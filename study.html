@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Exam Cram — CSE 4203 Discrete Mathematics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edc9;--surface:#faedcd;--surface2:#f3e5b8;--accent:#d4a373;--accent2:#bc6c25;--text:#283618;--text2:#5c6e3a;--green:#607d3b;--orange:#bc6c25;--red:#9c3a3a;--yellow:#d4a373;--radius:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Merriweather',Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);line-height:1.8}
+.sidebar{position:fixed;top:0;left:0;width:270px;height:100vh;background:var(--surface);overflow-y:auto;z-index:100;border-right:1px solid var(--surface2);transform:translateX(-100%);transition:transform .35s ease;box-shadow:2px 0 20px rgba(0,0,0,.05)}
+.sidebar.open{transform:translateX(0)}
+.sidebar h2{padding:22px 20px 18px;font-size:1.1rem;color:var(--accent2);border-bottom:1px solid var(--surface2);font-weight:600;letter-spacing:.02em}
+.sidebar a{display:block;padding:9px 20px;color:var(--text2);text-decoration:none;font-size:.88rem;border-left:3px solid transparent;transition:.2s}
+.sidebar a:hover,.sidebar a.active{color:var(--accent2);background:var(--surface2);border-left-color:var(--accent)}
+.sidebar .sub{padding-left:34px;font-size:.8rem}
+main{margin-left:0;padding:24px;max-width:960px}
+@media(min-width:900px){.sidebar{transform:translateX(0)}.sidebar-toggle{display:none!important}main{margin-left:270px;padding:36px 44px}}
+.sidebar-toggle{position:fixed;top:16px;left:16px;z-index:200;background:var(--accent);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius);cursor:pointer;font-size:1.2rem;box-shadow:0 2px 10px rgba(212,163,115,.3)}
+.search{position:sticky;top:0;z-index:50;background:var(--bg);padding:14px 0}
+.search input{width:100%;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--surface2);background:var(--surface);color:var(--text);font-size:.95rem;outline:0;font-family:inherit}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,163,115,.15)}
+#results{position:absolute;top:64px;left:0;right:0;background:var(--surface);border:1px solid var(--surface2);border-radius:var(--radius);max-height:400px;overflow-y:auto;display:none;z-index:99;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+#results a{display:block;padding:10px 16px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--surface2);font-size:.92rem}
+#results a:hover{background:var(--surface2)}
+section{margin-bottom:48px;scroll-margin-top:80px}
+.hero{background:var(--surface);border-radius:var(--radius);padding:36px;margin-bottom:36px;box-shadow:0 2px 16px rgba(0,0,0,.04);border:1px solid var(--surface2)}
+.hero h1{font-size:1.9rem;margin-bottom:10px;color:var(--accent2);font-weight:700}
+.hero p{color:var(--text2);font-size:.95rem}
+.card{background:var(--surface);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;border:1px solid var(--surface2);box-shadow:0 1px 8px rgba(0,0,0,.03)}
+.card-header{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;font-size:.93rem}
+.card-header:hover{background:var(--surface2)}
+.card-header .arrow{transition:transform .3s;font-size:.75rem;color:var(--accent)}
+.card-body{padding:0 18px 18px;display:none;font-size:.9rem}
+.card.open > .card-body{display:block}
+.card.open > .card-header .arrow{transform:rotate(180deg)}
+.card .card{background:var(--bg);border-color:var(--surface2)}
+.card .card .card-header{font-size:.88rem;padding:12px 16px}
+.card .card .card-body{padding:0 16px 14px;display:none}
+.card .card.open > .card-body{display:block}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;margin:2px;font-family:-apple-system,sans-serif}
+.tag-assignment{background:#bc6c2522;color:var(--accent2)}
+.tag-topic{background:#607d3b22;color:var(--green)}
+.tag-difficulty{background:#d4a37333;color:var(--accent2)}
+.tag-high{background:#607d3b22;color:var(--green)}
+.tag-mit{background:#bc6c2522;color:var(--orange)}
+.tag-book{background:#d4a37333;color:var(--accent2)}
+.theorem{background:var(--surface2);border-left:4px solid var(--accent);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
+.defn{background:var(--surface2);border-left:4px solid var(--green);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
+.solution{background:var(--bg);border:1px solid #607d3b44;border-radius:var(--radius);padding:14px;margin:10px 0}
+.solution .label{color:var(--green);font-weight:600;font-size:.85rem;margin-bottom:6px}
+.solution .body{margin-top:4px;font-size:.9rem}
+.solution .body p{margin-bottom:6px}
+.mistake{background:var(--surface);border:1px solid #9c3a3a33;border-radius:var(--radius);padding:14px;margin:10px 0}
+.mistake .label{color:var(--red);font-weight:600;font-size:.85rem;margin-bottom:6px}
+.mistake .body{margin-top:4px;font-size:.9rem}
+.mistake .body p{margin-bottom:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+th,td{padding:8px 12px;border:1px solid var(--surface2);text-align:left}
+th{background:var(--surface2);color:var(--accent2);font-weight:600}
+.freq-table th,.freq-table td{text-align:center}
+pre{background:var(--surface2);padding:12px;border-radius:8px;overflow-x:auto;font-size:.85rem;font-family:'SF Mono','Fira Code','Courier New',monospace}
+.math{font-family:'Times New Roman',serif;font-style:italic}
+.info-box{background:var(--surface2);border-radius:var(--radius);padding:14px;margin:12px 0}
+.info-box .title{color:var(--accent2);font-weight:600;margin-bottom:4px}
+h2{font-size:1.35rem;margin-bottom:16px;color:var(--accent2);padding-bottom:8px;border-bottom:1px solid var(--surface2);font-weight:600}
+h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.stat-card{background:var(--surface);border:1px solid var(--surface2);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.03)}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.stat-card .desc{font-size:.82rem;color:var(--text2);margin-top:4px}
+.back-top{position:fixed;bottom:26px;right:26px;background:var(--accent);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:.85;transition:.2s;box-shadow:0 2px 10px rgba(212,163,115,.3)}
+.back-top:hover{opacity:1}
+.back-top .arrow-up{font-size:1.1rem}
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<nav class="sidebar" id="sidebar">
+  <h2>DM Exam Cram</h2>
+  <a href="#overview" onclick="navigateTo('#overview')">Exam Overview</a>
+  <a href="#topic-freq" onclick="navigateTo('#topic-freq')">Topic Frequency</a>
+  <a href="#logic" onclick="navigateTo('#logic')">1. Logic</a>
+  <a href="#logic-propositions" class="sub" onclick="navigateTo('#logic-propositions')">Propositions & Truth Tables</a>
+  <a href="#logic-predicates" class="sub" onclick="navigateTo('#logic-predicates')">Predicates & Quantifiers</a>
+  <a href="#logic-operators" class="sub" onclick="navigateTo('#logic-operators')">Logical Operators</a>
+  <a href="#logic-rosen" class="sub" onclick="navigateTo('#logic-rosen')">Rosen Textbook Problems</a>
+  <a href="#logic-m4cs" class="sub" onclick="navigateTo('#logic-m4cs')">M4CS Textbook Problems</a>
+  <a href="#logic-problems" class="sub" onclick="navigateTo('#logic-problems')">MIT / DM Problems</a>
+  <a href="#proofs" onclick="navigateTo('#proofs')">2. Proof Techniques</a>
+  <a href="#proofs-direct" class="sub" onclick="navigateTo('#proofs-direct')">Direct & Contrapositive</a>
+  <a href="#proofs-contradiction" class="sub" onclick="navigateTo('#proofs-contradiction')">Contradiction</a>
+  <a href="#proofs-cases" class="sub" onclick="navigateTo('#proofs-cases')">Proof by Cases</a>
+  <a href="#proofs-textbook" class="sub" onclick="navigateTo('#proofs-textbook')">Textbook Problems</a>
+  <a href="#proofs-problems" class="sub" onclick="navigateTo('#proofs-problems')">MIT / DM Problems</a>
+  <a href="#sets" onclick="navigateTo('#sets')">3. Sets</a>
+  <a href="#sets-textbook" class="sub" onclick="navigateTo('#sets-textbook')">Textbook Problems</a>
+  <a href="#sets-problems" class="sub" onclick="navigateTo('#sets-problems')">MIT / DM Problems</a>
+  <a href="#induction" onclick="navigateTo('#induction')">4. Induction</a>
+  <a href="#induction-ordinary" class="sub" onclick="navigateTo('#induction-ordinary')">Ordinary & Strong Induction</a>
+  <a href="#induction-m4cs" class="sub" onclick="navigateTo('#induction-m4cs')">M4CS Textbook Problems</a>
+  <a href="#induction-textbook" class="sub" onclick="navigateTo('#induction-textbook')">Rosen Textbook Problems</a>
+  <a href="#induction-mit" class="sub" onclick="navigateTo('#induction-mit')">MIT / DM Problems</a>
+  <a href="#summations" onclick="navigateTo('#summations')">5. Summations</a>
+  <a href="#summations-formulas" class="sub" onclick="navigateTo('#summations-formulas')">Closed Forms & Formulas</a>
+  <a href="#summations-m4cs" class="sub" onclick="navigateTo('#summations-m4cs')">M4CS Textbook</a>
+  <a href="#summations-textbook" class="sub" onclick="navigateTo('#summations-textbook')">Textbook Problems</a>
+  <a href="#summations-problems" class="sub" onclick="navigateTo('#summations-problems')">MIT / DM Problems</a>
+  <a href="#asymptotics" onclick="navigateTo('#asymptotics')">6. Asymptotics</a>
+  <a href="#asymptotics-bigo" class="sub" onclick="navigateTo('#asymptotics-bigo')">Big O / Ω / Θ / ~</a>
+  <a href="#asymptotics-m4cs" class="sub" onclick="navigateTo('#asymptotics-m4cs')">M4CS Textbook</a>
+  <a href="#asymptotics-textbook" class="sub" onclick="navigateTo('#asymptotics-textbook')">Textbook Problems</a>
+  <a href="#asymptotics-problems" class="sub" onclick="navigateTo('#asymptotics-problems')">MIT / DM Problems</a>
+  <a href="#recurrences" onclick="navigateTo('#recurrences')">7. Recurrences</a>
+  <a href="#recurrences-master" class="sub" onclick="navigateTo('#recurrences-master')">Master Theorem</a>
+  <a href="#recurrences-m4cs" class="sub" onclick="navigateTo('#recurrences-m4cs')">M4CS Textbook</a>
+  <a href="#recurrences-textbook" class="sub" onclick="navigateTo('#recurrences-textbook')">Textbook Problems</a>
+  <a href="#recurrences-problems" class="sub" onclick="navigateTo('#recurrences-problems')">MIT / DM Problems</a>
+</nav>
+<main>
+<div class="search">
+  <input type="text" id="searchInput" placeholder="Search topics, problems, definitions..." oninput="doSearch(this.value)">
+  <div id="results"></div>
+</div>
+<section id="overview">
+  <div class="hero">
+    <h1>Discrete Mathematics — Exam Cram</h1>
+    <p>CSE 4203 / CSE 4302 &middot; Md. Bakhtiar Hasan &middot; IUT</p>
+    <div class="grid" style="margin-top:20px">
+      <div class="stat-card"><div class="num">7</div><div class="desc">Topics</div></div>
+      <div class="stat-card"><div class="num">50+</div><div class="desc">Curated Problems</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="desc">Textbooks Mined</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="desc">Assignments</div></div>
+    </div>
+  </div>
+  <div class="info-box">
+    <div class="title">Study Strategy</div>
+    <p style="font-size:.92rem">Sources mined: M4CS textbook (3 sections), Rosen textbook (Ch 1), MIT 6.042J assignments & recitations (Fall 2010), DM lecture slides & assignments. Problems classified by topic. Solutions in exam-cram format: short solution + key insight + common mistake.</p>
+  </div>
+
+<div class="card" id="proofs-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS</span> / <span class="tag tag-book">Rosen</span> — Textbook Proof Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.7 #8</span> Irrational^Rational</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove there exist irrational numbers a,b such that a^b is rational. (Hint: Consider √2^√2.)</p>
+        <div class="solution">
+          <div class="label">Non-Constructive Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Consider the number √2^√2. It is either rational or irrational.</p>
+            <p><strong>Step 2 (Case 1):</strong> If √2^√2 is rational, then we are done — take a = √2 and b = √2, and a^b is rational.</p>
+            <p><strong>Step 3 (Case 2):</strong> If √2^√2 is irrational, let a = √2^√2 (irrational) and b = √2 (irrational). Then a^b = (√2^√2)^√2 = √2^(√2·√2) = √2^2 = 2, which is rational.</p>
+            <p><strong>Step 4:</strong> In either case, we have found irrational a,b with a^b rational.</p>
+            <p><strong>Key Insight:</strong> Non-constructive proof — we prove existence without knowing which case actually holds.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Trying to construct a and b explicitly from the start instead of using a case analysis.</p>
+            <p><strong>Why it fails:</strong> We don't know whether √2^√2 is rational or irrational, so any explicit construction would require resolving an open problem. The case split avoids this.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #16</span> √2 + √3 irrational</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove √2 + √3 is irrational.</p>
+        <div class="solution">
+          <div class="label">Proof by Contradiction</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Assume for contradiction that √2 + √3 is rational. Then √2 + √3 = p/q for integers p,q with q ≠ 0 in lowest terms.</p>
+            <p><strong>Step 2:</strong> Square both sides: (√2 + √3)^2 = 2 + 3 + 2√6 = 5 + 2√6 = p^2/q^2.</p>
+            <p><strong>Step 3:</strong> Isolate √6: 2√6 = p^2/q^2 - 5, so √6 = (p^2/q^2 - 5)/2.</p>
+            <p><strong>Step 4:</strong> The left side (√6) is irrational. The right side is a rational combination of integers and thus rational.</p>
+            <p><strong>Step 5:</strong> This is a contradiction — an irrational number cannot equal a rational number. Therefore our assumption was false, and √2 + √3 is irrational.</p>
+            <p><strong>Key Insight:</strong> Square the sum to isolate √6, then use the closure of rational numbers under arithmetic operations to reach a contradiction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #6</span> Direct Proof</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove the product of two odd integers is odd.</p>
+        <div class="solution">
+          <div class="label">Direct Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let a and b be arbitrary odd integers. By definition of odd, a = 2k + 1 and b = 2m + 1 for some integers k,m.</p>
+            <p><strong>Step 2:</strong> Compute the product: a·b = (2k + 1)(2m + 1) = 4km + 2k + 2m + 1.</p>
+            <p><strong>Step 3:</strong> Factor out a 2 from the first three terms: 4km + 2k + 2m = 2(2km + k + m).</p>
+            <p><strong>Step 4:</strong> So a·b = 2(2km + k + m) + 1, which is of the form 2·(integer) + 1.</p>
+            <p><strong>Step 5:</strong> Therefore a·b is odd by definition, completing the proof.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Showing the sum instead of the product. The sum of two odd numbers is even (2k+1 + 2m+1 = 2(k+m+1)), but the product is odd. Don't confuse the two.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #16</span> Contrapositive</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove by contrapositive: if x+y ≥ 2, then x ≥ 1 or y ≥ 1.</p>
+        <div class="solution">
+          <div class="label">Contrapositive</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The contrapositive of "P → Q" is "¬Q → ¬P". Here P is "x+y ≥ 2" and Q is "x ≥ 1 or y ≥ 1".</p>
+            <p><strong>Step 2:</strong> Negate Q: ¬(x ≥ 1 or y ≥ 1) means x < 1 and y < 1 by De Morgan's law.</p>
+            <p><strong>Step 3:</strong> Negate P: ¬(x+y ≥ 2) means x+y < 2.</p>
+            <p><strong>Step 4:</strong> So the contrapositive is: if x < 1 and y < 1, then x+y < 2.</p>
+            <p><strong>Step 5:</strong> This is true because the sum of two numbers each strictly less than 1 is strictly less than 2.</p>
+            <p><strong>Key Insight:</strong> The contrapositive is logically equivalent to the original statement, so proving it suffices. This approach avoids case analysis on whether x or y meets the threshold.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.8 #1</span> Proof by Cases</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove n² + 1 ≥ 2n for all integers n.</p>
+        <div class="solution">
+          <div class="label">Case Analysis</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> We consider two cases: n ≥ 1 and n ≤ 0. These cover all integers.</p>
+            <p><strong>Step 2 (Case n ≥ 1):</strong> (n−1)² ≥ 0 for all integers. Expand: n² − 2n + 1 ≥ 0, so n² + 1 ≥ 2n.</p>
+            <p><strong>Step 3 (Case n ≤ 0):</strong> n² ≥ 0 always. Since n ≤ 0, we have 2n ≤ 0, so 1 ≥ 2n. Adding n² (which is ≥ 0) to both sides: n² + 1 ≥ 2n.</p>
+            <p><strong>Step 4:</strong> Both cases give n² + 1 ≥ 2n, so the statement holds for all integers n.</p>
+            <p><strong>Key Insight:</strong> The (n−1)² approach works only for n ≥ 1 (since it relies on real-number squaring). For n ≤ 0 we need a separate argument.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Only proving for positive n using the (n−1)² method and forgetting the n ≤ 0 case.</p>
+            <p><strong>Why it fails:</strong> Without the second case, the proof is incomplete — the claim must hold for all integers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #12</span> Contradiction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove if a·b ≤ n then a ≤ √n or b ≤ √n for positive integers a,b.</p>
+        <div class="solution">
+          <div class="label">Contrapositive</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Prove the contrapositive: if a > √n and b > √n, then a·b > n.</p>
+            <p><strong>Step 2:</strong> Since a,b are positive integers, we can multiply inequalities: a > √n and b > √n implies a·b > √n·√n = n.</p>
+            <p><strong>Step 3:</strong> This contradicts a·b ≤ n, so the original implication holds.</p>
+            <p><strong>Key Insight:</strong> The contrapositive swaps the conclusion inequality into a single multiplication, which is much simpler to reason about.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section id="topic-freq">
+  <h2>Topic Frequency (from Assignments)</h2>
+  <table class="freq-table">
+    <tr><th>Topic</th><th>A1</th><th>A2</th><th>A3</th><th>Weight</th></tr>
+    <tr><td>Proposition Translation</td><td>✓</td><td>—</td><td>—</td><td>High</td></tr>
+    <tr><td>Proof — Direct / Universal</td><td>✓</td><td>—</td><td>✓</td><td>High</td></tr>
+    <tr><td>Proof — Contradiction</td><td>✓</td><td>—</td><td>—</td><td>Medium</td></tr>
+    <tr><td>Proof — Cases</td><td>—</td><td>✓</td><td>—</td><td>High</td></tr>
+    <tr><td>Set Equality Proofs</td><td>✓</td><td>—</td><td>—</td><td>Medium</td></tr>
+    <tr><td>Induction (Ordinary)</td><td>✓</td><td>—</td><td>✓</td><td>High</td></tr>
+    <tr><td>Induction (Strong)</td><td>—</td><td>✓</td><td>—</td><td>High</td></tr>
+    <tr><td>Invariant / State Machine</td><td>—</td><td>✓</td><td>—</td><td>Medium</td></tr>
+    <tr><td>Summation — Closed Form</td><td>—</td><td>✓</td><td>—</td><td>High</td></tr>
+    <tr><td>Double Sums</td><td>—</td><td>✓</td><td>✓</td><td>Medium</td></tr>
+    <tr><td>Integral Bounds</td><td>—</td><td>✓</td><td>—</td><td>Medium</td></tr>
+    <tr><td>Asymptotic Comparison</td><td>—</td><td>—</td><td>✓</td><td>High</td></tr>
+    <tr><td>Merge Sort / Induction</td><td>—</td><td>—</td><td>✓</td><td>High</td></tr>
+    <tr><td>Master Theorem</td><td>—</td><td>—</td><td>✓</td><td>High</td></tr>
+  </table>
+</section>
+
+<!-- ===================== 1. LOGIC ===================== -->
+<section id="logic">
+<h2>1. Logic</h2>
+
+<div class="card open" id="logic-propositions">
+  <div class="card-header" onclick="toggleCard(this)"><span>Propositions & Truth Tables</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="defn"><strong>Proposition:</strong> A statement that is either True or False (not both).</div>
+    <p><strong>Not propositions:</strong> Questions, commands, variable-dependent (<em>x + 2 = 5</em>).</p>
+    <table>
+      <tr><th>p</th><th>q</th><th>p &and; q</th><th>p &or; q</th><th>p &oplus; q</th><th>p &rarr; q</th><th>p &harr; q</th></tr>
+      <tr><td>F</td><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td><td>T</td></tr>
+      <tr><td>F</td><td>T</td><td>F</td><td>T</td><td>T</td><td>T</td><td>F</td></tr>
+      <tr><td>T</td><td>F</td><td>F</td><td>T</td><td>T</td><td>F</td><td>F</td></tr>
+      <tr><td>T</td><td>T</td><td>T</td><td>T</td><td>F</td><td>T</td><td>T</td></tr>
+    </table>
+    <div class="theorem"><strong>Key trick:</strong> <span class="math">p &rarr; q</span> is equivalent to <span class="math">&not;p &or; q</span>. Implication is only false when premise is true and conclusion false.</div>
+  </div>
+</div>
+
+<div class="card" id="logic-predicates">
+  <div class="card-header" onclick="toggleCard(this)"><span>Predicates & Quantifiers</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="defn"><strong>Predicate:</strong> A proposition whose truth depends on a variable: <span class="math">P(x)</span>.</div>
+    <div class="defn"><strong>&forall;x P(x):</strong> True iff P(x) holds for every x in the domain.</div>
+    <div class="defn"><strong>&exist;x P(x):</strong> True iff P(x) holds for at least one x in the domain.</div>
+    <div class="theorem"><strong>Quantifier Negation:</strong><br>
+    <span class="math">&not;&forall;x P(x) &equiv; &exist;x &not;P(x)</span><br>
+    <span class="math">&not;&exist;x P(x) &equiv; &forall;x &not;P(x)</span></div>
+    <div class="theorem"><strong>Nested Quantifiers:</strong> <span class="math">&exist;x &forall;y P(x,y)</span> ≠ <span class="math">&forall;y &exist;x P(x,y)</span> in general.</div>
+  </div>
+</div>
+
+<div class="card" id="logic-operators">
+  <div class="card-header" onclick="toggleCard(this)"><span>Logical Operators & Equivalences</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <table>
+      <tr><th>Law</th><th>Form</th></tr>
+      <tr><td>Identity</td><td><span class="math">p &and; T &equiv; p</span>, <span class="math">p &or; F &equiv; p</span></td></tr>
+      <tr><td>Domination</td><td><span class="math">p &or; T &equiv; T</span>, <span class="math">p &and; F &equiv; F</span></td></tr>
+      <tr><td>Idempotent</td><td><span class="math">p &or; p &equiv; p</span>, <span class="math">p &and; p &equiv; p</span></td></tr>
+      <tr><td>Double Negation</td><td><span class="math">&not;(&not;p) &equiv; p</span></td></tr>
+      <tr><td>Commutative</td><td><span class="math">p &or; q &equiv; q &or; p</span>, <span class="math">p &and; q &equiv; q &and; p</span></td></tr>
+      <tr><td>Associative</td><td><span class="math">(p &or; q) &or; r &equiv; p &or; (q &or; r)</span></td></tr>
+      <tr><td>Distributive</td><td><span class="math">p &or; (q &and; r) &equiv; (p &or; q) &and; (p &or; r)</span></td></tr>
+      <tr><td>De Morgan's</td><td><span class="math">&not;(p &and; q) &equiv; &not;p &or; &not;q</span></td></tr>
+      <tr><td>Implication</td><td><span class="math">p &rarr; q &equiv; &not;p &or; q</span></td></tr>
+      <tr><td>Contrapositive</td><td><span class="math">p &rarr; q &equiv; &not;q &rarr; &not;p</span></td></tr>
+    </table>
+    <div class="theorem"><strong>NAND is universal:</strong> Every logical operator using only NAND (<span class="math">p | q &equiv; &not;(p &and; q)</span>). <span class="math">&not;p &equiv; p | p</span>, <span class="math">p &and; q &equiv; (p | q) | (p | q)</span>, <span class="math">p &or; q &equiv; (p | p) | (q | q)</span>.</div>
+  </div>
+</div>
+
+<div class="card" id="logic-rosen">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.1</span> Textbook Exercises — Propositional Logic</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #1-4 — Truth Tables</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>#1:</strong> Which of these are propositions? (a) Boston is capital of MA. (b) Miami is capital of FL. (c) 2+3=5. (d) 5+7=10. (e) x+2=11. (f) Answer this question.</p>
+        <p><strong>#3:</strong> Truth table for <span class="math">&not;p &and; q</span>.</p>
+        <p><strong>#4:</strong> Truth table for <span class="math">&not;(p &or; q)</span>.</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (#1):</strong> (a) "Boston is capital of MA" — declarative, truth value T → proposition. (b) "Miami is capital of FL" — declarative, truth value F (Tallahassee) → proposition. (c) "2+3=5" — declarative, T → proposition. (d) "5+7=10" — declarative, F → proposition. (e) "x+2=11" — truth depends on x → not a proposition. (f) "Answer this question" — command → not a proposition.</p>
+            <p><strong>Step 2 (#3):</strong> ¬p ∧ q is true only when p = F and q = T. For all other combinations of p,q it is false.</p>
+            <p><strong>Step 3 (#4):</strong> ¬(p ∨ q) is true only when p = F and q = F. This is equivalent to ¬p ∧ ¬q by De Morgan's law.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #18 — Conditional Equivalence</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Are <span class="math">(p &rarr; q) &and; (p &rarr; r)</span> and <span class="math">p &rarr; (q &and; r)</span> logically equivalent?</p>
+        <div class="solution">
+          <div class="label">Yes</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Rewrite (p→q) ∧ (p→r) using the implication equivalence: (¬p ∨ q) ∧ (¬p ∨ r).</p>
+            <p><strong>Step 2:</strong> Factor out ¬p using distributivity: (¬p ∨ q) ∧ (¬p ∨ r) ≡ ¬p ∨ (q ∧ r).</p>
+            <p><strong>Step 3:</strong> Convert back to implication: ¬p ∨ (q ∧ r) ≡ p → (q ∧ r).</p>
+            <p><strong>Step 4:</strong> Both are false only when p = T and at least one of q,r is F. Same truth table → logically equivalent.</p>
+            <p><strong>Key Insight:</strong> The equivalence shows that "if p then q, and if p then r" is the same as "if p then (q and r)" which makes intuitive sense — if p forces both q and r individually, it forces them together.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #24 — Contrapositive</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Show <span class="math">p &rarr; q</span> and <span class="math">&not;q &rarr; &not;p</span> are equivalent <strong>without</strong> a truth table.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Rewrite p → q using the implication equivalence: p → q ≡ ¬p ∨ q.</p>
+            <p><strong>Step 2:</strong> Rewrite ¬q → ¬p using the same rule: ¬q → ¬p ≡ ¬(¬q) ∨ ¬p ≡ q ∨ ¬p.</p>
+            <p><strong>Step 3:</strong> By commutativity of ∨: q ∨ ¬p ≡ ¬p ∨ q.</p>
+            <p><strong>Step 4:</strong> Both expressions reduce to ¬p ∨ q, so they are logically equivalent.</p>
+            <p><strong>Key Insight:</strong> The contrapositive has the same truth value as the original implication. This is not true for the converse (q → p) or inverse (¬p → ¬q).</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Confusing contrapositive with converse (q → p) or inverse (¬p → ¬q).</p>
+            <p><strong>Why it matters:</strong> The contrapositive is equivalent to the original, but the converse and inverse are not — they may have different truth values.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #33 — Bitwise Operations</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find bitwise OR, AND, XOR of:<br>(a) 101 1110, 010 0001<br>(b) 1111 0000, 1010 1010</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a) OR:</strong> Align bits: 1011110 | 0100001 = 1111111 (bit-by-bit logical OR).</p>
+            <p><strong>Step 2 (a) AND:</strong> 1011110 & 0100001 = 0000000 (bit-by-bit logical AND, no overlapping 1s).</p>
+            <p><strong>Step 3 (a) XOR:</strong> 1011110 ⊕ 0100001 = 1111111 (bit-by-bit XOR, each position differs).</p>
+            <p><strong>Step 4 (b) OR:</strong> 11110000 | 10101010 = 11111010.</p>
+            <p><strong>Step 5 (b) AND:</strong> 11110000 & 10101010 = 10100000.</p>
+            <p><strong>Step 6 (b) XOR:</strong> 11110000 ⊕ 10101010 = 01011010.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #41 — 3-Var Compound</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Truth table for <span class="math">(p &rarr; q) &rarr; (q &rarr; p)</span>.</p>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> This is NOT a tautology. To see why, consider the case p = F, q = T.</p>
+            <p><strong>Step 2:</strong> When p = F, q = T: (p → q) = (F → T) = T. But (q → p) = (T → F) = F.</p>
+            <p><strong>Step 3:</strong> So T → F = F, which means the whole compound is false.</p>
+            <p><strong>Step 4:</strong> This proves that the converse (q → p) is not equivalent to the original implication (p → q).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #46 — Program Conditionals</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Value of x after each if x=1 before?<br>(a) <code>if (x+2=3) then x:=x+1</code><br>(b) <code>if (x+1=3) OR (2x+2=3) then x:=x+1</code><br>(c) <code>if (2x+3=5) AND (3x+4=7) then x:=x+1</code><br>(d) <code>if (x+1=2) XOR (x+2=3) then x:=x+1</code></p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> x+2 = 1+2 = 3, so condition is true. x becomes 1+1 = 2.</p>
+            <p><strong>Step 2 (b):</strong> x+1 = 2 ≠ 3 (false). 2x+2 = 4 ≠ 3 (false). false OR false = false. x stays 1.</p>
+            <p><strong>Step 3 (c):</strong> 2x+3 = 5 (true). 3x+4 = 7 (true). true AND true = true. x becomes 2.</p>
+            <p><strong>Step 4 (d):</strong> x+1 = 2 (true). x+2 = 3 (true). true XOR true = false. x stays 1.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.1 #52 — Liar Paradox</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Is "This statement is false" a proposition?</p>
+        <div class="solution">
+          <div class="label">No.</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Assume the statement is true. Then what it says ("this statement is false") must hold, so it is false. Contradiction.</p>
+            <p><strong>Step 2:</strong> Assume the statement is false. Then the negation of "this statement is false" is "this statement is true", so it is true. Contradiction.</p>
+            <p><strong>Step 3:</strong> Since neither truth value yields a consistent assignment, the statement is not a proposition.</p>
+            <p><strong>Key Insight:</strong> Self-referential statements can break the fundamental requirement of propositional logic: every proposition must be either true or false, not both and not neither.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.3 #35 — NAND Universality</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Express <span class="math">&not;p, p&and;q, p&or;q, p&rarr;q</span> using only the NAND operator (<span class="math">p|q &equiv; &not;(p&and;q)</span>).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (¬p):</strong> ¬p ≡ p|p. Since p|p = ¬(p∧p) = ¬p.</p>
+            <p><strong>Step 2 (p∧q):</strong> p∧q ≡ (p|q)|(p|q). First p|q = ¬(p∧q). Then (p|q)|(p|q) = ¬(¬(p∧q) ∧ ¬(p∧q)) = ¬¬(p∧q) = p∧q.</p>
+            <p><strong>Step 3 (p∨q):</strong> p∨q ≡ (p|p)|(q|q) = ¬p|¬q = ¬(¬p ∧ ¬q) = p ∨ q (by De Morgan).</p>
+            <p><strong>Step 4 (p→q):</strong> p→q ≡ ¬p∨q ≡ (p|p)|(q|q), using the OR expression from Step 3 with ¬p and q.</p>
+            <p><strong>Key Insight:</strong> Since we can build ¬, ∧, and ∨ from NAND, any logical operator can be expressed using only NAND — making NAND a universal gate.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Forgetting that NAND is not associative: (p|q)|r ≠ p|(q|r) in general.</p>
+            <p><strong>Why it matters:</strong> When building complex expressions with NAND, the grouping (parentheses) is crucial — you can't rearrange them freely like AND or OR.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.4 #28 — Predicate Translation</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Domain = people at a university. Let <span class="math">S(x)</span>: x is a student, <span class="math">E(x)</span>: x is enrolled, <span class="math">C(x)</span>: x is a course, <span class="math">T(x,y)</span>: x is taking y. Translate:</p>
+        <ol style="margin-left:20px">
+          <li>Every student is enrolled.</li>
+          <li>Some student is not enrolled.</li>
+          <li>Every student is taking some course.</li>
+          <li>Some course is being taken by every student.</li>
+        </ol>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> "Every student is enrolled" = ∀x (S(x) → E(x)). If someone is a student, they are enrolled. Not ∀x (S(x) ∧ E(x)) — that would say everyone is a student and enrolled.</p>
+            <p><strong>Step 2 (2):</strong> "Some student is not enrolled" = ∃x (S(x) ∧ ¬E(x)). There exists at least one person who is both a student and not enrolled.</p>
+            <p><strong>Step 3 (3):</strong> "Every student is taking some course" = ∀x (S(x) → ∃y (C(y) ∧ T(x,y))). For each student, there exists some course that they take.</p>
+            <p><strong>Step 4 (4):</strong> "Some course is being taken by every student" = ∃x (C(x) ∧ ∀y (S(y) → T(y,x))). There exists a course that every student takes.</p>
+            <p><strong>Key Insight:</strong> Statements (3) and (4) differ in quantifier order — in (3) each student can take a different course, but in (4) there must be one common course for all students. The quantifier swap changes the meaning entirely.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Translating "every student is taking some course" as ∀x∃y or ∃y∀x without understanding the difference.</p>
+            <p><strong>Why it fails:</strong> ∀x∃y means "each student has some course (possibly different)" while ∃y∀x means "there is one course that all students take." These are not equivalent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>Rosen 1.5 #12 — Nested Quantifier Order</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Let domain = ℝ. Are <span class="math">&forall;x &exist;y (x + y = 0)</span> and <span class="math">&exist;y &forall;x (x + y = 0)</span> logically equivalent?</p>
+        <div class="solution">
+          <div class="label">No</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Evaluate ∀x ∃y (x + y = 0). For each x, we can pick y = −x. Since every real number has an additive inverse, this is always true.</p>
+            <p><strong>Step 2:</strong> Evaluate ∃y ∀x (x + y = 0). This asks: does there exist a single y that works for all x simultaneously? If y = 0, then x+0=0 fails for x=1. If y = −1, it fails for x=0. No single y can satisfy all x.</p>
+            <p><strong>Step 3:</strong> Since one is true and the other is false, they are not logically equivalent.</p>
+            <p><strong>Key Insight:</strong> ∀x∃y says "each x has its own y" while ∃y∀x says "one y works for all x." The latter is a much stronger claim.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Assuming ∀x∃y and ∃y∀x are always interchangeable.</p>
+            <p><strong>Why it fails:</strong> ∃y∀x is much stronger — it requires a single y that simultaneously satisfies the predicate for every x. Only certain symmetric predicates (like x+y = y+x) allow this.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="logic-m4cs">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §3</span> — Textbook Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 3.1 — Logical Equivalence Tautology</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Show <span class="math">(P &rarr; Q) &or; (Q &rarr; P)</span> is a tautology.</p>
+        <div class="solution">
+          <div class="label">Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> We show that regardless of the truth values of P and Q, at least one disjunct is always true.</p>
+            <p><strong>Step 2:</strong> Consider P. Either P is true or P is false.</p>
+            <p><strong>Step 3 (P true):</strong> If P is true, then Q → P is true because the consequent (P) is true. So the disjunction (P→Q) ∨ (Q→P) is true.</p>
+            <p><strong>Step 4 (P false):</strong> If P is false, then P → Q is true because the antecedent (P) is false. So the disjunction is true.</p>
+            <p><strong>Step 5:</strong> In both cases, the compound is true. Therefore it is a tautology.</p>
+            <p><strong>Key Insight:</strong> This tautology shows that for any two propositions, at least one direction of implication always holds — even if P and Q are unrelated. This is sometimes called "implication tautology."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 3.6 — Predicate Logic (Monkey/TA/Pizza)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Domain = students. Translate: "If a student is a TA, then they have a pizza or a monkey." Use <span class="math">TA(x), Pizza(x), Monkey(x)</span>.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> "If a student is a TA" — this is conditional, so we use →. The domain is all students, so we quantify with ∀.</p>
+            <p><strong>Step 2:</strong> "then they have a pizza or a monkey" — the consequent is Pizza(x) ∨ Monkey(x).</p>
+            <p><strong>Step 3:</strong> Combine: ∀x (TA(x) → (Pizza(x) ∨ Monkey(x))).</p>
+            <p><strong>Key Insight:</strong> "If...then" translates to →, not ∧. Using ∧ would claim that every student is a TA.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Writing ∀x (TA(x) ∧ (Pizza(x) ∨ Monkey(x))).</p>
+            <p><strong>Why it fails:</strong> This says every student is a TA and (has pizza or monkey), which is much stronger than the original. The correct form uses → to restrict the claim only to TAs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 3.26 — Quantified Truth</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Determine the truth value of <span class="math">&exist;x &in; &Zopf;: x&sup2; &minus; x &minus; 1 &gt; 0</span> and <span class="math">&forall;x &in; &Zopf;: x&sup2; &minus; x &minus; 1 &gt; 0</span>.</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> For ∃x (x² − x − 1 > 0): pick x = 2. Then 4 − 2 − 1 = 1 > 0. At least one integer satisfies it → true.</p>
+            <p><strong>Step 2:</strong> For ∀x (x² − x − 1 > 0): pick x = 0. Then 0 − 0 − 1 = −1 > 0 is false. One counterexample kills the universal claim → false.</p>
+            <p><strong>Key Insight:</strong> One witness proves an existential claim; one counterexample disproves a universal claim.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Confusing the roles of witnesses vs. counterexamples for existential and universal quantifiers.</p>
+            <p><strong>Why it fails:</strong> A single example does not prove a universal claim, and a single failure does not disprove an existential claim. They are duals of each other — De Morgan's laws for quantifiers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 3.33 — Validity of Quantified Implication</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Show <span class="math">(&forall;x P(x)) &rArr; (&exist;x P(x))</span> is valid when the domain is nonempty.</p>
+        <div class="solution">
+          <div class="label">Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Assume ∀x P(x) is true — every element in the domain satisfies P(x).</p>
+            <p><strong>Step 2:</strong> Since the domain is nonempty, there exists at least one element in it.</p>
+            <p><strong>Step 3:</strong> Pick any such element. By the assumption, that element satisfies P(x).</p>
+            <p><strong>Step 4:</strong> Therefore ∃x P(x) holds. Since the implication always holds, it is valid.</p>
+            <p><strong>Key Insight:</strong> This inference requires a nonempty domain. If the domain were empty, ∀x P(x) would be vacuously true but ∃x P(x) would be false — breaking the implication.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="logic-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT</span> / <span class="tag tag-assignment">DM</span> — Logic Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A01</span> — Predicate Logic Translation</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Domain = people. F(x): Ferrari, H(x): fast, C(x): car, R(x): race car driver. Translate:</p>
+        <ol style="margin-left:20px">
+          <li>All Ferraris are fast.</li>
+          <li>Some cars are Ferraris.</li>
+          <li>No race car driver is slow.</li>
+          <li>All race car drivers own a fast car.</li>
+        </ol>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> "All Ferraris are fast" = ∀x (F(x) → H(x)). Being a Ferrari implies being fast.</p>
+            <p><strong>Step 2 (2):</strong> "Some cars are Ferraris" = ∃x (C(x) ∧ F(x)). There exists something that is both a car and a Ferrari.</p>
+            <p><strong>Step 3 (3):</strong> "No race car driver is slow" = ∀x (R(x) → H(x)). Being a race car driver implies being fast (not slow). Alternatively, ¬∃x (R(x) ∧ ¬H(x)).</p>
+            <p><strong>Step 4 (4):</strong> "All race car drivers own a fast car" = ∀x (R(x) → ∃y (C(y) ∧ H(y) ∧ owns(x,y))). For each race car driver, there exists a car that is fast and they own it.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Writing "All As are Bs" as ∀x (A(x) ∧ B(x)).</p>
+            <p><strong>Why it fails:</strong> ∀x (A(x) ∧ B(x)) says everything is both A and B, which is clearly not what "all As are Bs" means. The correct form is ∀x (A(x) → B(x)).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A01</span> — NAND Universality</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Express <span class="math">&not;p, p&and;q, p&or;q, p&rarr;q</span> using only NAND.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (¬p):</strong> p|p = ¬(p∧p) = ¬p.</p>
+            <p><strong>Step 2 (p∧q):</strong> First compute p|q = ¬(p∧q). Then (p|q)|(p|q) = ¬(¬(p∧q)) = p∧q.</p>
+            <p><strong>Step 3 (p∨q):</strong> Compute ¬p = p|p and ¬q = q|q. Then (p|p)|(q|q) = ¬(¬p ∧ ¬q) = p ∨ q (De Morgan).</p>
+            <p><strong>Step 4 (p→q):</strong> p→q = ¬p ∨ q = (p|p)|(q|q), using the OR construction from Step 3.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A01 Q2</span> — Wizards Translation</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Domain = wizards. S:Spy, D:Death Eater, O:Order of Phoenix, G:Gryffindor. Translate.</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> "Some Order member is a Gryffindor" = ∃x (O(x) ∧ G(x)). There exists a wizard who is both in the Order and a Gryffindor.</p>
+            <p><strong>Step 2 (2):</strong> "All Death Eaters who are Order members are spies" = ∀x ((D(x) ∧ O(x)) → S(x)).</p>
+            <p><strong>Step 3 (3):</strong> "No Gryffindor is a Death Eater" = ∀x (G(x) → ¬D(x)).</p>
+            <p><strong>Step 4 (4):</strong> "Two distinct Order members who are not Gryffindor" = ∃x∃y (x≠y ∧ O(x) ∧ O(y) ∧ ¬G(x) ∧ ¬G(y)).</p>
+            <p><strong>Step 5 (5):</strong> "Exactly two Death Eater spies" = ∃x∃y (x≠y ∧ D(x)∧S(x) ∧ D(y)∧S(y) ∧ ∀z((D(z)∧S(z)) → (z=x ∨ z=y))).</p>
+            <p><strong>Key Insight:</strong> "Exactly two" requires: (a) existence of two distinct individuals satisfying the property, and (b) any individual satisfying the property must be one of those two.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R01</span> — Cabal Logic Puzzle</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Nine people. incabal(x): x in cabal. Given 7 constraints, deduce the cabal.</p>
+        <div class="solution">
+          <div class="label">Answer: {Oscar, David, Nick}</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> From (iii) — Martyna and Patrice are out.</p>
+            <p><strong>Step 2:</strong> From (v) — Darren is out.</p>
+            <p><strong>Step 3:</strong> From (iv)+(ii) — Stav is out.</p>
+            <p><strong>Step 4:</strong> If Tom is in, then (vi) forces Oscar and Nick out, leaving only Tom, Marten, David. But (vii) blocks David and Marten together, so Tom cannot be in.</p>
+            <p><strong>Step 5:</strong> If Marten is in, (vii) forces Oscar and David out, leaving only Marten and Nick. This violates (i) which needs at least 3. So Marten is out.</p>
+            <p><strong>Step 6:</strong> Only {Oscar, David, Nick} remain. Size = 3, satisfying all constraints.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===================== 2. PROOFS ===================== -->
+<section id="proofs">
+<h2>2. Proof Techniques</h2>
+
+<div class="card" id="proofs-direct">
+  <div class="card-header" onclick="toggleCard(this)"><span>Direct & Contrapositive Proofs</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem"><strong>Direct:</strong> To prove <span class="math">P &rArr; Q</span>, assume P and deduce Q.</div>
+    <div class="theorem"><strong>Contrapositive:</strong> Prove <span class="math">&not;Q &rArr; &not;P</span> instead.</div>
+    <p><strong>Example:</strong> <span class="math">n²</span> even &rArr; <span class="math">n</span> even. Prove contrapositive: if n odd, n² odd.</p>
+  </div>
+</div>
+
+<div class="card" id="proofs-contradiction">
+  <div class="card-header" onclick="toggleCard(this)"><span>Proof by Contradiction</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem">Assume <span class="math">&not;P</span>, derive contradiction (<span class="math">R &and; &not;R</span>). Conclude P.</div>
+    <p><strong>Classic — √2 irrational:</strong> Assume √2 = a/b in lowest terms. Then a²=2b², so a even, a=2c. Then b²=2c², b even. Contradiction.</p>
+  </div>
+</div>
+
+<div class="card" id="proofs-cases">
+  <div class="card-header" onclick="toggleCard(this)"><span>Proof by Cases</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem">Exhaustive cases C₁∨...∨Cₖ, prove each Cᵢ⇒P.</div>
+    <p><strong>Example:</strong> n²+n even for all n. Cases: n even (2k) or n odd (2k+1). Both give n²+n=2(...).</p>
+  </div>
+</div>
+
+<div class="card" id="proofs-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span>Proof Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A1 Q4</span> — Contrapositive</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove: n irrational ⇒ n^{1/3} irrational.</p>
+        <div class="solution">
+          <div class="label">Contrapositive</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> We prove the contrapositive: if n^{1/3} is rational, then n is rational.</p>
+            <p><strong>Step 2:</strong> Assume n^{1/3} = p/q where p,q are integers with q ≠ 0 in lowest terms.</p>
+            <p><strong>Step 3:</strong> Cube both sides: n = p³/q³.</p>
+            <p><strong>Step 4:</strong> Since p³ and q³ are integers, n = p³/q³ is rational.</p>
+            <p><strong>Step 5:</strong> The contrapositive is proved, so the original statement holds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A2 Q1</span> — Cases: Email</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Alice→Bob (uni), Bob→Charlie, Charlie not uni. Prove one email uni→personal.</p>
+        <div class="solution">
+          <div class="label">Cases on Bob's email</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> We know Alice sent to Bob using a university account. Charlie did not use a university account. Bob sent some email to Charlie.</p>
+            <p><strong>Step 2 (Case 1):</strong> Bob used a university account for the email to Charlie. Then Bob→Charlie is university → personal (since Charlie didn't use university).</p>
+            <p><strong>Step 3 (Case 2):</strong> Bob used a personal account for the email to Charlie. Then Alice→Bob is university → personal (since Bob used personal).</p>
+            <p><strong>Step 4:</strong> In either case, at least one email in the chain is from a university account to a personal account.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A01</span> — Fake Coin (12 coins)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>12 coins, one counterfeit. Find it in 3 weighings, determine heavy/light.</p>
+        <div class="solution">
+          <div class="label">Strategy (3³=27 > 24)</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Weigh 1: 4 coins vs 4 coins. Three outcomes possible (left heavy, balanced, right heavy). 3 weighings give 3³ = 27 outcomes, enough to distinguish 12×2 = 24 possibilities (12 coins × heavy/light).</p>
+            <p><strong>Step 2 (Case balanced):</strong> The fake is among the 4 aside coins. Weigh 2: 3 known-good coins vs 3 suspicious coins. This narrows it down.</p>
+            <p><strong>Step 3 (Case unbalanced):</strong> Label the 4 heavier-side coins H and 4 lighter-side coins L. Weigh 2 recombines coins strategically (e.g., 3H+1L vs 1H+3L+1good) to narrow candidates.</p>
+            <p><strong>Step 4:</strong> Weigh 3 resolves the final 2-3 candidate coins by comparing against a known-good coin.</p>
+            <p><strong>Key Insight:</strong> The information-theoretic bound: 3³ = 27 must be ≥ 24 (12 coins × 2 possibilities each). If it were 13 coins (26 possibilities) it would still be possible, but 14 (28) would not.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-difficulty">Hard</span> — Friends & Strangers</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>In any group of 6, 3 mutual friends or 3 mutual strangers.</p>
+        <div class="solution">
+          <div class="label">Pigeonhole + Cases</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Pick any person p. Among the other 5 people, by the pigeonhole principle, p has either ≥3 friends or ≥3 strangers (since 5 = 3+2).</p>
+            <p><strong>Step 2 (Subcase: ≥3 friends of p):</strong> If any two of those friends are friends with each other, then together with p they form 3 mutual friends. If none of them are friends, they are all mutual strangers — giving 3 mutual strangers.</p>
+            <p><strong>Step 3 (Subcase: ≥3 strangers to p):</strong> Symmetric argument — if any two of those strangers are strangers to each other, then p + those two form 3 mutual strangers. Otherwise they are all mutual friends.</p>
+            <p><strong>Step 4:</strong> In all cases, we find either 3 mutual friends or 3 mutual strangers. This is a Ramsey number R(3,3) = 6.</p>
+            <p><strong>Key Insight:</strong> This is a classic application of the pigeonhole principle combined with case analysis — known as Ramsey theory.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-difficulty">Medium</span> — Birthday Paradox Flaw</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find flaw: "Proof" all people share the same birthday.</p>
+        <div class="solution">
+          <div class="label">Step fails at n=1→2</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The faulty proof attempts induction: assume any group of n people share the same birthday. For n+1, consider the first n and the last n — by IH each group shares a birthday, and since the groups overlap, all share the same birthday.</p>
+            <p><strong>Step 2:</strong> The flaw: when n = 1 (going from 1 to 2 people), the "first n" = {person 1} and the "last n" = {person 2} are disjoint — there is no overlapping person to bridge the claim.</p>
+            <p><strong>Step 3:</strong> The argument works only for n ≥ 2 where the groups have at least one person in common. The inductive step fails at the base transition from n=1 to n=2.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===================== 3. SETS ===================== -->
+<section id="sets">
+<h2>3. Sets</h2>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)"><span>Set Theory Essentials</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="defn"><strong>Set:</strong> Collection of distinct objects.</div>
+    <p><strong>Key:</strong> A=B iff A⊆B and B⊆A. |P(A)|=2^{|A|}.</p>
+  </div>
+</div>
+
+<div class="card" id="sets-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A1 Q3</span> — Set Equality</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <p>Prove: A = (A−B) ∪ (A∩B).</p>
+    <div class="solution">
+      <div class="label">Two-direction proof</div>
+      <div class="body">
+        <p><strong>Step 1 (⊆ direction):</strong> Take x ∈ A. Either x ∈ B or x ∉ B.</p>
+        <p><strong>Step 2:</strong> If x ∈ B, then x ∈ A∩B. If x ∉ B, then x ∈ A−B.</p>
+        <p><strong>Step 3:</strong> In either case, x ∈ (A−B) ∪ (A∩B). So A ⊆ (A−B) ∪ (A∩B).</p>
+        <p><strong>Step 4 (⊇ direction):</strong> Take x ∈ (A−B) ∪ (A∩B).</p>
+        <p><strong>Step 5:</strong> If x ∈ A−B, then x ∈ A. If x ∈ A∩B, then x ∈ A.</p>
+        <p><strong>Step 6:</strong> In either case, x ∈ A. So (A−B) ∪ (A∩B) ⊆ A.</p>
+        <p><strong>Step 7:</strong> Both directions hold, therefore A = (A−B) ∪ (A∩B). ✓</p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="label">Common Mistake</div>
+      <div class="body">
+        <p><strong>Mistake:</strong> Only proving one direction (usually ⊆).</p>
+        <p><strong>Why it fails:</strong> Set equality requires both A ⊆ B and B ⊆ A. Proving only one direction only shows that A is a subset of B, not that they are equal.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="sets-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS</span> / <span class="tag tag-book">Rosen</span> — Textbook Set Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 4.1 #3</span> Set Formula to Propositional</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Convert set identity (A−B)∪(A∩B) = A into a propositional equivalence and verify.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Translate membership in the LHS to propositional logic: x ∈ (A−B)∪(A∩B) ≡ (x∈A ∧ x∉B) ∨ (x∈A ∧ x∈B).</p>
+            <p><strong>Step 2:</strong> Factor out x∈A using distributivity: (x∈A ∧ x∉B) ∨ (x∈A ∧ x∈B) ≡ x∈A ∧ (x∉B ∨ x∈B).</p>
+            <p><strong>Step 3:</strong> The inner clause (x∉B ∨ x∈B) is a tautology (always true). So we get x∈A ∧ T.</p>
+            <p><strong>Step 4:</strong> x∈A ∧ T ≡ x∈A, which is exactly the RHS. So the identity holds.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Not properly converting set operations to propositional connectives.</p>
+            <p><strong>Why it fails:</strong> Set operations (∪, ∩, −) have direct propositional analogs (∨, ∧, ∧¬). Skipping this conversion leads to algebraic errors.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 2.1 #21</span> Power Set</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find the power set of {a,b,c}.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The power set P(S) is the set of all subsets of S, including ∅ and S itself.</p>
+            <p><strong>Step 2:</strong> For a 3-element set, there are 2³ = 8 subsets.</p>
+            <p><strong>Step 3:</strong> List subsets by size: ∅; {a}, {b}, {c}; {a,b}, {a,c}, {b,c}; {a,b,c}.</p>
+            <p><strong>Step 4:</strong> P({a,b,c}) = {∅, {a}, {b}, {c}, {a,b}, {a,c}, {b,c}, {a,b,c}}.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 4.1 #5</span> De Morgan for Sets</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove A∩B = A̅ ∪ B̅ using propositional logic.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Translate the complement of intersection: x ∈ A∩B means x ∉ (A∩B).</p>
+            <p><strong>Step 2:</strong> x ∈ A∩B ≡ ¬(x ∈ A ∩ B) ≡ ¬(x∈A ∧ x∈B).</p>
+            <p><strong>Step 3:</strong> Apply De Morgan's law from propositional logic: ¬(x∈A ∧ x∈B) ≡ (x∉A) ∨ (x∉B).</p>
+            <p><strong>Step 4:</strong> Translate back: (x∉A) ∨ (x∉B) ≡ x ∈ A̅ ∪ B̅.</p>
+            <p><strong>Step 5:</strong> Therefore A∩B = A̅ ∪ B̅. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 2.2 #12</span> Set Identity</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove (A∩B)∪C = C ∪ (A∩B) using commutativity.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The union operation ∪ is commutative: for any sets X,Y, X∪Y = Y∪X.</p>
+            <p><strong>Step 2:</strong> Let X = (A∩B) and Y = C. Then (A∩B)∪C = C∪(A∩B) by commutativity.</p>
+            <p><strong>Step 3:</strong> No further simplification needed — the identity follows directly from the definition of set union.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 4.1 #8</span> Set Difference</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove A\(B\C) = (A\B)∪(A∩C).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Translate LHS: x ∈ A\(B\C) ≡ x∈A ∧ ¬(x∈B ∧ x∉C).</p>
+            <p><strong>Step 2:</strong> Apply De Morgan: x∈A ∧ (x∉B ∨ x∈C).</p>
+            <p><strong>Step 3:</strong> Distribute: (x∈A ∧ x∉B) ∨ (x∈A ∧ x∈C).</p>
+            <p><strong>Step 4:</strong> Translate back: (x∈A\B) ∨ (x∈A∩C) ≡ x ∈ (A\B) ∪ (A∩C).</p>
+            <p><strong>Step 5:</strong> Therefore A\(B\C) = (A\B) ∪ (A∩C). ✓</p>
+            <p><strong>Key Insight:</strong> Converting set expressions to propositional logic and back is a systematic method for proving set identities.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</section>
+
+<!-- ===================== 4. INDUCTION ===================== -->
+<section id="induction">
+<h2>4. Induction</h2>
+
+<div class="card" id="induction-ordinary">
+  <div class="card-header" onclick="toggleCard(this)"><span>Ordinary & Strong Induction</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem"><strong>Ordinary Induction:</strong> P(0) true, ∀n: P(n)⇒P(n+1) → ∀n: P(n).</div>
+    <div class="theorem"><strong>Strong Induction:</strong> P(0)..P(b) true, ∀n>b: [P(0)∧...∧P(n-1)]⇒P(n) → ∀n: P(n).</div>
+    <p><strong>Template:</strong> (1) State induction. (2) Define P(n). (3) Base case. (4) Inductive step. (5) Conclude.</p>
+  </div>
+</div>
+
+<div class="card" id="induction-m4cs">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §5.1</span> — Induction Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 5.1 — Sum of Squares</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove: ∑_{i=1}^{n} i² = n(n+1)(2n+1)/6.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=1):</strong> LHS = 1² = 1. RHS = 1·2·3/6 = 6/6 = 1. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume ∑_{i=1}^{n} i² = n(n+1)(2n+1)/6 for some n ≥ 1.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Show for n+1: ∑_{i=1}^{n+1} i² = ∑_{i=1}^{n} i² + (n+1)².</p>
+            <p><strong>Step 4:</strong> Substitute the hypothesis: = n(n+1)(2n+1)/6 + (n+1)².</p>
+            <p><strong>Step 5:</strong> Factor (n+1): = (n+1)[n(2n+1)/6 + (n+1)] = (n+1)[(2n²+n)/6 + (6n+6)/6] = (n+1)(2n²+7n+6)/6.</p>
+            <p><strong>Step 6:</strong> Factor the quadratic: 2n²+7n+6 = (n+2)(2n+3). So RHS = (n+1)(n+2)(2n+3)/6, which matches the formula for n+1. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 5.1 — Divisibility by 9</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove: 4ⁿ + 15n − 1 divisible by 9.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=0):</strong> 4⁰ + 15·0 − 1 = 1 + 0 − 1 = 0. 0 is divisible by 9. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume 4ⁿ + 15n − 1 = 9k for some integer k.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Compute for n+1: 4^{n+1} + 15(n+1) − 1 = 4·4ⁿ + 15n + 14.</p>
+            <p><strong>Step 4:</strong> From the hypothesis, 4ⁿ = 9k − 15n + 1. Substitute: 4(9k − 15n + 1) + 15n + 14 = 36k − 60n + 4 + 15n + 14 = 36k − 45n + 18.</p>
+            <p><strong>Step 5:</strong> Factor 9: 9(4k − 5n + 2). This is divisible by 9. ✓</p>
+            <p><strong>Key Insight:</strong> Express 4ⁿ from the hypothesis to substitute, rather than building from scratch each time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 5.1 — Chocolate Bar</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>An m×n bar needs mn−1 splits regardless of sequence.</p>
+        <div class="solution">
+          <div class="label">Strong Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Proposition P(s)):</strong> A chocolate bar with s squares requires exactly s−1 splits to separate into individual squares.</p>
+            <p><strong>Step 2 (Base s=1):</strong> Already a single square, 0 splits needed. 0 = 1−1. ✓</p>
+            <p><strong>Step 3 (Inductive hypothesis):</strong> Assume P(k) holds for all k ≤ s (strong induction).</p>
+            <p><strong>Step 4 (Inductive step):</strong> For a bar of s+1 squares, any first split divides it into two pieces of sizes a and b where a + b = s+1.</p>
+            <p><strong>Step 5:</strong> By the strong IH, the a-sized piece needs a−1 splits and the b-sized piece needs b−1 splits.</p>
+            <p><strong>Step 6:</strong> Total splits = 1 (first split) + (a−1) + (b−1) = a + b − 1 = (s+1) − 1 = s. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span>M4CS 5.1 — Stacking Game</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Split pile s into a,b (a+b=s), score a·b. Total always n(n-1)/2.</p>
+        <div class="solution">
+          <div class="label">Strong Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=1):</strong> One square, no split possible. Score = 0 = 1·0/2. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume for piles smaller than n, total score = k(k−1)/2.</p>
+            <p><strong>Step 3 (Inductive step):</strong> For a pile of size n, first split makes piles of sizes a and b where a+b=n, giving score a·b.</p>
+            <p><strong>Step 4:</strong> By IH, the a-pile contributes a(a−1)/2 and the b-pile contributes b(b−1)/2.</p>
+            <p><strong>Step 5:</strong> Total = a·b + a(a−1)/2 + b(b−1)/2 = (2ab + a²−a + b²−b)/2 = (a²+2ab+b² − a − b)/2 = ((a+b)² − (a+b))/2 = (n² − n)/2 = n(n−1)/2. ✓</p>
+            <p><strong>Key Insight:</strong> The total is independent of the splitting sequence — any order yields the same result.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 5.1 #3</span> Sum of Cubes</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove ∑_{i=1}^{n} i³ = [n(n+1)/2]² by induction.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=1):</strong> LHS = 1³ = 1. RHS = [1·2/2]² = 1² = 1. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume ∑_{i=1}^{n} i³ = [n(n+1)/2]² for some n ≥ 1.</p>
+            <p><strong>Step 3 (Inductive step):</strong> ∑_{i=1}^{n+1} i³ = [n(n+1)/2]² + (n+1)³.</p>
+            <p><strong>Step 4:</strong> Factor (n+1)²: = (n+1)²[n²/4 + (n+1)] = (n+1)²[(n² + 4n + 4)/4] = (n+1)²(n+2)²/4.</p>
+            <p><strong>Step 5:</strong> Rewrite: = [(n+1)(n+2)/2]², which matches the formula for n+1. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 5.1 #19</span> Divisibility Induction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove 11ⁿ − 4ⁿ is divisible by 7 for all n ≥ 0.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=0):</strong> 11⁰ − 4⁰ = 1 − 1 = 0, which is divisible by 7. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume 11ⁿ − 4ⁿ = 7k for some integer k.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Compute for n+1: 11^{n+1} − 4^{n+1} = 11·11ⁿ − 4·4ⁿ.</p>
+            <p><strong>Step 4:</strong> From hypothesis, 11ⁿ = 7k + 4ⁿ. Substitute: 11(7k + 4ⁿ) − 4·4ⁿ = 77k + 11·4ⁿ − 4·4ⁿ = 77k + 7·4ⁿ.</p>
+            <p><strong>Step 5:</strong> Factor 7: 7(11k + 4ⁿ). This is divisible by 7. ✓</p>
+            <p><strong>Key Insight:</strong> Replace 11ⁿ using the hypothesis rather than expanding 4ⁿ. This keeps the algebra clean.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Forgetting to use the induction hypothesis to replace 11ⁿ.</p>
+            <p><strong>Why it fails:</strong> Without substituting the hypothesis, you'll be stuck trying to factor 7 from an expression that doesn't obviously contain a factor of 7.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 5.1 #5</span> Sum of 1/k² bounded</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove by induction: ∑_{k=1}^{n} 1/k² < 2 − 1/n for n ≥ 2.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=2):</strong> LHS = 1 + 1/4 = 1.25. RHS = 2 − 1/2 = 1.5. 1.25 < 1.5. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume ∑_{k=1}^{n} 1/k² < 2 − 1/n for some n ≥ 2.</p>
+            <p><strong>Step 3 (Inductive step):</strong> ∑_{k=1}^{n+1} 1/k² = ∑_{k=1}^{n} 1/k² + 1/(n+1)² < 2 − 1/n + 1/(n+1)².</p>
+            <p><strong>Step 4:</strong> We need to show 2 − 1/n + 1/(n+1)² < 2 − 1/(n+1).</p>
+            <p><strong>Step 5:</strong> Cancel 2: −1/n + 1/(n+1)² < −1/(n+1). Rearrange: 1/(n+1)² + 1/(n+1) < 1/n.</p>
+            <p><strong>Step 6:</strong> LHS = 1/(n+1)² + (n+1)/(n+1)² = (n+2)/(n+1)². We need (n+2)/(n+1)² < 1/n, i.e., n(n+2) < (n+1)², i.e., n²+2n < n²+2n+1, which holds for all n. ✓</p>
+            <p><strong>Key Insight:</strong> Stronger bound proofs often require algebraic manipulation of the inequality to match the target form.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="induction-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen</span> — Textbook Induction Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 5.1 #12</span> Divisibility</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove n³+2n is divisible by 3 for all n ≥ 0.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=0):</strong> 0³ + 2·0 = 0. 0 is divisible by 3. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume n³ + 2n = 3k for some integer k.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Compute for n+1: (n+1)³ + 2(n+1) = n³ + 3n² + 3n + 1 + 2n + 2.</p>
+            <p><strong>Step 4:</strong> Group: (n³ + 2n) + (3n² + 3n + 3) = 3k + 3(n² + n + 1).</p>
+            <p><strong>Step 5:</strong> Factor 3: 3(k + n² + n + 1). This is divisible by 3. ✓</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Expanding (n+1)³ incorrectly.</p>
+            <p><strong>Why it fails:</strong> (n+1)³ = n³ + 3n² + 3n + 1, not n³ + 3n² + 3n + 3 or other variants. A small algebraic slip here breaks the proof.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 5.1 #18</span> Inequality</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove 2ⁿ > n² for n ≥ 5.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=5):</strong> 2⁵ = 32, 5² = 25. 32 > 25. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume 2ⁿ > n² for some n ≥ 5.</p>
+            <p><strong>Step 3 (Inductive step):</strong> 2^{n+1} = 2·2ⁿ > 2·n² by the hypothesis.</p>
+            <p><strong>Step 4:</strong> We need 2·n² > (n+1)² = n² + 2n + 1. This simplifies to n² > 2n + 1, i.e., n² − 2n − 1 > 0.</p>
+            <p><strong>Step 5:</strong> For n ≥ 3, n² − 2n − 1 = (n−1)² − 2 > 0 (since (3−1)² − 2 = 2 > 0 and it grows). For n ≥ 5, this certainly holds.</p>
+            <p><strong>Step 6:</strong> Therefore 2^{n+1} > (n+1)². By induction, 2ⁿ > n² for all n ≥ 5. ✓</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> The auxiliary inequality 2n² > (n+1)² fails for n = 2,3,4 — which is why the base case must be n ≥ 5.</p>
+            <p><strong>Why it matters:</strong> Choosing the wrong base case can make the inductive step impossible to prove. Always verify the base is large enough.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="induction-mit">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT</span> / <span class="tag tag-assignment">DM</span> — Induction Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A2 Q2</span> — Recharge Cards</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Every multiple of 5 taka ≥60 with 20/25 taka cards.</p>
+        <div class="solution">
+          <div class="label">Strong Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base cases):</strong> 60 = 20·3, 65 = 20·2 + 25, 70 = 20 + 25·2, 75 = 25·3, 80 = 20·4.</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume all multiples of 5 from 60 up to n−1 (where n ≥ 85) can be formed with 20 and 25 taka cards.</p>
+            <p><strong>Step 3 (Inductive step):</strong> n ≥ 85, so n − 20 ≥ 65. By the IH, n − 20 can be formed: n − 20 = 20a + 25b for some a,b.</p>
+            <p><strong>Step 4:</strong> Then n = 20(a+1) + 25b, using one more 20 taka card. So n is also representable.</p>
+            <p><strong>Key Insight:</strong> We need multiple base cases (60,65,70,75,80) because the induction subtracts 20 — we need all residues mod 20 covered.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A02</span> — Sum of Cubes</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove: ∑ i³ = [n(n+1)/2]².</p>
+        <div class="solution">
+          <div class="label">Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=1):</strong> 1³ = 1. [1·2/2]² = 1. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume ∑_{i=1}^{n} i³ = [n(n+1)/2]².</p>
+            <p><strong>Step 3 (Inductive step):</strong> ∑_{i=1}^{n+1} i³ = [n(n+1)/2]² + (n+1)³ = (n+1)²[n²/4 + (n+1)] = (n+1)²(n²+4n+4)/4 = (n+1)²(n+2)²/4 = [(n+1)(n+2)/2]². ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A02</span> — 15-Puzzle Parity</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Why the 14/15 swapped state is unreachable.</p>
+        <div class="solution">
+          <div class="label">Invariant</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Define an invariant: parity = (number of inversions + row number of empty space) mod 2, where an inversion is a pair (i,j) with i > j but i appears before j.</p>
+            <p><strong>Step 2:</strong> Each move (sliding a tile into the empty space) flips the parity: it changes inversions by ±1 and the empty row by ±1, so the total parity flips by 0 or 2 (unchanged mod 2).</p>
+            <p><strong>Step 3:</strong> The initial solved state has parity 0 (even).</p>
+            <p><strong>Step 4:</strong> The 14/15 swapped state has exactly 1 inversion (15 before 14), and the empty space is in the bottom row (row 4), giving parity (1 + 4) mod 2 = 1 (odd).</p>
+            <p><strong>Step 5:</strong> Since the invariant never changes, the odd-parity swapped state is unreachable from the even-parity solved state.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R02</span> — Surveyevor</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>p purple eyes, public announcement. All purple leave day p.</p>
+        <div class="solution">
+          <div class="label">Induction on day</div>
+          <div class="body">
+            <p><strong>Step 1 (Proposition P(n)):</strong> If there are exactly n people with purple eyes, then on day n all n leave together; if there are more than n, they all survive day n; if fewer, they're already gone.</p>
+            <p><strong>Step 2 (Base n=1):</strong> The lone purple-eyed person hears the announcement, sees no other purple eyes, deduces their own eye color, and leaves on day 1. If p > 1, each purple sees at least one other purple and cannot deduce anything on day 1. ✓</p>
+            <p><strong>Step 3 (Inductive hypothesis):</strong> Assume P(n) holds for a given n.</p>
+            <p><strong>Step 4 (Inductive step for p = n+1):</strong> Each purple-eyed person sees n other purples. By IH, if there were exactly n purples, they'd all leave on day n. When no one leaves on day n, each purple deduces that there are more than n, so there must be n+1 — including themselves.</p>
+            <p><strong>Step 5:</strong> All n+1 leave on day n+1. By induction, the general pattern holds. ✓</p>
+            <p><strong>Key Insight:</strong> Common knowledge (the public announcement) changes everyone's knowledge recursively. This is the classic "muddy children" / "blue eyes" puzzle.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R03</span> — Temple of Forever</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>(15R,12G). Exchange 3R→2G. Swap R↔G. Reach (5,5)?</p>
+        <div class="solution">
+          <div class="label">Invariant: r−g ≡ 2 or 3 (mod 5)</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let (r,g) be the counts of red and green tokens. Define the invariant I = r − g mod 5.</p>
+            <p><strong>Step 2:</strong> Initial state (15,12): I = 15 − 12 = 3 ≡ 3 (mod 5).</p>
+            <p><strong>Step 3 (Exchange 3R→2G):</strong> r decreases by 3, g increases by 2. New I = (r−3) − (g+2) = (r−g) − 5 ≡ r−g (mod 5). Invariant preserved.</p>
+            <p><strong>Step 4 (Swap R↔G):</strong> r and g are swapped. New I = g − r = −(r−g) ≡ −3 ≡ 2 (mod 5) or −2 ≡ 3 (mod 5). So I ∈ {2,3} (mod 5).</p>
+            <p><strong>Step 5:</strong> Target (5,5): I = 5 − 5 = 0 (mod 5). Since 0 ≠ 2,3 mod 5, (5,5) is unreachable.</p>
+            <p><strong>Key Insight:</strong> An invariant partitions the state space into disconnected components. If the target has a different invariant value, it's unreachable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R04</span> — Fibonacci GCD</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove gcd(F_n, F_{n+1}) = 1.</p>
+        <div class="solution">
+          <div class="label">Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=0):</strong> F_0 = 0, F_1 = 1. gcd(0,1) = 1. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume gcd(F_n, F_{n+1}) = 1 for some n ≥ 0.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Show gcd(F_{n+1}, F_{n+2}) = 1. Let d be any common divisor of F_{n+1} and F_{n+2}.</p>
+            <p><strong>Step 4:</strong> By the Fibonacci recurrence, F_{n+2} = F_{n+1} + F_n. So d divides both F_{n+1} and F_{n+1} + F_n.</p>
+            <p><strong>Step 5:</strong> Therefore d also divides (F_{n+1} + F_n) − F_{n+1} = F_n.</p>
+            <p><strong>Step 6:</strong> So d divides both F_n and F_{n+1}. By the IH, gcd(F_n, F_{n+1}) = 1, so d = 1. Therefore gcd(F_{n+1}, F_{n+2}) = 1. ✓</p>
+            <p><strong>Key Insight:</strong> A common divisor of consecutive Fibonacci numbers must divide their difference (which is the previous Fibonacci number), forcing it to be 1.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R04</span> — Power of 3</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Number with 3ⁿ same digits: prove 3ⁿ | N.</p>
+        <div class="solution">
+          <div class="label">Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base n=0):</strong> 3⁰ = 1 divides every integer. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume for a number N with 3ⁿ digits all the same, 3ⁿ | N.</p>
+            <p><strong>Step 3 (Inductive step):</strong> For 3^{n+1} digits, split N into 3 blocks of 3ⁿ digits each: N = A·(10^{2·3ⁿ} + 10^{3ⁿ} + 1) where A is the 3ⁿ-digit block value.</p>
+            <p><strong>Step 4:</strong> By the IH, 3ⁿ | A.</p>
+            <p><strong>Step 5:</strong> The second factor S = 10^{2·3ⁿ} + 10^{3ⁿ} + 1 has digit sum 3 (since it's 1 followed by zeros, plus 1 followed by zeros, plus 1). A number with digit sum 3 is divisible by 3.</p>
+            <p><strong>Step 6:</strong> Therefore 3ⁿ·3 = 3^{n+1} divides N. ✓</p>
+            <p><strong>Key Insight:</strong> The structure of repunit-like numbers with block size 3ⁿ allows splitting into a factor divisible by 3ⁿ and a factor divisible by 3 via digit sum.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A3 Q3</span> — Merge Sort Induction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>T(n)=2T(n/2)+(n-1), n=2ᵏ. Prove T(n)=n log₂ n − n + 1.</p>
+        <div class="solution">
+          <div class="label">Induction on k</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let n = 2ᵏ. The recurrence is T(2ᵏ) = 2T(2^{k-1}) + (2ᵏ − 1).</p>
+            <p><strong>Step 2 (Base k=0, n=1):</strong> T(1) = 0 (no comparisons for 1 element). RHS = 1·log₂1 − 1 + 1 = 0. ✓</p>
+            <p><strong>Step 3 (Inductive hypothesis):</strong> Assume T(2ᵏ) = 2ᵏ·k − 2ᵏ + 1 for some k ≥ 0.</p>
+            <p><strong>Step 4 (Inductive step for k+1):</strong> T(2^{k+1}) = 2T(2ᵏ) + (2^{k+1} − 1).</p>
+            <p><strong>Step 5:</strong> Substitute the hypothesis: = 2(2ᵏ·k − 2ᵏ + 1) + 2^{k+1} − 1 = 2^{k+1}·k − 2^{k+1} + 2 + 2^{k+1} − 1 = 2^{k+1}·k + 1.</p>
+            <p><strong>Step 6:</strong> Rewrite: 2^{k+1}·k + 1 = 2^{k+1}(k+1) − 2^{k+1} + 1, which matches the formula for n = 2^{k+1}. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- ===================== 5. SUMMATIONS ===================== -->
+<section id="summations">
+<h2>5. Summations</h2>
+
+<div class="card" id="summations-formulas">
+  <div class="card-header" onclick="toggleCard(this)"><span>Closed Forms & Key Formulas</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <table>
+      <tr><th>Sum</th><th>Closed Form</th></tr>
+      <tr><td><span class="math">∑_{i=1}^{n} i</span></td><td><span class="math">n(n+1)/2</span></td></tr>
+      <tr><td><span class="math">∑_{i=1}^{n} i²</span></td><td><span class="math">n(n+1)(2n+1)/6</span></td></tr>
+      <tr><td><span class="math">∑_{i=1}^{n} i³</span></td><td><span class="math">[n(n+1)/2]²</span></td></tr>
+      <tr><td><span class="math">∑_{i=0}^{n} xⁱ</span> (x≠1)</td><td><span class="math">(x^{n+1}−1)/(x−1)</span></td></tr>
+      <tr><td><span class="math">∑_{i=1}^{n} 1/i</span></td><td><span class="math">H_n ≈ ln n + γ</span></td></tr>
+      <tr><td><span class="math">∑_{i=1}^{n} a·r^{i-1}</span></td><td><span class="math">a(1−rⁿ)/(1−r)</span></td></tr>
+    </table>
+    <div class="theorem"><strong>Integral Bound:</strong> If f is decreasing on [1,n]: <span class="math">f(n) + ∫₁ⁿ f(x)dx ≤ ∑_{k=1}^{n} f(k) ≤ f(1) + ∫₁ⁿ f(x)dx</span></div>
+    <div class="theorem"><strong>Perturbation Method:</strong> For geometric sum S = ∑ xⁱ, compute S − xS to telescope.</div>
+  </div>
+</div>
+
+<div class="card" id="summations-m4cs">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.1</span> — Geometric Sums & Asymptotics</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem"><strong>Theorem 14.1.1 (Geometric Sum):</strong> If r ≠ 1, <span class="math">∑_{i=0}^{n} rⁱ = (r^{n+1}−1)/(r−1)</span>.</div>
+    <div class="theorem"><strong>Infinite Geometric:</strong> If |r| < 1, <span class="math">∑_{i=0}^{∞} rⁱ = 1/(1−r)</span>.</div>
+    <p><strong>Key insight:</strong> In geometric sums, the largest term dominates. For r > 1, the sum is Θ(rⁿ). For 0 < r < 1, the sum is Θ(1). This is critical for understanding annuity values and algorithm analysis.</p>
+
+    <div class="solution">
+      <div class="label">M4CS 14.1 #1 — Wine/Water</div>
+      <div class="body">
+        <p><strong>Problem:</strong> Two large glasses. First has 1 pint water, second has 1 pint wine. Transfer 1 spoonful water→wine, mix, transfer 1 spoonful back. Find closed form for amount of water in first glass after n cycles. Find the limit.</p>
+        <p><strong>Step 1:</strong> Let a<sub>n</sub> = amount of water in first glass after n cycles. Initially a<sub>0</sub> = 1 (all water).</p>
+        <p><strong>Step 2:</strong> Let s = total volume of each glass (pints). Each spoonful has volume 1. Transfer spoonful of water to wine: first glass loses 1/s of its water. After mixing, the second glass is fraction 1/s wine and (s−1)/s water.</p>
+        <p><strong>Step 3:</strong> Transfer spoonful back: the spoonful from second glass has (1/s)·1 = 1/s wine and (s−1)/s·1 = (s−1)/s water. So first glass receives back (s−1)/s water.</p>
+        <p><strong>Step 4:</strong> Net water in first glass after one cycle: a<sub>1</sub> = (s−1)/s · a<sub>0</sub> + (s−1)/s = ... Actually simpler: each cycle reduces a<sub>n</sub> by factor (1 − 1/s). So a<sub>n</sub> = (1 − 1/s)<sup>n</sup>.</p>
+        <p><strong>Step 5:</strong> Limit as n → ∞: since (1 − 1/s) < 1, we have lim a<sub>n</sub> = 0. The wine and water eventually fully mix to 50/50.</p>
+        <p><strong>Key Insight:</strong> Each transfer dilutes by a constant fraction, creating a geometric sequence.</p>
+      </div>
+    </div>
+
+    <div class="solution">
+      <div class="label">M4CS 14.1 #2 — Geometric Sum via Perturbation</div>
+      <div class="body">
+        <p><strong>Problem:</strong> Derive closed form for S = 1 + x + x² + ... + x^{n-1} using the perturbation method.</p>
+        <p><strong>Step 1:</strong> Write the sum: S = 1 + x + x² + ... + x^{n-2} + x^{n-1}.</p>
+        <p><strong>Step 2:</strong> Multiply both sides by x: xS = x + x² + x³ + ... + x^{n-1} + x<sup>n</sup>.</p>
+        <p><strong>Step 3:</strong> Subtract the two equations: S − xS = (1 + x + x² + ... + x^{n-1}) − (x + x² + ... + x^{n-1} + x<sup>n</sup>) = 1 − x<sup>n</sup>.</p>
+        <p><strong>Step 4:</strong> Factor left side: S(1 − x) = 1 − x<sup>n</sup>.</p>
+        <p><strong>Step 5:</strong> Solve: S = (1 − x<sup>n</sup>)/(1 − x) for x ≠ 1.</p>
+        <p><strong>Key Insight:</strong> The perturbation method subtracts a shifted version of the sum to create telescoping cancellation.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="summations-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT</span> / <span class="tag tag-assignment">DM</span> — Summation Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A2 Q3</span> — Closed Forms</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find closed forms:</p>
+        <p>(a) <span class="math">∑_{i=0}^{n} xⁱ</span></p>
+        <p>(b) <span class="math">∑_{i=1}^{n} ∑_{j=1}^{k} (3j − i)</span></p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> Recognize this as a geometric series with ratio x and n+1 terms.</p>
+            <p><strong>Step 2 (a):</strong> If x ≠ 1: use formula <span class="math">∑_{i=0}^{n} xⁱ = (x^{n+1}−1)/(x−1)</span>.</p>
+            <p><strong>Step 3 (a):</strong> If x = 1: each term is 1, so sum = n+1.</p>
+            <p><strong>Step 1 (b):</strong> Compute inner sum first: <span class="math">∑_{j=1}^{k} (3j−i) = 3∑_{j=1}^{k} j − ∑_{j=1}^{k} i = 3·k(k+1)/2 − i·k</span>.</p>
+            <p><strong>Step 2 (b):</strong> Now outer sum: <span class="math">∑_{i=1}^{n} [3k(k+1)/2 − ik] = 3k(k+1)/2·∑_{i=1}^{n}1 − k·∑_{i=1}^{n}i</span>.</p>
+            <p><strong>Step 3 (b):</strong> <span class="math">= n·3k(k+1)/2 − k·n(n+1)/2</span>.</p>
+            <p><strong>Key Insight:</strong> Always evaluate the innermost sum first, treating outer index variables as constants.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A2 Q4</span> — Integral Bound Proof</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove: if f:[1,n]→ℝ is weakly decreasing, then <span class="math">f(n) + ∫₁ⁿ f(x)dx ≤ ∑_{k=1}^{n} f(k) ≤ f(1) + ∫₁ⁿ f(x)dx</span>.</p>
+        <div class="solution">
+          <div class="label">Key Idea</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Since f is decreasing, for any integer k and x in [k, k+1], we have f(k+1) ≤ f(x) ≤ f(k).</p>
+            <p><strong>Step 2:</strong> Integrate this inequality over [k, k+1]: <span class="math">f(k+1) ≤ ∫_{k}^{k+1} f(x)dx ≤ f(k)</span>.</p>
+            <p><strong>Step 3:</strong> Sum over k = 1 to n−1: <span class="math">∑_{k=1}^{n-1} f(k+1) ≤ ∫_{1}^{n} f(x)dx ≤ ∑_{k=1}^{n-1} f(k)</span>.</p>
+            <p><strong>Step 4:</strong> The left sum is <span class="math">∑_{k=2}^{n} f(k)</span>. So <span class="math">∑_{k=2}^{n} f(k) ≤ ∫_{1}^{n} f(x)dx ≤ ∑_{k=1}^{n-1} f(k)</span>.</p>
+            <p><strong>Step 5:</strong> Add f(1) to the left inequality: <span class="math">f(1) + ∑_{k=2}^{n} f(k) ≤ f(1) + ∫_{1}^{n} f(x)dx</span>, which gives the upper bound <span class="math">∑_{k=1}^{n} f(k) ≤ f(1) + ∫_{1}^{n} f(x)dx</span>.</p>
+            <p><strong>Step 6:</strong> Add f(n) to the right inequality: <span class="math">∫_{1}^{n} f(x)dx + f(n) ≤ ∑_{k=1}^{n-1} f(k) + f(n)</span>, giving the lower bound <span class="math">f(n) + ∫_{1}^{n} f(x)dx ≤ ∑_{k=1}^{n} f(k)</span>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R02</span> — Geometric Sum & Induction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove <span class="math">∑_{k=0}^{n} rᵏ = (r^{n+1}−1)/(r−1)</span> using induction (or WOP).</p>
+        <div class="solution">
+          <div class="label">Induction</div>
+          <div class="body">
+            <p><strong>Step 1 (Base case n=0):</strong> LHS = ∑_{k=0}^{0} rᵏ = r⁰ = 1. RHS = (r^{1}−1)/(r−1) = (r−1)/(r−1) = 1. ✓</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume true for n: ∑_{k=0}^{n} rᵏ = (r^{n+1}−1)/(r−1).</p>
+            <p><strong>Step 3 (Inductive step):</strong> Prove for n+1: ∑_{k=0}^{n+1} rᵏ = ∑_{k=0}^{n} rᵏ + r^{n+1}.</p>
+            <p><strong>Step 4:</strong> Substitute the inductive hypothesis: = (r^{n+1}−1)/(r−1) + r^{n+1}.</p>
+            <p><strong>Step 5:</strong> Write r^{n+1} with denominator (r−1): = (r^{n+1}−1)/(r−1) + r^{n+1}·(r−1)/(r−1).</p>
+            <p><strong>Step 6:</strong> Combine numerators: = (r^{n+1}−1 + r^{n+2} − r^{n+1})/(r−1) = (r^{n+2}−1)/(r−1). ✓</p>
+            <p><strong>Key Insight:</strong> Induction works by reducing the n+1 case to the n case plus one extra term.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q1</span> — Closed Form with xⁱ</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Express <span class="math">∑_{i=0}^{n} i² xⁱ</span> as a closed-form function of n.</p>
+        <div class="solution">
+          <div class="label">Perturbation Method</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let S = ∑_{i=0}^{n} i²xⁱ. This is a weighted geometric sum.</p>
+            <p><strong>Step 2:</strong> Use the derivative trick: note that ∑ i²xⁱ = x·d/dx(x·d/dx(∑ xⁱ)).</p>
+            <p><strong>Step 3:</strong> Let G(x) = ∑_{i=0}^{n} xⁱ = (x^{n+1}−1)/(x−1).</p>
+            <p><strong>Step 4:</strong> First derivative: dG/dx = ∑ i·x^{i-1}. So x·dG/dx = ∑ i·xⁱ.</p>
+            <p><strong>Step 5:</strong> Second derivative: apply the same trick. x·d/dx(x·dG/dx) = ∑ i²·xⁱ.</p>
+            <p><strong>Step 6:</strong> Compute the derivatives of G(x) = (x^{n+1}−1)/(x−1) and simplify. Result: <span class="math">[x(1+x−(n+1)²xⁿ+(2n²+2n−1)x^{n+1}−n²x^{n+2})]/(1−x)³</span> for x≠1.</p>
+            <p><strong>Key Insight:</strong> The derivative trick converts polynomial coefficients into derivatives of a simpler geometric series.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q2</span> — Double Sums</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find closed forms:</p>
+        <p>(a) <span class="math">∏_{k=1}^{n} 2^{2k−1}</span></p>
+        <p>(b) <span class="math">∑_{i=0}^{n} ∑_{j=0}^{m} 3i+j</span></p>
+        <p>(c) <span class="math">∑_{i=1}^{n} ∑_{j=1}^{n} (i+j)</span></p>
+        <p>(d) <span class="math">∑_{i=1}^{n} ∑_{j=1}^{n} 2ⁱ·3ʲ</span></p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> Use <span class="math">∏ 2^{2k-1} = 2^{∑(2k-1)}</span>. The exponent is sum of first n odd numbers.</p>
+            <p><strong>Step 2 (a):</strong> <span class="math">∑_{k=1}^{n} (2k−1) = 2·n(n+1)/2 − n = n²</span>. So product = <span class="math">2^{n²}</span>.</p>
+            <p><strong>Step 1 (b):</strong> Split the sum: <span class="math">∑_{i=0}^{n} ∑_{j=0}^{m} (3i+j) = ∑_{i=0}^{n} ∑_{j=0}^{m} 3i + ∑_{i=0}^{n} ∑_{j=0}^{m} j</span>.</p>
+            <p><strong>Step 2 (b):</strong> First term: <span class="math">∑_{i=0}^{n} 3i·(m+1) = 3(m+1)·n(n+1)/2</span>.</p>
+            <p><strong>Step 3 (b):</strong> Second term: <span class="math">∑_{i=0}^{n} (m(m+1)/2) = (n+1)·m(m+1)/2</span>.</p>
+            <p><strong>Step 1 (c):</strong> <span class="math">∑_{i=1}^{n} ∑_{j=1}^{n} (i+j) = ∑_{i=1}^{n} ∑_{j=1}^{n} i + ∑_{i=1}^{n} ∑_{j=1}^{n} j</span>.</p>
+            <p><strong>Step 2 (c):</strong> First term: each i appears n times, so <span class="math">n·∑_{i=1}^{n} i = n·n(n+1)/2</span>.</p>
+            <p><strong>Step 3 (c):</strong> Second term: each j appears n times, so <span class="math">n·∑_{j=1}^{n} j = n·n(n+1)/2</span>.</p>
+            <p><strong>Step 4 (c):</strong> Sum: <span class="math">n·n(n+1)/2 + n·n(n+1)/2 = n²(n+1)</span>.</p>
+            <p><strong>Step 1 (d):</strong> Since 2ⁱ·3ʲ factors as f(i)·g(j), the double sum separates: <span class="math">(∑_{i=1}^{n} 2ⁱ)(∑_{j=1}^{n} 3ʲ)</span>.</p>
+            <p><strong>Step 2 (d):</strong> <span class="math">∑_{i=1}^{n} 2ⁱ = 2(2^{n}−1)/(2−1) = 2^{n+1}−2</span>.</p>
+            <p><strong>Step 3 (d):</strong> <span class="math">∑_{j=1}^{n} 3ʲ = 3(3^{n}−1)/(3−1) = (3^{n+1}−3)/2</span>.</p>
+            <p><strong>Step 4 (d):</strong> Multiply: <span class="math">(2^{n+1}−2)(3^{n+1}−3)/6</span>.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Forgetting that separate sums factor only when terms factor: ∑∑ f(i)g(j) = (∑ f(i))(∑ g(j)).</p>
+            <p><strong>Step 2:</strong> For part (c), (i+j) does NOT factor into f(i)·g(j). It splits into i + j, so you must sum the i terms and j terms separately.</p>
+            <p><strong>Key Insight:</strong> Always check if the summand factorizes before trying to separate double sums.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R12</span> — Sum of Harmonic Numbers</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Evaluate <span class="math">∑_{k=1}^{n} H_k</span> where H_k = ∑_{j=1}^{k} 1/j.</p>
+        <div class="solution">
+          <div class="label">Double Sum + Exchange Order</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Write the sum of harmonic numbers as a double sum: <span class="math">∑_{k=1}^{n} H_k = ∑_{k=1}^{n} ∑_{j=1}^{k} 1/j</span>.</p>
+            <p><strong>Step 2:</strong> The inner sum goes from j=1 to k, and outer from k=1 to n. The region is triangular: j ≤ k.</p>
+            <p><strong>Step 3:</strong> Exchange the order of summation: for each j (1 to n), sum over k from j to n. <span class="math">∑_{j=1}^{n} ∑_{k=j}^{n} 1/j</span>.</p>
+            <p><strong>Step 4:</strong> The inner sum counts how many k's: from j to n is (n−j+1) terms. So <span class="math">∑_{j=1}^{n} (n−j+1)/j</span>.</p>
+            <p><strong>Step 5:</strong> Split: <span class="math">(n+1)∑_{j=1}^{n} 1/j − ∑_{j=1}^{n} 1 = (n+1)H_n − n</span>.</p>
+            <p><strong>Key Insight:</strong> Exchanging summation order converts a triangular sum into a column-wise sum, making evaluation straightforward.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The double sum ∑_{k=1}^{n} ∑_{j=1}^{k} 1/j indexes over a triangle: k is row, j is column.</p>
+            <p><strong>Step 2:</strong> Exchanging order gives ∑_{j=1}^{n} ∑_{k=j}^{n} 1/j — summing columns instead of rows.</p>
+            <p><strong>Step 3:</strong> The closed form (n+1)H_n − n ≈ n ln n (since H_n ≈ ln n + γ).</p>
+            <p><strong>Key Insight:</strong> Triangular sums often simplify via order exchange.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q3</span> — Integral Bounds</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>(a) Use integration to bound <span class="math">∑_{i=1}^{∞} 1/(2i+1)²</span> within 0.1.</p>
+        <p>(b) Determine which inequality holds for <span class="math">∑_{i=1}^{n} ln(i+1)</span>.</p>
+        <div class="solution">
+          <div class="label">Approach</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> f(x) = 1/(2x+1)² is a decreasing function of x.</p>
+            <p><strong>Step 2 (a):</strong> Bound the tail from m to ∞: <span class="math">∫_{m}^{∞} 1/(2x+1)² dx = [−1/(2(2x+1))]_{m}^{∞} = 1/(2(2m+1))</span>.</p>
+            <p><strong>Step 3 (a):</strong> Add the first m−1 terms explicitly and use the integral to bound the remainder. Choose m so the remainder < 0.05 (half the target precision).</p>
+            <p><strong>Step 1 (b):</strong> f(x) = ln(x+1) is increasing. Use the integral bound theorem for increasing functions.</p>
+            <p><strong>Step 2 (b):</strong> Upper bound: <span class="math">∑_{i=1}^{n} ln(i+1) ≤ ∫_{0}^{n} ln(x+2)dx</span>.</p>
+            <p><strong>Step 3 (b):</strong> Lower bound: <span class="math">∑_{i=1}^{n} ln(i+1) ≥ ∫_{1}^{n+1} ln(x+1)dx</span>.</p>
+            <p><strong>Key Insight:</strong> Integrals bound sums by comparing a sum of function values to the area under the curve.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q4</span> — Bug on a Rug</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Bug crawls 1cm/s on 1m rug stretched 1m/s. During second i, what fraction does the bug cross? Over n seconds, total fraction? How long to cross?</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Initially rug is 1m = 100cm. At start of second i, the rug length is (100 + i − 1) cm since it stretches 1m/s.</p>
+            <p><strong>Step 2:</strong> During second i, the bug crawls 1 cm. The fraction of the rug crossed is 1/(100 + i − 1) = 1/(99 + i).</p>
+            <p><strong>Step 3:</strong> But the rug also stretches uniformly during the second. The standard simplification: fraction during second i ≈ 1/(100)·(1/i) = 0.01/i. More precisely, the fraction of remaining rug crossed is 0.01/(i).</p>
+            <p><strong>Step 4:</strong> Total fraction over n seconds: <span class="math">∑_{i=1}^{n} 0.01/i = H_n/100</span>.</p>
+            <p><strong>Step 5:</strong> To cross entirely, need H<sub>n</sub>/100 ≥ 1 → H<sub>n</sub> ≥ 100. Since H<sub>n</sub> ≈ ln n + γ, we need n ≈ e^{100−γ} ≈ 10⁴³ seconds.</p>
+            <p><strong>Key Insight:</strong> The bug never crosses in any practical sense — the harmonic series diverges, but agonizingly slowly.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The stretching is uniform: every point on the rug stretches proportionally.</p>
+            <p><strong>Step 2:</strong> During second i, rug length = i meters (starting from second 1 with length 1m).</p>
+            <p><strong>Step 3:</strong> Bug crawls 0.01m (1cm) during that second, but also gets carried by stretching.</p>
+            <p><strong>Step 4:</strong> The fraction crossed per second = 1/(100 × current length in meters) = 0.01/i.</p>
+            <p><strong>Key Insight:</strong> The harmonic series diverges, but n must be astronomically large for H<sub>n</sub> to reach 100.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="summations-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS / Rosen</span> — Textbook Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 14.2 #3</span> — Sum of Powers</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find a formula for <span class="math">∑_{i=1}^{n} i³</span> using the ansatz method (guess cubic polynomial).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Since ∑ i is quadratic and ∑ i² is cubic, guess ∑ i³ is quartic: S(n) = an⁴ + bn³ + cn² + dn + e.</p>
+            <p><strong>Step 2:</strong> S(0) = 0 → e = 0.</p>
+            <p><strong>Step 3:</strong> Compute small values: S(1) = 1, S(2) = 1+8 = 9, S(3) = 1+8+27 = 36.</p>
+            <p><strong>Step 4:</strong> Set up system: a+b+c+d = 1, 16a+8b+4c+2d = 9, 81a+27b+9c+3d = 36.</p>
+            <p><strong>Step 5:</strong> Solve: a = 1/4, b = 1/2, c = 1/4, d = 0.</p>
+            <p><strong>Step 6:</strong> So S = (1/4)n⁴ + (1/2)n³ + (1/4)n² = n²(n+1)²/4 = [n(n+1)/2]².</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Guessing a polynomial of the wrong degree. Sum of k-th powers is a polynomial of degree k+1.</p>
+            <p><strong>Step 2:</strong> For i³, the sum is a quartic (degree 4), not a cubic.</p>
+            <p><strong>Key Insight:</strong> The sum ∑ iᵏ is always a polynomial of degree k+1 in n.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 14.3 #4</span> — Integral Approximation</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Approximate <span class="math">∑_{k=1}^{n} ln(k)</span> using integrals. Give bounds.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> f(x) = ln(x) is an increasing function.</p>
+            <p><strong>Step 2:</strong> For increasing f, the integral bound gives: <span class="math">∫_{1}^{n} ln(x)dx ≤ ∑_{k=2}^{n} ln(k) ≤ ∫_{2}^{n+1} ln(x)dx</span>.</p>
+            <p><strong>Step 3:</strong> Compute <span class="math">∫ ln(x)dx = x ln x − x + C</span>.</p>
+            <p><strong>Step 4:</strong> Lower bound: <span class="math">∫_{1}^{n} ln(x)dx = [x ln x − x]_{1}^{n} = n ln n − n + 1</span>.</p>
+            <p><strong>Step 5:</strong> Upper bound: <span class="math">∫_{2}^{n+1} ln(x)dx = [(n+1)ln(n+1) − (n+1)] − [2 ln 2 − 2] = (n+1)ln(n+1) − n − 2 ln 2 + 1</span>.</p>
+            <p><strong>Step 6:</strong> So n ln n − n + 1 ≤ ln(n!) ≤ (n+1)ln(n+1) − n − 2 ln 2 + 1.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> n! is a product, which is hard to work with directly in asymptotics.</p>
+            <p><strong>Step 2:</strong> Convert n! to sum via logs: ln(n!) = ∑_{k=1}^{n} ln(k).</p>
+            <p><strong>Step 3:</strong> Bound the sum with integrals to get Stirling-like inequalities.</p>
+            <p><strong>Key Insight:</strong> Logs convert products to sums, making integral bounds applicable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 2.4 #35</span> — Summation Formula</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find <span class="math">∑_{k=1}^{100} k</span>.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Use the formula <span class="math">∑_{k=1}^{n} k = n(n+1)/2</span>.</p>
+            <p><strong>Step 2:</strong> Plug in n = 100: <span class="math">100·101/2 = 5050</span>.</p>
+            <p><strong>Step 3:</strong> Gauss's method alternative: pair (1+100) = 101, (2+99) = 101, ..., (50+51) = 101. There are 50 pairs, each summing to 101. So 50 × 101 = 5050.</p>
+            <p><strong>Key Insight:</strong> The pairing trick works because 1 + n = 2 + (n−1) = ... = n+1.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 2.4 #39</span> — Double Sum</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Evaluate <span class="math">∑_{i=1}^{n} ∑_{j=i}^{n} 1</span>.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Inner sum <span class="math">∑_{j=i}^{n} 1</span> counts the number of integers from i to n inclusive, which is n − i + 1.</p>
+            <p><strong>Step 2:</strong> Outer sum: <span class="math">∑_{i=1}^{n} (n−i+1) = n + (n−1) + (n−2) + ... + 1</span>.</p>
+            <p><strong>Step 3:</strong> This is the sum of the first n positive integers: <span class="math">n(n+1)/2</span>.</p>
+            <p><strong>Key Insight:</strong> The triangular double sum ∑_{i=1}^{n} ∑_{j=i}^{n} 1 counts all pairs (i,j) with i ≤ j, which is n(n+1)/2.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Confusing the index ranges when the inner sum starts at j=i.</p>
+            <p><strong>Step 2:</strong> The inner sum has n−i+1 terms, not n−i terms. For i=1, j goes from 1 to n: that's n terms (n−1+1 = n).</p>
+            <p><strong>Key Insight:</strong> When summing j from i to n, the number of terms is n−i+1, not n−i.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 14.4 #9</span> — Block Stacking</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Maximum overhang of n unit-length blocks is H_n/2 where H_n is the nth harmonic number. Show the overhang with n blocks is H_n/2.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Work from the top down. The top block can overhang the second block by at most 1/2 (center of mass at edge).</p>
+            <p><strong>Step 2:</strong> The top 2 blocks together have their center of mass at some position. To balance on the third block, place the edge of block 3 at this center of mass.</p>
+            <p><strong>Step 3:</strong> For k blocks, the center of mass of the top k blocks must be at the edge of block k+1. The overhang added by the k-th block is 1/(2k).</p>
+            <p><strong>Step 4:</strong> Total overhang from n blocks: <span class="math">∑_{k=1}^{n} 1/(2k) = (1/2)∑_{k=1}^{n} 1/k = H_n/2</span>.</p>
+            <p><strong>Key Insight:</strong> Each additional block adds a diminishing overhang of 1/(2k), producing the harmonic series.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===================== 6. ASYMPTOTICS ===================== -->
+<section id="asymptotics">
+<h2>6. Asymptotics</h2>
+
+<div class="card" id="asymptotics-bigo">
+  <div class="card-header" onclick="toggleCard(this)"><span>Big O / Ω / Θ / ∼ Definitions</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="defn"><strong>f = O(g):</strong> ∃c,n₀: ∀n≥n₀, f(n) ≤ c·g(n). Asymptotic upper bound.</div>
+    <div class="defn"><strong>f = Ω(g):</strong> ∃c,n₀: ∀n≥n₀, f(n) ≥ c·g(n). Asymptotic lower bound.</div>
+    <div class="defn"><strong>f = Θ(g):</strong> f = O(g) and f = Ω(g). Tight bound.</div>
+    <div class="defn"><strong>f = o(g):</strong> ∀c>0, ∃n₀: ∀n≥n₀, f(n) < c·g(n). f grows strictly slower.</div>
+    <div class="defn"><strong>f = ω(g):</strong> ∀c>0, ∃n₀: ∀n≥n₀, f(n) > c·g(n). f grows strictly faster.</div>
+    <div class="defn"><strong>f ∼ g:</strong> lim_{n→∞} f(n)/g(n) = 1. Asymptotic equivalence.</div>
+    <div class="theorem"><strong>Key rankings:</strong> log n ≺ n^ε ≺ n^c ≺ n^{log n} ≺ cⁿ ≺ n! ≺ nⁿ for any ε>0, c>1.</div>
+    <div class="theorem"><strong>log* n:</strong> iterated log, grows slower than any log (inverse of tetration). Θ(log* n) for union-find.</div>
+  </div>
+</div>
+
+<div class="card" id="asymptotics-m4cs">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.1</span> — Asymptotic Notation</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <p><strong>Key properties from M4CS:</strong></p>
+    <ul style="margin-left:20px">
+      <li>Constant factors don't affect Θ class: <span class="math">Θ(c·f) = Θ(f)</span>.</li>
+      <li>Only the fastest-growing term matters: <span class="math">f + g = Θ(max(f,g))</span>.</li>
+      <li><span class="math">log_a n = Θ(log_b n)</span> for any a,b>1 — log base doesn't matter in Θ.</li>
+      <li><span class="math">a^{log_b n} = n^{log_b a}</span> — key identity for recurrences.</li>
+    </ul>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.7 #17</span> — Big O Definition</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Verify that n²+3n+7 = O(n²) by finding witnesses c and n₀.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Find an n₀ and c such that n²+3n+7 ≤ c·n² for all n ≥ n₀.</p>
+            <p><strong>Step 2 (loose bound):</strong> For n ≥ 1, n² ≤ n², 3n ≤ 3n², 7 ≤ 7n². Sum: n²+3n+7 ≤ 11n². So c=11, n₀=1 works.</p>
+            <p><strong>Step 3 (tighter bound):</strong> For n ≥ 4, note 3n ≤ n² and 7 ≤ n². So n²+3n+7 ≤ n²+n²+n² = 3n². So c=3, n₀=4 works.</p>
+            <p><strong>Key Insight:</strong> We can always bound lower-order terms by multiples of the highest power for sufficiently large n.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Stating a function is O(g) without providing explicit witnesses c and n₀.</p>
+            <p><strong>Step 2:</strong> The definition requires both ∃c > 0 and ∃n₀. Both must be specified for a complete proof.</p>
+            <p><strong>Key Insight:</strong> Always provide concrete values for c and n₀ when proving O bounds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.7 #19</span> — Limit Method</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Use limit method to determine if n² ∈ O(2ⁿ).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Compute <span class="math">L = lim_{n→∞} n²/2ⁿ</span>. If L is finite, then n² = O(2ⁿ).</p>
+            <p><strong>Step 2:</strong> Both numerator and denominator → ∞. Apply L'Hôpital's rule to n²/2ⁿ.</p>
+            <p><strong>Step 3:</strong> First application: derivative of n² is 2n, derivative of 2ⁿ is 2ⁿ ln 2. So lim 2n/(2ⁿ ln 2).</p>
+            <p><strong>Step 4:</strong> Still ∞/∞. Apply L'Hôpital again: derivative of 2n is 2, derivative of 2ⁿ ln 2 is 2ⁿ ln² 2. So lim 2/(2ⁿ ln² 2).</p>
+            <p><strong>Step 5:</strong> As n → ∞, 2ⁿ → ∞, so 2/(2ⁿ ln² 2) → 0.</p>
+            <p><strong>Step 6:</strong> Since limit = 0 < ∞, n² = O(2ⁿ). Moreover, limit = 0 means n² = o(2ⁿ) (strictly slower growth).</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The limit test gives a complete classification: if lim f/g = 0, then f = o(g) and f = O(g).</p>
+            <p><strong>Step 2:</strong> If lim f/g = c > 0, then f = Θ(g). If lim f/g = ∞, then f = ω(g).</p>
+            <p><strong>Key Insight:</strong> The limit method simultaneously gives both O and o classification in one computation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="asymptotics-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT</span> / <span class="tag tag-assignment">DM</span> — Asymptotic Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A3 Q1</span> — What to Ignore</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Explain why these can be ignored in asymptotic analysis:</p>
+        <p>(a) Constant factors. (b) Behavior for small n. (c) Lower-order terms.</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> Constants are absorbed by the existential quantifier in the O/Ω definition. If f(n) ≤ c·g(n), then 2f(n) ≤ 2c·g(n), so O(cf) = O(f).</p>
+            <p><strong>Step 2 (b):</strong> Big O/Ω/Θ only requires the inequality to hold "for all sufficiently large n" (n ≥ n₀). Finitely many exceptions (small n) don't matter.</p>
+            <p><strong>Step 3 (c):</strong> For large n, the highest-degree term dominates. A lower-order term divided by the leading term → 0 as n → ∞, so it's eventually negligible.</p>
+            <p><strong>Key Insight:</strong> Asymptotic analysis ignores constants, small values, and lower terms because they don't affect growth rates.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A3 Q2</span> — Asymptotic Comparisons</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Determine tightest relationship (∼, Θ, O, Ω, o, ω) for each pair:</p>
+        <p>(a) <span class="math">f=2ⁿ, g=n^{1200}</span></p>
+        <p>(b) <span class="math">f=(log n)⁶, g=1200√n</span></p>
+        <p>(c) <span class="math">f=log(n⁶), g=log n</span></p>
+        <p>(d) <span class="math">f=log(n!), g=n log n</span></p>
+        <p>(e) <span class="math">f=2^{|log₂ n|}, g=2^{|log₃ n|}</span></p>
+        <p>(f) <span class="math">f=2^{⌊log₂ n⌋}−n+1, g=3^{⌊log₃ n⌋}−n+1</span></p>
+        <p>(g) <span class="math">f=n, g=n^{cos(πn·log₂ n)}</span></p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> <span class="math">f = ω(g)</span>. Exponential (2ⁿ) beats any polynomial (n^{1200}), regardless of how large the exponent is. lim 2ⁿ/n^{1200} = ∞.</p>
+            <p><strong>Step 2 (b):</strong> <span class="math">f = o(g)</span>. √n = n^{1/2} is a positive power of n, which beats any power of log n. lim (log n)⁶/√n = 0.</p>
+            <p><strong>Step 3 (c):</strong> <span class="math">f ∼ g</span>. log(n⁶) = 6 log n, so f/g = 6 log n / log n = 6 → constant, but not 1. Actually f = Θ(g) and f/g → 6. So f ∼ g is false since ∼ requires ratio → 1. The tightest is Θ.</p>
+            <p><strong>Step 4 (d):</strong> <span class="math">f ∼ g</span>. By Stirling: log(n!) = n log n − n + O(log n) ∼ n log n.</p>
+            <p><strong>Step 5 (e):</strong> 2^{⌊log₂ n⌋} = Θ(n) (drops at most a factor of 2). 2^{⌊log₃ n⌋} = Θ(n^{log₃ 2}) ≈ Θ(n^{0.63}). So f = ω(g).</p>
+            <p><strong>Step 6 (f):</strong> 2^{⌊log₂ n⌋} ∈ Θ(n) but subtracting n leaves the difference. 3^{⌊log₃ n⌋} ∈ Θ(n) but subtracting n leaves the difference. Both are bounded O(1) — they oscillate between 0 and 1. So f ∼ g as both → 0 or bounded.</p>
+            <p><strong>Step 7 (g):</strong> cos(πn·log₂ n) oscillates between −1 and 1, so g oscillates between n^{-1} and n^{1}. f is always n. No standard asymptotic relation holds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q5</span> — Asymptotic Comparisons</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Relations for: (a) log₂ n vs log₁₀ n. (b) 2ⁿ vs 10ⁿ. (c) 0 vs 17. (d) 1+cos(πn/2) vs 1+sin(πn/2). (e) 1.0000000001ⁿ vs n^{10000000000}.</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a):</strong> <span class="math">Θ, ∼</span>. log₂ n = log₁₀ n / log₁₀ 2. They differ by constant factor, so Θ and ∼ both hold (ratio → 1/log₁₀ 2 — actually ∼ is false, ratio is constant ≠ 1). Just Θ.</p>
+            <p><strong>Step 2 (b):</strong> <span class="math">o, O</span>. 10ⁿ / 2ⁿ = 5ⁿ → ∞, so 2ⁿ = o(10ⁿ).</p>
+            <p><strong>Step 3 (c):</strong> <span class="math">o, O</span>. 0 = o(17) since 0 < c·17 for any c > 0. 0 = O(17) since 0 ≤ c·17.</p>
+            <p><strong>Step 4 (d):</strong> <span class="math">None</span>. Both oscillate between 0 and 2, out of phase. Neither consistently bounds the other.</p>
+            <p><strong>Step 5 (e):</strong> <span class="math">ω, Ω</span>. Exponential 1.0000000001ⁿ eventually dominates any polynomial, even n^{10000000000}. It just takes very large n.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A07 Q6</span> — Factorial Asymptotics</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>(a) True/false: n! = O((n+1)!), n! = Ω((n+1)!), n! = Θ((n+1)!), n! = ω((n+1)!), n! = o((n+1)!).</p>
+        <p>(b) Show n! = ω((n/3)^{n+e}). (c) Show n! = Ω(2ⁿ).</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (a) — O:</strong> n! ≤ (n+1)! = (n+1)n! for n ≥ 0. So n! = O((n+1)!). TRUE.</p>
+            <p><strong>Step 2 (a) — Ω:</strong> Need c > 0 such that n! ≥ c·(n+1)! = c·(n+1)n!. This requires 1 ≥ c·(n+1), impossible for large n. FALSE.</p>
+            <p><strong>Step 3 (a):</strong> Since Ω is false, Θ, ω, and ∼ are also false. Only O holds.</p>
+            <p><strong>Step 4 (b):</strong> Use Stirling: n! ∼ √(2πn)(n/e)ⁿ. Compare to (n/3)^{n+e}: ratio n!/(n/3)^{n+e} ∼ √(2πn)·(n/e)ⁿ/(n/3)^{n+e} = √(2πn)·(3/e)ⁿ·n^{-e}. Since (3/e)ⁿ → ∞, the ratio → ∞. So n! = ω((n/3)^{n+e}).</p>
+            <p><strong>Step 5 (c):</strong> For n ≥ 4, at least half the terms in n! are ≥ n/2. So n! ≥ (n/2)^{n/2}. Then n!/2ⁿ ≥ (n/2)^{n/2}/2ⁿ = (n^{n/2})/(2^{n/2}·2ⁿ) = (n/4)^{n/2} → ∞. So n! = ω(2ⁿ) and thus Ω(2ⁿ).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R13</span> — Asymptotic Notation Puzzles</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Which symbols (Θ,O,Ω,o,ω) fit?</p>
+        <p>(1) <span class="math">2n + log n = __(n)</span></p>
+        <p>(2) <span class="math">log n = __(√n)</span></p>
+        <p>(3) <span class="math">n·2ⁿ = __(n·7ⁿ)</span></p>
+        <p>(4) <span class="math">n = __(log^{300} n)</span></p>
+        <p>(5) <span class="math">n = __(1.01ⁿ)</span></p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> <span class="math">Θ, O, Ω</span>. 2n dominates log n, so 2n+log n grows like 2n. It is both upper and lower bounded by n up to constants.</p>
+            <p><strong>Step 2 (2):</strong> <span class="math">o, O</span>. √n = n^{1/2} is a positive power of n. Any positive power of n grows faster than any power of log n. So log n = o(√n).</p>
+            <p><strong>Step 3 (3):</strong> <span class="math">o, O</span>. n·2ⁿ / (n·7ⁿ) = (2/7)ⁿ → 0. So n·2ⁿ = o(n·7ⁿ).</p>
+            <p><strong>Step 4 (4):</strong> <span class="math">ω, Ω</span>. n / log^{300} n → ∞. So n = ω(log^{300} n).</p>
+            <p><strong>Step 5 (5):</strong> <span class="math">o, O</span>. n / 1.01ⁿ → 0 (exponential beats polynomial). So n = o(1.01ⁿ).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R13</span> — Asymptotic Equivalence (∼)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Let f∼g.</p>
+        <p>(1) Prove 2^f ∼ 2^g. (2) Prove f² ∼ g². (3) Find f,g where 2^f ≁ 2^g. (4) Show ∼ is an equivalence relation. (5) Show Θ is an equivalence relation.</p>
+        <div class="solution">
+          <div class="label">Solutions</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> f∼g means lim f/g = 1, so lim (f−g) = 0. Then lim 2^f/2^g = lim 2^{f-g} = 2^0 = 1. So 2^f ∼ 2^g. ✓</p>
+            <p><strong>Step 2 (2):</strong> lim f²/g² = lim (f/g)² = 1² = 1. So f² ∼ g². ✓</p>
+            <p><strong>Step 3 (3):</strong> Let f(n) = n, g(n) = n+1. Then f/g = n/(n+1) → 1, so f∼g. But 2^{n+1}/2ⁿ = 2 → 2, which is not 1. So 2^f ≁ 2^g.</p>
+            <p><strong>Step 4 (4):</strong> Reflexive: f/f → 1. Symmetric: if f/g → 1 then g/f → 1/1 = 1. Transitive: if f/g → 1 and g/h → 1, then f/h = (f/g)(g/h) → 1·1 = 1. ✓</p>
+            <p><strong>Step 5 (5):</strong> Θ also satisfies reflexivity (f = Θ(f)), symmetry (if f=Θ(g) then g=Θ(f)), and transitivity (if f=Θ(g) and g=Θ(h) then f=Θ(h)). Though Θ's equivalence classes are coarser than ∼'s.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Assuming f∼g implies 2^f ∼ 2^g. This is false because exponentiation amplifies additive differences.</p>
+            <p><strong>Step 2:</strong> Counterexample: n ∼ n+1 (ratio → 1), but 2ⁿ⁺¹/2ⁿ = 2, so 2ⁿ ≁ 2^{n+1}.</p>
+            <p><strong>Key Insight:</strong> Asymptotic equivalence is preserved under multiplication, addition, and roots, but NOT under exponentiation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R13</span> — More Asymptotic Facts</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>(1) Show (an)^{b/n} ∼ 1 for positive constants a,b.</p>
+        <p>(2) Show <span class="math">√{n!} = Θ(n)</span>.</p>
+        <div class="solution">
+          <div class="label">Solutions</div>
+          <div class="body">
+            <p><strong>Step 1 (1):</strong> Write (an)^{b/n} = (an)^{b/n} = a^{b/n} · n^{b/n}.</p>
+            <p><strong>Step 2 (1):</strong> a^{b/n} = e^{(b ln a)/n} → e⁰ = 1 as n→∞.</p>
+            <p><strong>Step 3 (1):</strong> n^{b/n} = e^{(b ln n)/n} → e⁰ = 1 as n→∞ (since ln n/n → 0).</p>
+            <p><strong>Step 4 (1):</strong> Product → 1·1 = 1. So (an)^{b/n} ∼ 1. ✓</p>
+            <p><strong>Step 1 (2):</strong> Use Stirling: n! ∼ √(2πn)(n/e)ⁿ. Then (n!)^{1/n} ∼ (2πn)^{1/(2n)}·(n/e).</p>
+            <p><strong>Step 2 (2):</strong> (2πn)^{1/(2n)} → 1 as n→∞. So (n!)^{1/n} ∼ n/e.</p>
+            <p><strong>Step 3 (2):</strong> Actually the original asks about (n!)^{1/n}: (n/e) ≤ (n!)^{1/n} ≤ n, so (n!)^{1/n} = Θ(n). The problem statement says √{n!} but likely means (n!)^{1/n}.</p>
+            <p><strong>Key Insight:</strong> The nth root of n! grows linearly, which is why Stirling's formula is so useful for asymptotics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A08 Q2</span> — Bogus Asymptotic Induction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>False claim: T(n) = 4T(n/2) + n, T(1)=1 ⇒ T(n) = O(n). Find the flaw.</p>
+        <div class="solution">
+          <div class="label">Flaw</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Suppose we try to prove T(n) ≤ cn by induction.</p>
+            <p><strong>Step 2:</strong> Inductive hypothesis: T(n/2) ≤ c·(n/2).</p>
+            <p><strong>Step 3:</strong> Then T(n) = 4T(n/2) + n ≤ 4·c·(n/2) + n = 2cn + n = (2c+1)n.</p>
+            <p><strong>Step 4:</strong> To close the induction we need (2c+1)n ≤ cn, which requires 2c+1 ≤ c, i.e., c ≤ −1 — impossible.</p>
+            <p><strong>Step 5:</strong> The flaw: asymptotic notation hides constants that don't align. The O at each level assumes the same constant c, but the recurrence amplifies constants.</p>
+            <p><strong>Step 6:</strong> By the Master Theorem: a=4, b=2, log_b a = 2 > 1, so T(n) = Θ(n^{log₂ 4}) = Θ(n²), not O(n).</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> When proving asymptotic bounds by induction, you MUST use explicit constants and verify the inductive step works.</p>
+            <p><strong>Step 2:</strong> Simply assuming T(n/2) = O(n/2) with the same c fails because the recurrence multiplies c by 4 and divides by 2, producing net factor 2, which can't be absorbed.</p>
+            <p><strong>Step 3:</strong> The Master Theorem gives the correct answer: a=4, b=2, log_b a = 2 > 1 → T(n) = Θ(n^{log₂ 4}) = Θ(n²).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="asymptotics-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Textbook Problems</span> — Asymptotic Growth & Proofs</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.7 #21</span> — Ordering Functions</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Order these functions by growth rate (slowest to fastest): n², 2ⁿ, n!, n log n, n, log n, n³.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Recall the standard growth hierarchy: log n ≺ n^ε ≺ n^c ≺ cⁿ ≺ n! for any ε>0, c>1.</p>
+            <p><strong>Step 2:</strong> Apply to this set: log n (slowest) ≺ n ≺ n log n ≺ n² ≺ n³ ≺ 2ⁿ ≺ n! (fastest).</p>
+            <p><strong>Step 3:</strong> Verify via limits: n/log n → ∞, n²/(n log n) → ∞, 2ⁿ/n³ → ∞, n!/2ⁿ → ∞.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Use limits of ratios to compare growth rates formally.</p>
+            <p><strong>Step 2:</strong> n! grows faster than 2ⁿ because n! ≥ (n/2)^{n/2} for n ≥ 4, and (n/2)^{n/2}/2ⁿ = (n/4)^{n/2} → ∞.</p>
+            <p><strong>Key Insight:</strong> Memorizing the hierarchy (log ≺ poly ≺ exp ≺ fact) is useful but proving via limits is rigorous.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen §3.2 #3</span> — Big O Proofs</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Show 3x⁴ + 5x³ + 2x + 1 = O(x⁴).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Need to find c, k such that |3x⁴ + 5x³ + 2x + 1| ≤ c·|x⁴| for all x ≥ k.</p>
+            <p><strong>Step 2:</strong> For x ≥ 1, bound each term by a multiple of x⁴: 3x⁴ ≤ 3x⁴, 5x³ ≤ 5x⁴, 2x ≤ 2x⁴, 1 ≤ x⁴.</p>
+            <p><strong>Step 3:</strong> Sum the coefficients: 3x⁴ + 5x³ + 2x + 1 ≤ 3x⁴ + 5x⁴ + 2x⁴ + x⁴ = 11x⁴.</p>
+            <p><strong>Step 4:</strong> So c = 11, k = 1 works. Therefore 3x⁴ + 5x³ + 2x + 1 = O(x⁴).</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Only bounding some terms in terms of the highest power, not all.</p>
+            <p><strong>Step 2:</strong> Each lower-order term must be bounded individually by a multiple of the leading term.</p>
+            <p><strong>Key Insight:</strong> For x ≥ 1, any term xᵏ with k < 4 satisfies xᵏ ≤ x⁴, so every term can be bounded by the highest power.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen §3.2 #15</span> — Growth Comparison</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Determine if n^0.0001 = O(log₂ n).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Compare any positive power of n against log n. For any ε > 0, n^ε grows faster than log n.</p>
+            <p><strong>Step 2:</strong> Compute lim_{n→∞} n^0.0001 / log₂ n = ∞ (e.g., using L'Hôpital or known hierarchy).</p>
+            <p><strong>Step 3:</strong> Since limit is ∞, n^0.0001 = ω(log₂ n). Therefore it is NOT O(log₂ n).</p>
+            <p><strong>Key Insight:</strong> Even a tiny positive exponent on n (0.0001) eventually dominates log n.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Any positive power of n beats any power of log n.</p>
+            <p><strong>Step 2:</strong> This is a fundamental hierarchy result: n^ε = ω(log^c n) for any ε > 0, c > 0.</p>
+            <p><strong>Key Insight:</strong> Polynomials (even with tiny exponents) always outgrow polylogarithms.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen §3.2 #31</span> — Big Theta</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Show 3x²+7x = Θ(x²).</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> To prove Θ(x²), we need both O(x²) and Ω(x²).</p>
+            <p><strong>Step 2 (Upper bound — O):</strong> For x ≥ 1, 3x²+7x ≤ 3x²+7x² = 10x². So c=10, n₀=1 works. Thus 3x²+7x = O(x²).</p>
+            <p><strong>Step 3 (Lower bound — Ω):</strong> For x ≥ 1, 3x²+7x ≥ 3x² (since 7x ≥ 0). So c=3, n₀=1 works. Thus 3x²+7x = Ω(x²).</p>
+            <p><strong>Step 4:</strong> Since both O and Ω hold, 3x²+7x = Θ(x²). ✓</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Only proving one direction (e.g., only upper bound O) and claiming Θ.</p>
+            <p><strong>Step 2:</strong> Θ requires both an upper bound AND a lower bound. Missing either makes the proof incomplete.</p>
+            <p><strong>Key Insight:</strong> Always prove both O and Ω separately when establishing Θ.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.7 #28</span> — ∼ vs Θ</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Give an example of f,g where f = Θ(g) but f ≁ g.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Choose f(n) = 2n², g(n) = n².</p>
+            <p><strong>Step 2 (Θ check):</strong> 2n² ≤ 2·n² (O) and 2n² ≥ 1·n² (Ω). So f = Θ(g).</p>
+            <p><strong>Step 3 (∼ check):</strong> lim_{n→∞} f/g = lim 2n²/n² = 2 ≠ 1. So f ≁ g.</p>
+            <p><strong>Key Insight:</strong> Θ allows constant factor differences; ∼ requires the ratio to approach exactly 1.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Key Insight</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Θ is coarser than ∼: f ∼ g implies f = Θ(g), but the converse is false.</p>
+            <p><strong>Step 2:</strong> Any constant multiple of g is Θ(g) but not ∼ g (unless the constant is 1).</p>
+            <p><strong>Key Insight:</strong> Θ ignores constant factors; ∼ requires exact asymptotic proportionality of 1.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §14.7 #35</span> — Harmonic Asymptotics</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Show H_n ∼ ln n.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> H_n = ∑_{k=1}^{n} 1/k. Use integral bounds for f(x) = 1/x (decreasing).</p>
+            <p><strong>Step 2:</strong> Integral bound for decreasing functions: <span class="math">f(n) + ∫₁ⁿ f(x)dx ≤ ∑_{k=1}^{n} f(k) ≤ f(1) + ∫₁ⁿ f(x)dx</span>.</p>
+            <p><strong>Step 3:</strong> With f(x) = 1/x: <span class="math">1/n + ∫₁ⁿ (1/x)dx ≤ H_n ≤ 1 + ∫₁ⁿ (1/x)dx</span>.</p>
+            <p><strong>Step 4:</strong> Compute ∫₁ⁿ 1/x dx = ln n. So <span class="math">ln n + 1/n ≤ H_n ≤ ln n + 1</span>.</p>
+            <p><strong>Step 5:</strong> Divide by ln n: <span class="math">1 + 1/(n ln n) ≤ H_n/ln n ≤ 1 + 1/ln n</span>.</p>
+            <p><strong>Step 6:</strong> As n → ∞, 1/(n ln n) → 0 and 1/ln n → 0. So both bounds → 1, giving H_n/ln n → 1. Thus H_n ∼ ln n. ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+<!-- ===================== 7. RECURRENCES ===================== -->
+<section id="recurrences">
+<h2>7. Recurrences</h2>
+
+<div class="card" id="recurrences-master">
+  <div class="card-header" onclick="toggleCard(this)"><span>Master Theorem & Akra-Bazzi</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem"><strong>Master Theorem (M4CS §22.4.4):</strong> For <span class="math">T(n) = aT(⌈n/b⌉) + O(nᵈ)</span> where a≥1, b>1, d≥0:</div>
+    <table>
+      <tr><th>Case</th><th>Condition</th><th>Solves To</th></tr>
+      <tr><td>1</td><td><span class="math">a > bᵈ</span></td><td><span class="math">T(n) = Θ(n^{log_b a})</span></td></tr>
+      <tr><td>2</td><td><span class="math">a = bᵈ</span></td><td><span class="math">T(n) = Θ(nᵈ log n)</span></td></tr>
+      <tr><td>3</td><td><span class="math">a < bᵈ</span></td><td><span class="math">T(n) = Θ(nᵈ)</span></td></tr>
+    </table>
+    <div class="theorem"><strong>Akra-Bazzi (M4CS §22.4.1):</strong> For <span class="math">T(x) = ∑ a_i T(b_i x + h_i(x)) + g(x)</span>, solve <span class="math">∑ a_i b_i^p = 1</span> for p. Then <span class="math">T(x) = Θ(x^p(1 + ∫₁ˣ g(u)/u^{p+1} du))</span>.</div>
+    <div class="theorem"><strong>Linear Recurrences:</strong> For <span class="math">x_n = c₁x_{n-1} + ... + c_k x_{n-k}</span>, characteristic eq: <span class="math">rᵏ - c₁r^{k-1} - ... - c_k = 0</span>. If roots r₁,...,r_k distinct, <span class="math">x_n = A₁r₁ⁿ + ... + A_k r_kⁿ</span>. For repeated roots r of multiplicity m, include <span class="math">(A₀ + A₁n + ... + A_{m-1}n^{m-1})rⁿ</span>.</div>
+  </div>
+</div>
+
+<div class="card" id="recurrences-m4cs">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS §22.4</span> — Textbook Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 22.1</span> — Algorithm Comparison</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Algorithm A: T(n) = 7T(n/2) + n². Algorithm A': T'(n) = aT'(n/4) + n². For what values of a is A' asymptotically faster than A?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Analyze Algorithm A using Master Theorem. Parameters: a=7 (7 subproblems), b=2 (halving), d=2 (polynomial degree of f(n)=n²). Compute log_b a = log₂ 7 ≈ 2.807.</p>
+            <p><strong>Step 2:</strong> Compare log_b a with d. Since 2.807 &gt; 2, we have a &gt; bᵈ, so Master Theorem Case 1 applies: T(n) = Θ(n^{log_b a}) = Θ(n^{log₂ 7}) ≈ Θ(n²·⁸⁰⁷).</p>
+            <p><strong>Step 3:</strong> Now analyze Algorithm A': T'(n) = aT'(n/4) + n². The threshold value is bᵈ = 4² = 16. Three subcases arise based on a relative to 16.</p>
+            <p><strong>Step 4 — Subcase a &lt; 16:</strong> Master Theorem Case 3 applies (a &lt; bᵈ), giving T'(n) = Θ(nᵈ) = Θ(n²). Since Θ(n²) = o(Θ(n²·⁸⁰⁷)), A' is asymptotically faster.</p>
+            <p><strong>Step 5 — Subcase a = 16:</strong> Master Theorem Case 2 applies (a = bᵈ), giving T'(n) = Θ(nᵈ log n) = Θ(n² log n). This is also o(n²·⁸⁰⁷), so A' is still faster.</p>
+            <p><strong>Step 6 — Subcase a &gt; 16:</strong> Master Theorem Case 1 applies: T'(n) = Θ(n^{log₄ a}). A' is faster when n^{log₄ a} = o(n^{log₂ 7}), requiring log₄ a &lt; log₂ 7.</p>
+            <p><strong>Step 7:</strong> Solve log₄ a &lt; log₂ 7. Using change of base: log₄ a = (log₂ a)/(log₂ 4) = (log₂ a)/2. So (log₂ a)/2 &lt; log₂ 7 → log₂ a &lt; 2·log₂ 7 = log₂ 49 → a &lt; 49.</p>
+            <p><strong>Key Insight:</strong> A' is asymptotically faster than A for any a &lt; 49, covering all three Master Theorem cases. Even when A' spawns significantly more subproblems (up to a=48), the smaller recursion factor (n/4 vs n/2) keeps it ahead.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 22.2</span> — Akra-Bazzi Practice</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Use Akra-Bazzi to find Θ bounds for these recurrences (T(1)=1):</p>
+        <p>1. T(n) = 3T(⌊n/3⌋) + n</p>
+        <p>2. T(n) = 4T(⌊n/3⌋) + n²</p>
+        <p>3. T(n) = 3T(⌊n/4⌋) + n</p>
+        <p>4. T(n) = 2T(⌊n/4⌋) + √n</p>
+        <p>5. T(n) = 2T(⌊n/4⌋) + 1</p>
+        <p>6. T(n) = 3T(⌊n/4⌋) + √n</p>
+        <p>7. T(n) = 2T(⌊n/4⌋) + n</p>
+        <p>8. T(n) = T(⌊n/3⌋) + T(⌊3n/4⌋) + n</p>
+        <p>9. T(n) = 3T(⌊n^{1/3}⌋) + log₃ n</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Most recurrences fit the Master Theorem form T(n) = aT(n/b) + O(nᵈ). For each, extract a (subproblems), b (division factor), and d (polynomial degree of the non-recursive work).</p>
+            <p><strong>Step 2 — Problem 1 (3T(n/3) + n):</strong> a=3, b=3, d=1. Compute log_b a = log₃ 3 = 1. Since a = bᵈ (3 = 3¹), Master Theorem Case 2 applies: T(n) = Θ(n log n).</p>
+            <p><strong>Step 3 — Problem 2 (4T(n/3) + n²):</strong> a=4, b=3, d=2. log₃ 4 ≈ 1.26. Since 1.26 &lt; 2 (a &lt; bᵈ), Master Theorem Case 3 applies: T(n) = Θ(n²). The quadratic work dominates the recursion.</p>
+            <p><strong>Step 4 — Problem 3 (3T(n/4) + n):</strong> a=3, b=4, d=1. log₄ 3 ≈ 0.79. Since 0.79 &lt; 1 (a &lt; bᵈ), Case 3 applies: T(n) = Θ(n).</p>
+            <p><strong>Step 5 — Problem 4 (2T(n/4) + √n):</strong> a=2, b=4, d=0.5 (since √n = n⁰·⁵). log₄ 2 = 0.5. Since a = bᵈ, Case 2 applies: T(n) = Θ(√n log n).</p>
+            <p><strong>Step 6 — Problem 5 (2T(n/4) + 1):</strong> a=2, b=4, d=0 (since 1 = n⁰). log₄ 2 = 0.5. Since 0.5 &gt; 0 (a &gt; bᵈ), Case 1 applies: T(n) = Θ(n^{log₄ 2}) = Θ(n^{1/2}) = Θ(√n).</p>
+            <p><strong>Step 7 — Problem 6 (3T(n/4) + √n):</strong> a=3, b=4, d=0.5. log₄ 3 ≈ 0.79. Since 0.79 &gt; 0.5 (a &gt; bᵈ), Case 1 applies: T(n) = Θ(n^{log₄ 3}) ≈ Θ(n⁰·⁷⁹).</p>
+            <p><strong>Step 8 — Problem 7 (2T(n/4) + n):</strong> a=2, b=4, d=1. log₄ 2 = 0.5. Since 0.5 &lt; 1 (a &lt; bᵈ), Case 3 applies: T(n) = Θ(n). The linear work at each level dominates the recursion.</p>
+            <p><strong>Step 9 — Problem 8 (T(n/3) + T(3n/4) + n):</strong> This has two different subproblem sizes, so Master Theorem does not apply. Use Akra-Bazzi: a₁=1, b₁=1/3, a₂=1, b₂=3/4, g(n)=n. Solve (1/3)^p + (3/4)^p = 1 for p. By inspection, p=1 gives 1/3+3/4=13/12 &gt; 1, p=0 gives 2 &gt; 1, so p ≈ 0.88. Then Θ(n^p(1 + ∫₁ⁿ u/u^{p+1} du)) = Θ(n).</p>
+            <p><strong>Step 10 — Problem 9 (3T(n^{1/3}) + log₃ n):</strong> Subproblem size is n^{1/3}, not a linear fraction of n, so standard Master Theorem does not apply. The recursion depth is log₃ log₃ n and each level does Θ(log n) work branching by 3, giving Θ(log n · log log n).</p>
+            <p><strong>Key Insight:</strong> Problems 1–7 are all direct Master Theorem applications. Only problems 8 (multiple distinct subproblem sizes) and 9 (sublinear subproblems) genuinely require Akra-Bazzi or recursion tree analysis.</p>
+            <em>ponytail: Akra-Bazzi for all 9 is overkill — most are Master Theorem cases.</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 22.3</span> — OverSort</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> (Class Problem 22.3) OverSort divides n items into three subproblems of size 2n/3, sorts recursively, and merges. Write recurrence, find Θ bound.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Write the recurrence. Three subproblems each of size 2n/3, plus linear merge cost: T(n) = 3T(2n/3) + O(n).</p>
+            <p><strong>Step 2:</strong> This does not fit standard Master Theorem because the subproblem size factor is 2/3, not 1/b for integer b. Use Akra-Bazzi: a=3, b=2/3, g(n)=n.</p>
+            <p><strong>Step 3:</strong> Solve for p in 3·(2/3)^p = 1. This gives (2/3)^p = 1/3. Taking logs: p·ln(2/3) = ln(1/3) → p = ln(3)/ln(3/2) ≈ 2.71.</p>
+            <p><strong>Step 4:</strong> With p ≈ 2.71 &gt; 1, the integral term ∫₁ⁿ g(u)/u^{p+1} du = ∫₁ⁿ u/u^{p+1} du = ∫₁ⁿ u^{-p} du converges to a constant. Therefore T(n) = Θ(n^p) ≈ Θ(n²·⁷¹).</p>
+            <p><strong>Key Insight:</strong> OverSort is Θ(n²·⁷¹) — much worse than MergeSort's Θ(n log n). The three subproblems per level compound faster than the reduced subproblem size (2n/3) can offset.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 22.4</span> — Exam Problem</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> T(n) = 2T(⌊n/2⌋) + n log n. Find Θ bound using Master Theorem.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Identify parameters. a=2, b=2, so log_b a = log₂ 2 = 1. The non-recursive work is f(n) = n log n.</p>
+            <p><strong>Step 2:</strong> Compare f(n) with n^{log_b a} = n¹. Here n log n = n¹ log n, which matches n^{log_b a} times a polylog factor (specifically, f(n) = n¹ log¹ n).</p>
+            <p><strong>Step 3:</strong> This is the extended Case 2 of the Master Theorem: T(n) = Θ(n^{log_b a} log^{k+1} n) where k=1 (the exponent of the log factor in f(n)).</p>
+            <p><strong>Step 4:</strong> Therefore T(n) = Θ(n log² n).</p>
+            <p><strong>Key Insight:</strong> Compared to standard MergeSort (T(n) = 2T(n/2) + n = Θ(n log n)), the extra log factor in f(n) propagates to an extra log factor in the final bound. Each level does n log n work instead of n work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="recurrences-problems">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT</span> / <span class="tag tag-assignment">DM</span> — Recurrence Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-assignment">DM A3 Q4</span> — Karatsuba Master Theorem</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>T(n) = 3T(⌈n/2⌉) + 10n, with T(0)=0, T(1)=1. Verify T(n) = Θ(n^{log₂ 3}) using Master Theorem.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Extract Master Theorem parameters. a=3 (Karatsuba's three subproblems), b=2 (halving), d=1 (linear overhead 10n = Θ(n¹)).</p>
+            <p><strong>Step 2:</strong> Compute log_b a = log₂ 3 ≈ 1.585. Compare with d=1. Since 1.585 &gt; 1, we have a &gt; bᵈ.</p>
+            <p><strong>Step 3:</strong> Master Theorem Case 1 applies. Therefore T(n) = Θ(n^{log_b a}) = Θ(n^{log₂ 3}) ≈ Θ(n¹·⁵⁸⁵).</p>
+            <p><strong>Step 4:</strong> The explicit closed form T(n) = 21n^{log₂ 3} − 20n matches this asymptotic classification, verifying the Master Theorem result.</p>
+            <p><strong>Key Insight:</strong> This is exactly Karatsuba's multiplication recurrence. The three subproblems (instead of four in naive multiplication) reduce the exponent from log₂ 4 = 2 to log₂ 3 ≈ 1.585.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A08 Q1</span> — Master Theorem Recurrences</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find Θ bounds (T(1)=1):</p>
+        <p>(a) T(n) = 8T(⌈n/2⌉) + n</p>
+        <p>(b) T(n) = 2T(⌈n/8⌉ + 1/n) + n</p>
+        <p>(c) T(n) = 7T(⌈n/20⌉) + 2T(⌈n/8⌉) + n</p>
+        <p>(d) T(n) = 2T(⌈n/4⌉ + 1) + n^{1/2}</p>
+        <p>(e) T(n) = 3T(⌊n/9 + n^{1/9}⌋) + 1</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — (a) 8T(n/2) + n:</strong> a=8, b=2, d=1. Compute log_b a = log₂ 8 = 3. Since 3 &gt; 1, Case 1 applies: T(n) = Θ(n³).</p>
+            <p><strong>Step 2 — (b) 2T(n/8 + 1/n) + n:</strong> a=2, b=8, d=1. The +1/n perturbation is negligible for large n. Compute log₈ 2 = 1/3 ≈ 0.333. Since 0.333 &lt; 1, Case 3 applies: T(n) = Θ(n). The linear merge cost dominates the slow recursion.</p>
+            <p><strong>Step 3 — (c) 7T(n/20) + 2T(n/8) + n:</strong> Two distinct subproblem sizes: Master Theorem does not apply. Use Akra-Bazzi with a₁=7, b₁=1/20, a₂=2, b₂=1/8, g(n)=n. Solve 7(1/20)^p + 2(1/8)^p = 1. p ≈ 0.16. Since p &lt; 1, the integral ∫₁ⁿ u/u^{p+1} du diverges, giving T(n) = Θ(n).</p>
+            <p><strong>Step 4 — (d) 2T(n/4 + 1) + √n:</strong> a=2, b=4, d=0.5 (since √n = n⁰·⁵). The +1 shift is negligible. Compute log₄ 2 = 0.5. Since a = bᵈ, Case 2 applies: T(n) = Θ(√n log n).</p>
+            <p><strong>Step 5 — (e) 3T(n/9 + n^{1/9}) + 1:</strong> a=3, b=9, d=0 (since f(n)=1 = n⁰). The n^{1/9} perturbation is negligible. Compute log₉ 3 = 0.5. Since 0.5 &gt; 0, Case 1 applies: T(n) = Θ(n^{log₉ 3}) = Θ(n⁰·⁵) = Θ(√n).</p>
+            <p><strong>Key Insight:</strong> Small additive perturbations (±1, +1/n, +n^{1/9}) do not affect the asymptotic classification. Always check if they are dominated by the main term before accounting for them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A08 Q3</span> — Linear Recurrence</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>A₀ = 2, A_{n+1} = A_n/2 + 1/A_n. Prove A_n ≤ √2 + 1/2ⁿ for all n≥0.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 (Base case n=0):</strong> A₀ = 2. The claim is 2 ≤ √2 + 1/2⁰ = √2 + 1 ≈ 2.414. Since 2 ≤ 2.414, the base case holds.</p>
+            <p><strong>Step 2 (Inductive hypothesis):</strong> Assume A_n ≤ √2 + 1/2ⁿ for some n ≥ 0.</p>
+            <p><strong>Step 3 (Inductive step):</strong> Compute A_{n+1} = A_n/2 + 1/A_n. Using the hypothesis, A_n/2 ≤ (√2 + 1/2ⁿ)/2 = √2/2 + 1/2^{n+1}.</p>
+            <p><strong>Step 4 (Bound 1/A_n):</strong> Since A_n ≥ 0 (non-negative by definition), we need a lower bound on A_n to bound 1/A_n from above. Note A_n approaches √2 from above, so 1/A_n ≤ 1/√2 = √2/2.</p>
+            <p><strong>Step 5 (Combine bounds):</strong> A_{n+1} ≤ √2/2 + 1/2^{n+1} + √2/2 = √2 + 1/2^{n+1}. This completes the induction.</p>
+            <p><strong>Key Insight:</strong> The recurrence converges to √2. The induction uses the identity 1/√2 = √2/2 to simplify the sum. Each iteration halves the error term.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT A08 Q4</span> — Solving Linear Recurrences</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find closed-form solutions:</p>
+        <p>(a) x_n = 4x_{n-1} − x_{n-2} − 6x_{n-3}, x₀=3, x₁=4, x₂=14.</p>
+        <p>(b) x_n = −x_{n-1} + 2x_{n-2} + n, x₀=5, x₁=−4/9.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — (a) Characteristic equation:</strong> The homogeneous recurrence x_n = 4x_{n-1} − x_{n-2} − 6x_{n-3} gives characteristic r³ − 4r² + r + 6 = 0.</p>
+            <p><strong>Step 2 — (a) Factor:</strong> Factor the cubic: (r+1)(r-2)(r-3) = 0. Roots are r = −1, 2, 3 (all distinct).</p>
+            <p><strong>Step 3 — (a) General form:</strong> With three distinct roots, x_n = A(−1)ⁿ + B·2ⁿ + C·3ⁿ.</p>
+            <p><strong>Step 4 — (a) Solve for constants:</strong> Use initial conditions: n=0: A + B + C = 3. n=1: −A + 2B + 3C = 4. n=2: A + 4B + 9C = 14. Solving gives A=1, B=1, C=1. Therefore <span class="math">x_n = (−1)ⁿ + 2ⁿ + 3ⁿ</span>.</p>
+            <p><strong>Step 5 — (b) Homogeneous solution:</strong> The homogeneous part r² + r − 2 = 0 factors as (r-1)(r+2) = 0, with roots r=1, r=−2.</p>
+            <p><strong>Step 6 — (b) Particular solution attempt:</strong> Since the non-homogeneous term is n (degree 1) and r=1 is a root, try x_n = n(pn+q) = pn²+qn. Substitute into the recurrence to solve for p, q.</p>
+            <p><strong>Step 7 — (b) Find p, q:</strong> Substituting x_n = pn²+qn: pn²+qn = −(p(n-1)²+q(n-1)) + 2(p(n-2)²+q(n-2)) + n. Collecting coefficients gives p = 1/2, q = −5/6.</p>
+            <p><strong>Step 8 — (b) Complete solution:</strong> x_n = A·1ⁿ + B·(−2)ⁿ + n²/2 − 5n/6 + ... (the particular solution may need a constant term adjustment since r=1 is a root).</p>
+            <p><strong>Key Insight:</strong> When the non-homogeneous term overlaps with a characteristic root, multiply the particular solution guess by n (or n^m for multiplicity m) to avoid duplication.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R14</span> — TriMergeSort</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>TriMergeSort splits into 3 sublists of n/3, sorts recursively, merges with 2 comparisons per 3 items.</p>
+        <p>Find T(n) recurrence and Θ bound.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Write the recurrence. Three subproblems each of size n/3, and merging three sorted lists of total size n requires 2n−3 comparisons in the worst case. So T(n) = 3T(n/3) + 2n.</p>
+            <p><strong>Step 2:</strong> Apply Master Theorem: a=3, b=3, d=1 (since 2n = Θ(n¹)). Compute log_b a = log₃ 3 = 1.</p>
+            <p><strong>Step 3:</strong> Compare: a = bᵈ (3 = 3¹), so Master Theorem Case 2 applies: T(n) = Θ(n log n).</p>
+            <p><strong>Key Insight:</strong> Splitting into 3 subproblems instead of 2 does not change the Θ class. TriMergeSort is still Θ(n log n), same as ordinary MergeSort.</p>
+          </div>
+        </div>
+        <div class="solution">
+          <div class="label">Solution — Akra-Bazzi Verification</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Apply Akra-Bazzi to verify: a=3, b=1/3, g(n)=2n. Solve 3·(1/3)^p = 1.</p>
+            <p><strong>Step 2:</strong> Simplify: 3^{1-p} = 1 → 1-p = 0 → p = 1.</p>
+            <p><strong>Step 3:</strong> With p=1, evaluate the Akra-Bazzi formula: T(n) = Θ(n(1 + ∫₁ⁿ g(u)/u² du)) = Θ(n(1 + ∫₁ⁿ 2u/u² du)) = Θ(n(1 + 2∫₁ⁿ 1/u du)).</p>
+            <p><strong>Step 4:</strong> Evaluate the integral: ∫₁ⁿ 1/u du = ln n. Therefore T(n) = Θ(n(1 + 2 ln n)) = Θ(n log n).</p>
+            <p><strong>Key Insight:</strong> Akra-Bazzi confirms the Master Theorem result. Both methods converge to the same asymptotic bound.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-mit">MIT R14</span> — Linear Recurrences</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Find closed forms:</p>
+        <p>(1) T₀=0, T₁=1, T_n = T_{n-1} + T_{n-2} + 1.</p>
+        <p>(2) S₀=0, S₁=1, S_n = 6S_{n-1} − 9S_{n-2}.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — (1) Homogeneous part:</strong> The homogeneous recurrence T_n = T_{n-1} + T_{n-2} is the Fibonacci recurrence with characteristic r² − r − 1 = 0. Roots are φ = (1+√5)/2 and −1/φ = (1−√5)/2.</p>
+            <p><strong>Step 2 — (1) Particular solution:</strong> Try constant T_n = c. Substituting: c = c + c + 1 → c = −1. So the particular solution is T_n = −1.</p>
+            <p><strong>Step 3 — (1) General form:</strong> T_n = A·φⁿ + B·(−1/φ)ⁿ − 1. Using T₀ = 0: A + B − 1 = 0 → A + B = 1. Using T₁ = 1: Aφ − B/φ − 1 = 1 → Aφ − B/φ = 2.</p>
+            <p><strong>Step 4 — (1) Solve and simplify:</strong> Solving the system and recognizing the Fibonacci pattern yields <span class="math">T_n = F_{n+2} − 1</span> where F₁=1, F₂=1. Verify: n=0 → F₂−1 = 1−1 = 0 ✓, n=1 → F₃−1 = 2−1 = 1 ✓.</p>
+            <p><strong>Step 5 — (2) Characteristic equation:</strong> r² − 6r + 9 = 0 factors as (r−3)² = 0, giving a repeated root r = 3 with multiplicity 2.</p>
+            <p><strong>Step 6 — (2) General form for repeated root:</strong> S_n = (A + Bn)·3ⁿ. Using S₀ = 0: (A + 0)·1 = 0 → A = 0. Using S₁ = 1: (0 + B)·3 = 1 → B = 1/3.</p>
+            <p><strong>Step 7 — (2) Final closed form:</strong> <span class="math">S_n = n·3^{n-1}</span>.</p>
+            <p><strong>Key Insight:</strong> Repeated roots require the polynomial prefactor (A + Bn) instead of separate exponential terms. This is analogous to repeated roots in differential equations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="recurrences-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8th Ed.</span> — Textbook Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8.1 #1</span> — Bit Strings</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Find a recurrence for the number of bit strings of length n that do NOT have two consecutive 0s.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let a_n be the number of valid bit strings of length n (no consecutive 0s). Partition the set by the last digit.</p>
+            <p><strong>Step 2 — Strings ending in 1:</strong> If the last digit is 1, the first n−1 bits can be any valid string of length n−1. This contributes a_{n-1} strings.</p>
+            <p><strong>Step 3 — Strings ending in 0:</strong> If the last digit is 0, the preceding digit must be 1 (otherwise we'd have consecutive 0s). So the string ends in "10", and the first n−2 bits can be any valid string of length n−2. This contributes a_{n-2} strings.</p>
+            <p><strong>Step 4 — Recurrence:</strong> a_n = a_{n-1} + a_{n-2}. Base cases: a₁ = 2 (strings "0" and "1"), a₂ = 3 (strings "01", "10", "11"; "00" is invalid).</p>
+            <p><strong>Key Insight:</strong> Partition by last digit. The constraint "no 00" forces a trailing 0 to be preceded by 1, which reduces the problem to counting valid prefixes of length n−2.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8.2 #4</span> — Linear Recurrence</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Solve recurrence: a_n = 7a_{n-1} − 10a_{n-2} with a_0 = 2, a_1 = 1.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Write the characteristic equation: r² − 7r + 10 = 0.</p>
+            <p><strong>Step 2:</strong> Factor: (r−2)(r−5) = 0. Roots are r = 2 and r = 5 (distinct).</p>
+            <p><strong>Step 3:</strong> General solution with distinct roots: a_n = A·2ⁿ + B·5ⁿ.</p>
+            <p><strong>Step 4:</strong> Apply initial condition a₀ = 2: A·2⁰ + B·5⁰ = A + B = 2.</p>
+            <p><strong>Step 5:</strong> Apply initial condition a₁ = 1: A·2¹ + B·5¹ = 2A + 5B = 1.</p>
+            <p><strong>Step 6:</strong> Solve the system: From A + B = 2, B = 2 − A. Substitute: 2A + 5(2−A) = 1 → 2A + 10 − 5A = 1 → −3A = −9 → A = 3, B = −1.</p>
+            <p><strong>Step 7:</strong> Final closed form: a_n = 3·2ⁿ − 5ⁿ.</p>
+            <p><strong>Common Mistake:</strong> Forgetting to use both initial conditions to determine the constants A and B. One condition alone leaves a free parameter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8.2 #12</span> — Repeated Root</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Solve b_n = 8b_{n-1} − 16b_{n-2} with b_0 = 1, b_1 = 4.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Write the characteristic equation: r² − 8r + 16 = 0.</p>
+            <p><strong>Step 2:</strong> Factor: (r−4)² = 0. This gives a single root r = 4 with multiplicity 2.</p>
+            <p><strong>Step 3:</strong> For a repeated root of multiplicity 2, use the form b_n = (A + Bn)·4ⁿ.</p>
+            <p><strong>Step 4:</strong> Apply b₀ = 1: (A + B·0)·4⁰ = A = 1.</p>
+            <p><strong>Step 5:</strong> Apply b₁ = 4: (1 + B·1)·4¹ = 4 → (1 + B)·4 = 4 → 1 + B = 1 → B = 0.</p>
+            <p><strong>Step 6:</strong> Final closed form: b_n = 4ⁿ.</p>
+            <p><strong>Common Mistake:</strong> Using A·4ⁿ + B·4ⁿ (which collapses to (A+B)·4ⁿ, a single exponential term) instead of (A + Bn)·4ⁿ for repeated roots. The factor n provides the second independent solution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8.3 #1</span> — Binary Search Comparisons</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> Binary search on n items. Worst-case comparisons f(n) = f(⌊n/2⌋) + 2 for n ≥ 2, f(1) = 2. Find big-O bound.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Identify Master Theorem parameters. The recurrence is f(n) = f(n/2) + 2, so a=1 (one subproblem), b=2 (halving), d=0 (since f(n) = 2 = Θ(n⁰)).</p>
+            <p><strong>Step 2:</strong> Compute log_b a = log₂ 1 = 0. Compare with d = 0.</p>
+            <p><strong>Step 3:</strong> Since a = bᵈ (1 = 2⁰), Master Theorem Case 2 applies: f(n) = Θ(nᵈ log n) = Θ(log n).</p>
+            <p><strong>Step 4:</strong> More concretely, the recursion depth is log₂ n and each level does 2 comparisons, so f(n) = 2 log₂ n + 2 = Θ(log n).</p>
+            <p><strong>Common Mistake:</strong> Binary search does 2 comparisons per level (one equality check and one less-than check), not 1. However, the constant factor does not affect the asymptotic Θ(log n) bound.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 8.3 #13</span> — Master Theorem Cases</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem:</strong> For each recurrence, find Θ bound: (a) T(n) = 4T(n/2) + n (b) T(n) = 4T(n/2) + n² (c) T(n) = 4T(n/2) + n³.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — Common parameters:</strong> All three have a=4, b=2, so log_b a = log₂ 4 = 2. This is the threshold exponent.</p>
+            <p><strong>Step 2 — (a) T(n) = 4T(n/2) + n:</strong> f(n) = n = n¹. Compare exponent 1 with threshold 2: 1 &lt; 2, so Case 1 applies. T(n) = Θ(n^{log_b a}) = Θ(n²). The recursion dominates.</p>
+            <p><strong>Step 3 — (b) T(n) = 4T(n/2) + n²:</strong> f(n) = n² matches the threshold n² exactly. Case 2 applies: T(n) = Θ(n² log n).</p>
+            <p><strong>Step 4 — (c) T(n) = 4T(n/2) + n³:</strong> f(n) = n³, exponent 3 &gt; threshold 2. Case 3 potentially applies, but verify regularity: 4·(n/2)³ = 4·n³/8 = n³/2 ≤ c·n³ for c = 1/2 &lt; 1. The regularity condition holds, so T(n) = Θ(n³). The non-recursive work dominates.</p>
+            <p><strong>Common Mistake:</strong> Confusing which case applies based on exponent comparison. Remember: the threshold exponent is log_b a. Compare the exponent of f(n) against it, not against d alone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<a href="#" class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">↑</a>
+</main>
+<script>
+function toggleCard(header) {
+  var card = header.parentElement;
+  if (!card || !card.classList) return;
+  card.classList.toggle('open');
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+}
+function openCardChain(el) {
+  if (!el) return;
+  var parents = [];
+  var p = el.parentElement;
+  while (p) {
+    if (p.classList && p.classList.contains('card') && !p.classList.contains('open'))
+      parents.push(p);
+    p = p.parentElement;
+  }
+  parents.reverse().forEach(function(c) {
+    var h = c.querySelector('.card-header');
+    if (h) toggleCard(h);
+  });
+  if (el.classList && el.classList.contains('card')) {
+    el.querySelectorAll('.card-header').forEach(function(h) {
+      var c = h.parentElement;
+      if (!c.classList.contains('open')) toggleCard(h);
+    });
+  }
+}
+function navigateTo(hash) {
+  var el = document.querySelector(hash);
+  if (!el) return;
+  openCardChain(el);
+  setTimeout(function() {
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 120);
+  closeSidebar();
+  document.getElementById('results').style.display='none';
+}
+function doSearch(q) {
+  if (!q) { document.getElementById('results').style.display='none'; return }
+  var cards = document.querySelectorAll('.card[id]');
+  var found = [];
+  q = q.toLowerCase();
+  cards.forEach(function(c) {
+    if (c.textContent.toLowerCase().indexOf(q) !== -1) found.push(c);
+  });
+  var results = document.getElementById('results');
+  if (found.length === 0) { results.style.display='none'; return }
+  results.innerHTML = found.map(function(c) {
+    var id = c.id || '';
+    var title = (c.querySelector('.card-header')||c).textContent.trim().substring(0,60);
+    return '<a href="#'+id+'" onclick="event.preventDefault();navigateTo(\'#'+id+'\')">'+title+'</a>';
+  }).join('');
+  results.style.display='block';
+}
+function highlightActiveLink() {
+  var links = document.querySelectorAll('.sidebar a');
+  var topSection = null, topDist = Infinity;
+  links.forEach(function(a) {
+    var href = a.getAttribute('href');
+    if (href && href[0] === '#') {
+      var el = document.getElementById(href.substring(1));
+      if (el) {
+        var rect = el.getBoundingClientRect();
+        var dist = Math.abs(rect.top);
+        if (dist < topDist) { topDist = dist; topSection = a; }
+      }
+    }
+  });
+  links.forEach(function(x){x.classList.remove('active')});
+  if (topSection) topSection.classList.add('active');
+}
+window.addEventListener('scroll', highlightActiveLink);
+window.addEventListener('hashchange', function() {
+  var hash = window.location.hash;
+  if (hash) navigateTo(hash);
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = window.location.hash;
+  if (hash) navigateTo(hash);
+});
+</script>
+</body>
+</html>
