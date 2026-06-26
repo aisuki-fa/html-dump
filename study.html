@@ -48,6 +48,8 @@ section{margin-bottom:48px;scroll-margin-top:80px}
 .tag-high{background:#607d3b22;color:var(--green)}
 .tag-mit{background:#bc6c2522;color:var(--orange)}
 .tag-book{background:#d4a37333;color:var(--accent2)}
+.tag-web{background:#607d3b44;color:var(--green);border:1px dashed var(--green)}
+.tag-set{background:#28361833;color:var(--text2);border:1px solid var(--text2)}
 .theorem{background:var(--surface2);border-left:4px solid var(--accent);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
 .defn{background:var(--surface2);border-left:4px solid var(--green);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
 .solution{background:var(--bg);border:1px solid #607d3b44;border-radius:var(--radius);padding:14px;margin:10px 0}
@@ -75,6 +77,16 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 .back-top{position:fixed;bottom:26px;right:26px;background:var(--accent);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:.85;transition:.2s;box-shadow:0 2px 10px rgba(212,163,115,.3)}
 .back-top:hover{opacity:1}
 .back-top .arrow-up{font-size:1.1rem}
+.filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.filter-pill{padding:6px 16px;border-radius:20px;border:1px solid var(--surface2);background:var(--surface);color:var(--text2);cursor:pointer;font-size:.82rem;font-family:inherit;transition:.2s}
+.filter-pill:hover,.filter-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.card-progress,.card-star{cursor:pointer;user-select:none;margin-right:6px;transition:.2s;font-size:.95rem}
+.card-progress{color:var(--surface2)}
+.card-progress.checked{color:var(--green)}
+.card-star{color:var(--surface2)}
+.card-star.active{color:var(--yellow)}
+.card.hidden{display:none}
+section.hidden{display:none}
 </style>
 </head>
 <body>
@@ -119,18 +131,30 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
   <a href="#recurrences-m4cs" class="sub" onclick="navigateTo('#recurrences-m4cs')">M4CS Textbook</a>
   <a href="#recurrences-textbook" class="sub" onclick="navigateTo('#recurrences-textbook')">Textbook Problems</a>
   <a href="#recurrences-problems" class="sub" onclick="navigateTo('#recurrences-problems')">MIT / DM Problems</a>
+  <a href="#metalogic" onclick="navigateTo('#metalogic')">8. Meta-Logic</a>
+  <a href="#logic-fallacies" class="sub" onclick="navigateTo('#logic-fallacies')">Logical Fallacies</a>
+  <a href="#logic-consistency" class="sub" onclick="navigateTo('#logic-consistency')">Consistency</a>
+  <a href="#logic-completeness" class="sub" onclick="navigateTo('#logic-completeness')">Completeness</a>
+  <a href="#logic-godel" class="sub" onclick="navigateTo('#logic-godel')">Gödel's Incompleteness</a>
 </nav>
 <main>
 <div class="search">
   <input type="text" id="searchInput" placeholder="Search topics, problems, definitions..." oninput="doSearch(this.value)">
   <div id="results"></div>
 </div>
+<div class="filter-bar">
+  <button class="filter-pill active" data-filter="0" onclick="doFilter(0)">All</button>
+  <button class="filter-pill" data-filter="1" onclick="doFilter(1)">Set 1 (Summations, Asymptotics)</button>
+  <button class="filter-pill" data-filter="2" onclick="doFilter(2)">Set 2 (Logic, Proofs, Sets, Induction)</button>
+  <button class="filter-pill" data-filter="3" onclick="doFilter(3)">Set 3 (Recurrences / Master Theorem)</button>
+  <button class="filter-pill" data-filter="4" onclick="doFilter(4)">Set 4 (Meta-Logic)</button>
+</div>
 <section id="overview">
   <div class="hero">
     <h1>Discrete Mathematics — Exam Cram</h1>
     <p>CSE 4203 / CSE 4302 &middot; Md. Bakhtiar Hasan &middot; IUT</p>
     <div class="grid" style="margin-top:20px">
-      <div class="stat-card"><div class="num">7</div><div class="desc">Topics</div></div>
+      <div class="stat-card"><div class="num">8</div><div class="desc">Topics</div></div>
       <div class="stat-card"><div class="num">50+</div><div class="desc">Curated Problems</div></div>
       <div class="stat-card"><div class="num">3</div><div class="desc">Textbooks Mined</div></div>
       <div class="stat-card"><div class="num">3</div><div class="desc">Assignments</div></div>
@@ -138,138 +162,32 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
   </div>
   <div class="info-box">
     <div class="title">Study Strategy</div>
-    <p style="font-size:.92rem">Sources mined: M4CS textbook (3 sections), Rosen textbook (Ch 1), MIT 6.042J assignments & recitations (Fall 2010), DM lecture slides & assignments. Problems classified by topic. Solutions in exam-cram format: short solution + key insight + common mistake.</p>
+    <p style="font-size:.92rem">Sources mined: M4CS textbook (3 sections), Rosen textbook (Ch 1), MIT 6.042J assignments & recitations (Fall 2010), DM lecture slides & assignments. Problems classified by topic. Solutions in exam-cram format: short solution + key insight + common mistake. <strong>New:</strong> Section 8 covers fallacies, consistency, completeness, and Gödel's Incompleteness Theorem.</p>
   </div>
 
-<div class="card" id="proofs-textbook">
-  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS</span> / <span class="tag tag-book">Rosen</span> — Textbook Proof Problems</span><span class="arrow">▾</span></div>
+<div class="card" id="cheat-sheet">
+  <div class="card-header" onclick="toggleCard(this)"><span>📋 Quick-Reference Cheat Sheet (Closed-Book Cram)</span><span class="arrow">▾</span></div>
   <div class="card-body">
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.7 #8</span> Irrational^Rational</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove there exist irrational numbers a,b such that a^b is rational. (Hint: Consider √2^√2.)</p>
-        <div class="solution">
-          <div class="label">Non-Constructive Proof</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> Consider the number √2^√2. It is either rational or irrational.</p>
-            <p><strong>Step 2 (Case 1):</strong> If √2^√2 is rational, then we are done — take a = √2 and b = √2, and a^b is rational.</p>
-            <p><strong>Step 3 (Case 2):</strong> If √2^√2 is irrational, let a = √2^√2 (irrational) and b = √2 (irrational). Then a^b = (√2^√2)^√2 = √2^(√2·√2) = √2^2 = 2, which is rational.</p>
-            <p><strong>Step 4:</strong> In either case, we have found irrational a,b with a^b rational.</p>
-            <p><strong>Key Insight:</strong> Non-constructive proof — we prove existence without knowing which case actually holds.</p>
-          </div>
-        </div>
-        <div class="mistake">
-          <div class="label">Common Mistake</div>
-          <div class="body">
-            <p><strong>Mistake:</strong> Trying to construct a and b explicitly from the start instead of using a case analysis.</p>
-            <p><strong>Why it fails:</strong> We don't know whether √2^√2 is rational or irrational, so any explicit construction would require resolving an open problem. The case split avoids this.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #16</span> √2 + √3 irrational</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove √2 + √3 is irrational.</p>
-        <div class="solution">
-          <div class="label">Proof by Contradiction</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> Assume for contradiction that √2 + √3 is rational. Then √2 + √3 = p/q for integers p,q with q ≠ 0 in lowest terms.</p>
-            <p><strong>Step 2:</strong> Square both sides: (√2 + √3)^2 = 2 + 3 + 2√6 = 5 + 2√6 = p^2/q^2.</p>
-            <p><strong>Step 3:</strong> Isolate √6: 2√6 = p^2/q^2 - 5, so √6 = (p^2/q^2 - 5)/2.</p>
-            <p><strong>Step 4:</strong> The left side (√6) is irrational. The right side is a rational combination of integers and thus rational.</p>
-            <p><strong>Step 5:</strong> This is a contradiction — an irrational number cannot equal a rational number. Therefore our assumption was false, and √2 + √3 is irrational.</p>
-            <p><strong>Key Insight:</strong> Square the sum to isolate √6, then use the closure of rational numbers under arithmetic operations to reach a contradiction.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #6</span> Direct Proof</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove the product of two odd integers is odd.</p>
-        <div class="solution">
-          <div class="label">Direct Proof</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> Let a and b be arbitrary odd integers. By definition of odd, a = 2k + 1 and b = 2m + 1 for some integers k,m.</p>
-            <p><strong>Step 2:</strong> Compute the product: a·b = (2k + 1)(2m + 1) = 4km + 2k + 2m + 1.</p>
-            <p><strong>Step 3:</strong> Factor out a 2 from the first three terms: 4km + 2k + 2m = 2(2km + k + m).</p>
-            <p><strong>Step 4:</strong> So a·b = 2(2km + k + m) + 1, which is of the form 2·(integer) + 1.</p>
-            <p><strong>Step 5:</strong> Therefore a·b is odd by definition, completing the proof.</p>
-          </div>
-        </div>
-        <div class="mistake">
-          <div class="label">Common Mistake</div>
-          <div class="body">
-            <p><strong>Mistake:</strong> Showing the sum instead of the product. The sum of two odd numbers is even (2k+1 + 2m+1 = 2(k+m+1)), but the product is odd. Don't confuse the two.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #16</span> Contrapositive</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove by contrapositive: if x+y ≥ 2, then x ≥ 1 or y ≥ 1.</p>
-        <div class="solution">
-          <div class="label">Contrapositive</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> The contrapositive of "P → Q" is "¬Q → ¬P". Here P is "x+y ≥ 2" and Q is "x ≥ 1 or y ≥ 1".</p>
-            <p><strong>Step 2:</strong> Negate Q: ¬(x ≥ 1 or y ≥ 1) means x < 1 and y < 1 by De Morgan's law.</p>
-            <p><strong>Step 3:</strong> Negate P: ¬(x+y ≥ 2) means x+y < 2.</p>
-            <p><strong>Step 4:</strong> So the contrapositive is: if x < 1 and y < 1, then x+y < 2.</p>
-            <p><strong>Step 5:</strong> This is true because the sum of two numbers each strictly less than 1 is strictly less than 2.</p>
-            <p><strong>Key Insight:</strong> The contrapositive is logically equivalent to the original statement, so proving it suffices. This approach avoids case analysis on whether x or y meets the threshold.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.8 #1</span> Proof by Cases</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove n² + 1 ≥ 2n for all integers n.</p>
-        <div class="solution">
-          <div class="label">Case Analysis</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> We consider two cases: n ≥ 1 and n ≤ 0. These cover all integers.</p>
-            <p><strong>Step 2 (Case n ≥ 1):</strong> (n−1)² ≥ 0 for all integers. Expand: n² − 2n + 1 ≥ 0, so n² + 1 ≥ 2n.</p>
-            <p><strong>Step 3 (Case n ≤ 0):</strong> n² ≥ 0 always. Since n ≤ 0, we have 2n ≤ 0, so 1 ≥ 2n. Adding n² (which is ≥ 0) to both sides: n² + 1 ≥ 2n.</p>
-            <p><strong>Step 4:</strong> Both cases give n² + 1 ≥ 2n, so the statement holds for all integers n.</p>
-            <p><strong>Key Insight:</strong> The (n−1)² approach works only for n ≥ 1 (since it relies on real-number squaring). For n ≤ 0 we need a separate argument.</p>
-          </div>
-        </div>
-        <div class="mistake">
-          <div class="label">Common Mistake</div>
-          <div class="body">
-            <p><strong>Mistake:</strong> Only proving for positive n using the (n−1)² method and forgetting the n ≤ 0 case.</p>
-            <p><strong>Why it fails:</strong> Without the second case, the proof is incomplete — the claim must hold for all integers.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #12</span> Contradiction</span><span class="arrow">▾</span></div>
-      <div class="card-body">
-        <p>Prove if a·b ≤ n then a ≤ √n or b ≤ √n for positive integers a,b.</p>
-        <div class="solution">
-          <div class="label">Contrapositive</div>
-          <div class="body">
-            <p><strong>Step 1:</strong> Prove the contrapositive: if a > √n and b > √n, then a·b > n.</p>
-            <p><strong>Step 2:</strong> Since a,b are positive integers, we can multiply inequalities: a > √n and b > √n implies a·b > √n·√n = n.</p>
-            <p><strong>Step 3:</strong> This contradicts a·b ≤ n, so the original implication holds.</p>
-            <p><strong>Key Insight:</strong> The contrapositive swaps the conclusion inequality into a single multiplication, which is much simpler to reason about.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div class="theorem"><strong>Truth Tables (p, q):</strong> p→q ≡ ¬p∨q (false only when p=T, q=F). p↔q ≡ (p→q)∧(q→p). XOR true when inputs differ. NAND is universal.</div>
+    <div class="theorem"><strong>Quantifier Negation:</strong> ¬∀x P(x) ≡ ∃x ¬P(x). ¬∃x P(x) ≡ ∀x ¬P(x). ∀x∃y ≠ ∃y∀x in general.</div>
+    <div class="theorem"><strong>Proof Templates:</strong> Direct (assume P, deduce Q). Contrapositive (prove ¬Q→¬P). Contradiction (assume ¬P, derive R∧¬R). Cases (exhaust C₁..Cₖ, prove each Cᵢ→P). Induction (P(0), ∀n P(n)→P(n+1)). Strong Induction (P(0)..P(b), [P(0)∧..∧P(n-1)]→P(n)).</div>
+    <div class="theorem"><strong>Set Equality:</strong> A = B iff A⊆B and B⊆A. |P(A)| = 2^{|A|}. Translate to propositional logic via x∈(A∪B) ≡ x∈A ∨ x∈B, x∈(A∩B) ≡ x∈A ∧ x∈B, x∈(A\B) ≡ x∈A ∧ x∉B.</div>
+    <div class="theorem"><strong>Closed Forms:</strong> ∑i = n(n+1)/2. ∑i² = n(n+1)(2n+1)/6. ∑i³ = [n(n+1)/2]². ∑xⁱ (i=0..n) = (x^{n+1}-1)/(x-1) for x≠1. ∑_{i=0}^{∞} xⁱ = 1/(1-x) for |x|&lt;1.</div>
+    <div class="theorem"><strong>Integral Bound (f decreasing):</strong> f(n) + ∫₁ⁿ f(x)dx ≤ ∑_{k=1}^{n} f(k) ≤ f(1) + ∫₁ⁿ f(x)dx.</div>
+    <div class="theorem"><strong>Master Theorem (T(n) = aT(n/b) + f(n)):</strong> Case 1 (f(n)=O(n^{log_b a - ε})) → T(n)=Θ(n^{log_b a}). Case 2 (f(n)=Θ(n^{log_b a} log^k n)) → T(n)=Θ(n^{log_b a} log^{k+1} n). Case 3 (f(n)=Ω(n^{log_b a + ε}) ∧ af(n/b)≤cf(n)) → T(n)=Θ(f(n)).</div>
+    <div class="theorem"><strong>Logical Fallacies:</strong> Affirming conclusion ((p→q)∧q)→p. Denying hypothesis ((p→q)∧¬p)→¬q. Begging the question (circular reasoning).</div>
+    <div class="theorem"><strong>Gödel's Incompleteness (1930s):</strong> Any consistent axiom system powerful enough for arithmetic cannot prove all true statements (1st) and cannot prove its own consistency (2nd). Self-reference: "This statement is unprovable."</div>
   </div>
 </div>
+
+<div class="card" id="revision-list">
+  <div class="card-header" onclick="toggleCard(this)"><span>⭐ Last-Minute Revision — Starred Cards</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <p style="color:var(--text2);margin-bottom:8px">Click ☆ on any card to add it here for last-minute review.</p>
+    <div id="revision-items"></div>
+  </div>
+</div>
+
 </section>
 
 <section id="topic-freq">
@@ -294,8 +212,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </section>
 
 <!-- ===================== 1. LOGIC ===================== -->
-<section id="logic">
-<h2>1. Logic</h2>
+<section id="logic" data-set="2">
+<h2>1. Logic <span class="tag tag-set">Set 2</span></h2>
 
 <div class="card open" id="logic-propositions">
   <div class="card-header" onclick="toggleCard(this)"><span>Propositions & Truth Tables</span><span class="arrow">▾</span></div>
@@ -728,8 +646,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </section>
 
 <!-- ===================== 2. PROOFS ===================== -->
-<section id="proofs">
-<h2>2. Proof Techniques</h2>
+<section id="proofs" data-set="2">
+<h2>2. Proof Techniques <span class="tag tag-set">Set 2</span></h2>
 
 <div class="card" id="proofs-direct">
   <div class="card-header" onclick="toggleCard(this)"><span>Direct & Contrapositive Proofs</span><span class="arrow">▾</span></div>
@@ -838,11 +756,141 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
     </div>
   </div>
 </div>
+<div class="card" id="proofs-textbook">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 2</span> <span class="tag tag-book">M4CS</span> / <span class="tag tag-book">Rosen</span> — Textbook Proof Problems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.7 #8</span> Irrational^Rational</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove there exist irrational numbers a,b such that a^b is rational. (Hint: Consider √2^√2.)</p>
+        <div class="solution">
+          <div class="label">Non-Constructive Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Consider the number √2^√2. It is either rational or irrational.</p>
+            <p><strong>Step 2 (Case 1):</strong> If √2^√2 is rational, then we are done — take a = √2 and b = √2, and a^b is rational.</p>
+            <p><strong>Step 3 (Case 2):</strong> If √2^√2 is irrational, let a = √2^√2 (irrational) and b = √2 (irrational). Then a^b = (√2^√2)^√2 = √2^(√2·√2) = √2^2 = 2, which is rational.</p>
+            <p><strong>Step 4:</strong> In either case, we have found irrational a,b with a^b rational.</p>
+            <p><strong>Key Insight:</strong> Non-constructive proof — we prove existence without knowing which case actually holds.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Trying to construct a and b explicitly from the start instead of using a case analysis.</p>
+            <p><strong>Why it fails:</strong> We don't know whether √2^√2 is rational or irrational, so any explicit construction would require resolving an open problem. The case split avoids this.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #16</span> √2 + √3 irrational</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove √2 + √3 is irrational.</p>
+        <div class="solution">
+          <div class="label">Proof by Contradiction</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Assume for contradiction that √2 + √3 is rational. Then √2 + √3 = p/q for integers p,q with q ≠ 0 in lowest terms.</p>
+            <p><strong>Step 2:</strong> Square both sides: (√2 + √3)^2 = 2 + 3 + 2√6 = 5 + 2√6 = p^2/q^2.</p>
+            <p><strong>Step 3:</strong> Isolate √6: 2√6 = p^2/q^2 - 5, so √6 = (p^2/q^2 - 5)/2.</p>
+            <p><strong>Step 4:</strong> The left side (√6) is irrational. The right side is a rational combination of integers and thus rational.</p>
+            <p><strong>Step 5:</strong> This is a contradiction — an irrational number cannot equal a rational number. Therefore our assumption was false, and √2 + √3 is irrational.</p>
+            <p><strong>Key Insight:</strong> Square the sum to isolate √6, then use the closure of rational numbers under arithmetic operations to reach a contradiction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #6</span> Direct Proof</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove the product of two odd integers is odd.</p>
+        <div class="solution">
+          <div class="label">Direct Proof</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let a and b be arbitrary odd integers. By definition of odd, a = 2k + 1 and b = 2m + 1 for some integers k,m.</p>
+            <p><strong>Step 2:</strong> Compute the product: a·b = (2k + 1)(2m + 1) = 4km + 2k + 2m + 1.</p>
+            <p><strong>Step 3:</strong> Factor out a 2 from the first three terms: 4km + 2k + 2m = 2(2km + k + m).</p>
+            <p><strong>Step 4:</strong> So a·b = 2(2km + k + m) + 1, which is of the form 2·(integer) + 1.</p>
+            <p><strong>Step 5:</strong> Therefore a·b is odd by definition, completing the proof.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Showing the sum instead of the product. The sum of two odd numbers is even (2k+1 + 2m+1 = 2(k+m+1)), but the product is odd. Don't confuse the two.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.7 #16</span> Contrapositive</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove by contrapositive: if x+y ≥ 2, then x ≥ 1 or y ≥ 1.</p>
+        <div class="solution">
+          <div class="label">Contrapositive</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The contrapositive of "P → Q" is "¬Q → ¬P". Here P is "x+y ≥ 2" and Q is "x ≥ 1 or y ≥ 1".</p>
+            <p><strong>Step 2:</strong> Negate Q: ¬(x ≥ 1 or y ≥ 1) means x < 1 and y < 1 by De Morgan's law.</p>
+            <p><strong>Step 3:</strong> Negate P: ¬(x+y ≥ 2) means x+y < 2.</p>
+            <p><strong>Step 4:</strong> So the contrapositive is: if x < 1 and y < 1, then x+y < 2.</p>
+            <p><strong>Step 5:</strong> This is true because the sum of two numbers each strictly less than 1 is strictly less than 2.</p>
+            <p><strong>Key Insight:</strong> The contrapositive is logically equivalent to the original statement, so proving it suffices. This approach avoids case analysis on whether x or y meets the threshold.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">Rosen 1.8 #1</span> Proof by Cases</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove n² + 1 ≥ 2n for all integers n.</p>
+        <div class="solution">
+          <div class="label">Case Analysis</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> We consider two cases: n ≥ 1 and n ≤ 0. These cover all integers.</p>
+            <p><strong>Step 2 (Case n ≥ 1):</strong> (n−1)² ≥ 0 for all integers. Expand: n² − 2n + 1 ≥ 0, so n² + 1 ≥ 2n.</p>
+            <p><strong>Step 3 (Case n ≤ 0):</strong> n² ≥ 0 always. Since n ≤ 0, we have 2n ≤ 0, so 1 ≥ 2n. Adding n² (which is ≥ 0) to both sides: n² + 1 ≥ 2n.</p>
+            <p><strong>Step 4:</strong> Both cases give n² + 1 ≥ 2n, so the statement holds for all integers n.</p>
+            <p><strong>Key Insight:</strong> The (n−1)² approach works only for n ≥ 1 (since it relies on real-number squaring). For n ≤ 0 we need a separate argument.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Only proving for positive n using the (n−1)² method and forgetting the n ≤ 0 case.</p>
+            <p><strong>Why it fails:</strong> Without the second case, the proof is incomplete — the claim must hold for all integers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-book">M4CS 1.8 #12</span> Contradiction</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Prove if a·b ≤ n then a ≤ √n or b ≤ √n for positive integers a,b.</p>
+        <div class="solution">
+          <div class="label">Contrapositive</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Prove the contrapositive: if a > √n and b > √n, then a·b > n.</p>
+            <p><strong>Step 2:</strong> Since a,b are positive integers, we can multiply inequalities: a > √n and b > √n implies a·b > √n·√n = n.</p>
+            <p><strong>Step 3:</strong> This contradicts a·b ≤ n, so the original implication holds.</p>
+            <p><strong>Key Insight:</strong> The contrapositive swaps the conclusion inequality into a single multiplication, which is much simpler to reason about.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </section>
 
 <!-- ===================== 3. SETS ===================== -->
-<section id="sets">
-<h2>3. Sets</h2>
+<section id="sets" data-set="2">
+<h2>3. Sets <span class="tag tag-set">Set 2</span></h2>
 
 <div class="card">
   <div class="card-header" onclick="toggleCard(this)"><span>Set Theory Essentials</span><span class="arrow">▾</span></div>
@@ -977,8 +1025,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </section>
 
 <!-- ===================== 4. INDUCTION ===================== -->
-<section id="induction">
-<h2>4. Induction</h2>
+<section id="induction" data-set="2">
+<h2>4. Induction <span class="tag tag-set">Set 2</span></h2>
 
 <div class="card" id="induction-ordinary">
   <div class="card-header" onclick="toggleCard(this)"><span>Ordinary & Strong Induction</span><span class="arrow">▾</span></div>
@@ -1329,8 +1377,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </div>
 </section>
 <!-- ===================== 5. SUMMATIONS ===================== -->
-<section id="summations">
-<h2>5. Summations</h2>
+<section id="summations" data-set="1">
+<h2>5. Summations <span class="tag tag-set">Set 1</span></h2>
 
 <div class="card" id="summations-formulas">
   <div class="card-header" onclick="toggleCard(this)"><span>Closed Forms & Key Formulas</span><span class="arrow">▾</span></div>
@@ -1700,8 +1748,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </section>
 
 <!-- ===================== 6. ASYMPTOTICS ===================== -->
-<section id="asymptotics">
-<h2>6. Asymptotics</h2>
+<section id="asymptotics" data-set="1">
+<h2>6. Asymptotics <span class="tag tag-set">Set 1</span></h2>
 
 <div class="card" id="asymptotics-bigo">
   <div class="card-header" onclick="toggleCard(this)"><span>Big O / Ω / Θ / ∼ Definitions</span><span class="arrow">▾</span></div>
@@ -2106,8 +2154,8 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </div>
 </section>
 <!-- ===================== 7. RECURRENCES ===================== -->
-<section id="recurrences">
-<h2>7. Recurrences</h2>
+<section id="recurrences" data-set="3">
+<h2>7. Recurrences <span class="tag tag-set">Set 3</span></h2>
 
 <div class="card" id="recurrences-master">
   <div class="card-header" onclick="toggleCard(this)"><span>Master Theorem & Akra-Bazzi</span><span class="arrow">▾</span></div>
@@ -2453,6 +2501,674 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 </div>
 </section>
 
+<!-- ===================== 8. META-LOGIC ===================== -->
+<section id="metalogic" data-set="4">
+<h2>8. Meta-Logic — Fallacies, Consistency, Completeness, Gödel <span class="tag tag-set">Set 4</span></h2>
+
+<div class="card" id="logic-fallacies">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Logical Fallacies</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+    <div class="theorem"><strong>Fallacy:</strong> An error in reasoning that results in an invalid argument. Fallacies resemble valid rules of inference but are based on contingencies rather than tautologies. (Rosen §1.6.6)</div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">Rosen §1.6.6</span> — Affirming the Conclusion</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Fallacy of Affirming the Conclusion:</strong> The proposition ((p→q) ∧ q) → p is <strong>not</strong> a tautology — it is false when p is false and q is true. Despite this, many incorrect arguments treat it as valid.</div>
+        <p><strong>Example (Rosen):</strong> "If you do every problem in this book, then you will learn discrete mathematics. You learned discrete mathematics. Therefore, you did every problem in this book."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let p = "You did every problem," q = "You learned DM." The argument is: p→q, q, therefore p.</p>
+            <p><strong>Step 2:</strong> You could learn DM by reading, attending lectures, or doing some (not all) problems. The premise q (you learned DM) could be true while p (you did every problem) is false.</p>
+            <p><strong>Step 3:</strong> This is exactly the truth table row where p is false and q is true: p→q is true (F→T = T), q is true, but the conclusion p is false. So the inference is invalid.</p>
+            <p><strong>Key Insight:</strong> Affirming the conclusion confuses a sufficient condition (doing all problems is enough to learn DM) with a necessary one (it's not the only way).</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">How to Spot</div>
+          <div class="body">
+            <p>If an argument says "If P then Q, Q is true, therefore P is true," it's committing this fallacy. The correct inference is modus ponens: P→Q, P, therefore Q.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">Rosen §1.6.6</span> — Denying the Hypothesis</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Fallacy of Denying the Hypothesis:</strong> The proposition ((p→q) ∧ ¬p) → ¬q is <strong>not</strong> a tautology — it is false when p is false and q is true.</div>
+        <p><strong>Example (Rosen):</strong> "If you do every problem in this book, then you will learn discrete mathematics. You did not do every problem. Therefore, you did not learn discrete mathematics."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Let p = "You did every problem," q = "You learned DM." The argument is: p→q, ¬p, therefore ¬q.</p>
+            <p><strong>Step 2:</strong> Even without doing every problem, you could still learn DM through other means. So ¬p (didn't do every problem) can be true while q (learned DM) is also true, making ¬q false.</p>
+            <p><strong>Step 3:</strong> This is the truth table row p=F, q=T: p→q is true, ¬p is true, but the conclusion ¬q is false.</p>
+            <p><strong>Key Insight:</strong> Denying the hypothesis confuses a sufficient condition with a necessary condition. The correct inference is modus tollens: P→Q, ¬Q, therefore ¬P.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">Rosen §1.8</span> — Fallacious "Proof" Examples</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem (Rosen Ex 17):</strong> Find the error in this "proof": "If n² is positive, then n is positive."</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The argument claims: "If n is positive, then n² is positive" (∀n, P(n)→Q(n)). We have Q(n) (n² is positive), so conclude P(n) (n is positive).</p>
+            <p><strong>Step 2:</strong> This is the fallacy of affirming the conclusion. Counterexample: n = -1 gives n² = 1 (positive) but n is negative.</p>
+            <p><strong>Key Insight:</strong> Always test a proof with edge cases (negative numbers, zero, etc.) before accepting it.</p>
+          </div>
+        </div>
+        <p><strong>Problem (Rosen Ex 18):</strong> Find the error: "If n is not positive, then n² is not positive."</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The argument claims: from ¬P(n) (n not positive) and ∀n (P(n)→Q(n)), conclude ¬Q(n) (n² not positive).</p>
+            <p><strong>Step 2:</strong> This is the fallacy of denying the hypothesis. Counterexample: n = -1 is not positive, but n² = 1 is positive.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">Rosen §1.8</span> — Begging the Question (Circular Reasoning)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Begging the Question:</strong> A fallacy where one or more steps of a proof are based on the truth of the statement being proved — the conclusion is assumed in the premises (circular reasoning).</div>
+        <p><strong>Example (Rosen Ex 19):</strong> "Suppose n² is even. Then n² = 2k for some integer k. Let n = 2l for some integer l. This shows n is even."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The statement "let n = 2l for some integer l" is exactly what we're trying to prove — that n is even.</p>
+            <p><strong>Step 2:</strong> No justification is given for why n can be written as 2l. The proof assumes its own conclusion.</p>
+            <p><strong>Key Insight:</strong> The statement itself (if n² even then n even) is actually true — but the proof is invalid because it uses circular reasoning. A correct proof requires the contrapositive or prime factorization.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Straw Man Fallacy</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Straw Man:</strong> Misrepresenting someone's argument to make it easier to attack. Instead of addressing the actual argument, you attack a distorted or exaggerated version of it.</div>
+        <p><strong>Example (DM context):</strong> <em>Person A:</em> "I think we need to prove the base case before the inductive step." <em>Person B:</em> "So you're saying we should memorize base cases instead of understanding the inductive hypothesis? That's ridiculous."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Person A's actual position: the base case is a necessary component of an inductive proof.</p>
+            <p><strong>Step 2:</strong> Person B misrepresents this as "memorize base cases instead of understanding induction" — which is not what Person A said at all.</p>
+            <p><strong>Step 3:</strong> Person B then attacks this made-up position and claims victory. The original argument was never addressed.</p>
+            <p><strong>Key Insight:</strong> In math proofs, straw man arguments waste time by disproving claims nobody made. Always restate your opponent's position in your own words to confirm understanding before rebutting.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — False Dilemma (False Dichotomy)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>False Dilemma:</strong> Presenting only two options when more exist. This forces a choice between extremes when intermediate positions are available.</div>
+        <p><strong>Example (DM context):</strong> "Either P=NP or computer science is useless. P=NP hasn't been proven yet. Therefore, computer science is useless."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The argument presents only two possibilities: P=NP or CS is useless. This ignores the third option: P≠NP but CS is still useful.</p>
+            <p><strong>Step 2:</strong> Computer science has produced countless important results (cryptography, algorithms, programming languages, etc.) regardless of the P vs NP question.</p>
+            <p><strong>Step 3:</strong> The false dilemma improperly restricts the universe of possibilities.</p>
+            <p><strong>Key Insight:</strong> Proof by cases is only valid when the cases are <em>exhaustive</em>. A false dilemma smuggles in non-exhaustive cases. Always check: "Are there other possibilities not considered?"</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">DM Connection</div>
+          <div class="body">
+            <p>This fallacy is especially dangerous in proofs by cases — if your cases don't cover all possibilities, the proof is invalid. For example, proving something for "n even" and "n odd" covers all integers. But proving it for "n positive" and "n negative" misses n=0.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Slippery Slope</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Slippery Slope:</strong> Arguing that a relatively small first step inevitably leads to a chain of events culminating in some (usually bad) effect, without providing evidence for the chain of causation.</div>
+        <p><strong>Example (DM context):</strong> "If we allow the inductive hypothesis to assume P(k) for k < n, then next we'll be assuming P(k) for all k without proof, and then we won't need base cases at all, and mathematics will collapse!"</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The argument claims that assuming P(k) for k < n (strong induction) leads to "mathematics collapsing" — but provides no evidence for this chain.</p>
+            <p><strong>Step 2:</strong> Strong induction is a legitimate, well-understood proof technique with a solid logical foundation. It does not lead to abandoning base cases.</p>
+            <p><strong>Step 3:</strong> Each step in the chain requires its own justification. A valid inductive proof explicitly shows each implication P(k) → P(k+1); a slippery slope skips these justifications.</p>
+            <p><strong>Key Insight:</strong> The slippery slope is a "false implication" — it asserts P→Q→R without proving any of the intermediate arrows. Compare with mathematical induction, where each arrow (inductive step) is explicitly proved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Appeal to Ignorance (Argumentum ad Ignorantiam)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Appeal to Ignorance:</strong> Claiming something is true because it hasn't been proven false (or vice versa). The burden of proof is shifted incorrectly.</div>
+        <p><strong>Example (DM context):</strong> "No one has found a counterexample to Goldbach's conjecture after centuries of searching. Therefore, Goldbach's conjecture is true."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The absence of a counterexample is not the same as a proof. There might be a counterexample that nobody has found yet.</p>
+            <p><strong>Step 2:</strong> In discrete mathematics, many conjectures seemed true for large ranges until counterexamples were found (e.g., the Borwein integral pattern that breaks at n=15).</p>
+            <p><strong>Step 3:</strong> The correct logical form: ¬∃x ¬P(x) does NOT imply ∀x P(x) unless the domain is finite and we've checked every element.</p>
+            <p><strong>Key Insight:</strong> This is connected to the limits of induction in math — checking finitely many cases never proves a universal statement over an infinite domain. That's why we need mathematical induction, not empirical checking.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Thinking "no counterexample found" equals "the statement is true."</p>
+            <p><strong>Why it fails:</strong> In mathematics, conjectures require proof, not evidence. A statement proved true for n up to 10⁶ might still fail at 10⁶+1. This is why induction proofs must prove the inductive step for all n — not just test it on finitely many values.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Hasty Generalization</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Hasty Generalization:</strong> Drawing a general conclusion from insufficient or unrepresentative evidence. The sample size is too small to support the conclusion.</div>
+        <p><strong>Example (DM context):</strong> "I tested the formula n² + n + 41 for n = 0, 1, 2, 3, 4, and it gave prime numbers every time. Therefore, n² + n + 41 produces primes for all n ≥ 0."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Testing 5 values is insufficient to prove a universal claim over all natural numbers (an infinite set).</p>
+            <p><strong>Step 2:</strong> Indeed, n² + n + 41 = 41² + 41 + 41 = 41·43 = 1763 (composite) when n = 41. The pattern fails.</p>
+            <p><strong>Step 3:</strong> This is a classic example in discrete mathematics showing why proof by example doesn't work for universal statements.</p>
+            <p><strong>Key Insight:</strong> Hasty generalization is the informal counterpart to the mathematical error of "proof by insufficient base cases." In induction, you need the base case <em>and</em> the inductive step — many examples alone never constitute a proof.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> In induction proofs, forgetting to verify the inductive step and thinking "I checked the first 10 cases" is sufficient. This is hasty generalization.</p>
+            <p><strong>Why it fails:</strong> P(0) through P(9) being true doesn't mean P(10) is true unless you've proved P(k) → P(k+1). The inductive step is what bridges the gap from finite checking to infinite coverage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Red Herring</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Red Herring:</strong> Introducing an irrelevant topic to divert attention from the original issue. The argument changes the subject to something easier to address.</div>
+        <p><strong>Example (DM context):</strong> "My proof of the recurrence has a small gap, but the algorithm runs in linear time anyway, so it doesn't matter."</p>
+        <div class="solution">
+          <div class="label">Why it fails</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The claim about the algorithm's runtime is a separate issue from whether the recurrence proof is correct.</p>
+            <p><strong>Step 2:</strong> Even if the algorithm is fast in practice, the proof still needs to be logically valid. A "small gap" could hide a fundamental error.</p>
+            <p><strong>Step 3:</strong> The runtime claim (even if true) doesn't fix the gap in the proof. Two correct claims don't make an incorrect argument correct.</p>
+            <p><strong>Key Insight:</strong> In mathematical proofs, every step must be justified. Introducing irrelevant true facts doesn't patch gaps in reasoning. Focus on the logical structure, not tangential truths.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">M4CS 3.33</span> — The Converse Fallacy</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem (M4CS 3.33):</strong> The formula (P→Q) ∨ (Q→P) is valid (always true). This suggests a "proof method": to prove an implication is true, just prove its converse is false. But this leads to paradox. Explain the flaw.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The validity of (P→Q) ∨ (Q→P) means at least one is true — but it doesn't tell us which one.</p>
+            <p><strong>Step 2:</strong> If we know Q→P is false, then P→Q must be true (by the validity). So knowing the converse is false does let us conclude the original is true — <em>if we know the converse is false</em>.</p>
+            <p><strong>Step 3:</strong> The fallacy is in thinking we can determine the converse is false without determining the truth of the original. In the calculus example: "If continuous then differentiable" is false, so its converse "If differentiable then continuous" should be true. But this works because we independently know the original is false.</p>
+            <p><strong>Step 4:</strong> The second example fails: "If differentiable then not continuous" is false. The method would claim its converse "If not continuous then differentiable" is true — but that converse is also false. Why? Because we were wrong about the original being false — we assumed it was false without properly verifying.</p>
+            <p><strong>Key Insight:</strong> The "method" only works when we have an independent way to determine the truth of the original implication. The validity of (P→Q) ∨ (Q→P) is about existence, not about which one is true.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Treating (P→Q) ∨ (Q→P) as if it provides a constructive way to determine truth.</p>
+            <p><strong>Why it fails:</strong> A tautology tells you that at least one disjunct is true, not which one. You still need separate reasoning to determine the truth of each component.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-difficulty">Medium</span> — Mathematical Fallacies (Rosen §1.8 + Extra)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Find the error in each mathematical "proof":</strong></p>
+
+        <p><strong>(a) All horses are the same color (Rosen §1.8 — Induction Fallacy):</strong> We prove by induction that for all n ≥ 1, any group of n horses are the same color. <em>Base case n=1:</em> one horse trivially has the same color as itself. <em>Inductive step:</em> Assume any n horses are the same color. Given n+1 horses, remove one to get n horses — by IH they're the same color. Return the removed horse and remove a different one — again by IH these n are the same color. Since the two groups overlap, all n+1 horses are the same color.</p>
+
+        <p><strong>(b) 1 = 2 (Algebraic Fallacy):</strong> Let a = b. Then a² = ab. Subtract b²: a² − b² = ab − b². Factor: (a−b)(a+b) = b(a−b). Divide by (a−b): a+b = b. Since a = b: b+b = b, so 2b = b, so 2 = 1.</p>
+
+        <p><strong>(c) Every integer can be described in fourteen words (Berry Paradox):</strong> Consider the set of integers that <em>cannot</em> be described in fourteen words. This set is non-empty (there are only finitely many fourteen-word descriptions but infinitely many integers). Take the smallest such integer: "The smallest positive integer that cannot be described in fourteen words." That description has fourteen words — contradiction! Therefore, every integer can be described in fourteen words.</p>
+
+        <p><strong>(d) 1 = −1 (Square Root Fallacy):</strong> 1 = √1 = √((−1)(−1)) = √(−1) · √(−1) = i · i = −1.</p>
+
+        <p><strong>(e) All triangles are isosceles (Geometric Fallacy):</strong> Given any triangle ABC, draw the perpendicular bisector of BC and the angle bisector at A. Let their intersection be O. Draw perpendiculars from O to AB and AC. Through a series of angle-side-angle congruences, we "prove" that AB = AC — every triangle is isosceles.</p>
+
+        <div class="solution">
+          <div class="label">Solutions — Where Each Proof Goes Wrong</div>
+          <div class="body">
+            <p><strong>(a) All horses:</strong> The inductive step fails at n=1→2. When n+1=2, removing one horse gives a group of 1 (trivially same color). But the two groups {horse 1} and {horse 2} are <em>disjoint</em> — they don't overlap. The argument that "the two groups overlap" only works when n ≥ 2, so the base case needs to be n=2 (but that's false!). <strong>Fallacy type:</strong> Induction with insufficient base case coverage.</p>
+            <p><strong>(b) 1 = 2:</strong> Division by (a−b) is division by zero (since a=b). Division by zero is undefined — the step is invalid. <strong>Fallacy type:</strong> Invalid algebraic operation (division by zero).</p>
+            <p><strong>(c) Berry Paradox:</strong> The phrase "described in fourteen words" is ambiguous — it's a meta-linguistic description, not a formal mathematical one. The paradox reveals the problem of self-reference in natural language, not a genuine contradiction in mathematics. Unlike Gödel's formal self-reference, this informal paradox doesn't have a well-defined notion of "description." <strong>Fallacy type:</strong> Self-referential paradox (informal language).</p>
+            <p><strong>(d) 1 = −1:</strong> The identity √(ab) = √a · √b only holds for non-negative real numbers. When a = b = −1, both are negative, so the splitting is invalid. <strong>Fallacy type:</strong> Invalid application of a property outside its domain.</p>
+            <p><strong>(e) All triangles isosceles:</strong> The intersection point O lies <em>outside</em> the triangle for non-isosceles triangles — the perpendiculars from O to AB and AC don't fall on the segments but on their extensions. The side-length equalities derived are between external segments, not the triangle's actual sides. <strong>Fallacy type:</strong> Hidden assumption about point location (incomplete case analysis).</p>
+            <p><strong>Key Insight:</strong> Mathematical fallacies teach us to check: (1) Are we dividing by zero? (2) Does the base case actually support the induction? (3) Is the property valid for all elements in the domain? (4) Are there hidden geometric assumptions? (5) Is the self-reference well-defined?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-difficulty">Medium</span> — Set 13: Parity & Number Theory Proof Spotting (Rosen §1.7–1.8 + M4CS Bogus Proofs)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Find the error in each "proof" — the statement may be true, but the proof is invalid:</strong></p>
+
+        <p><strong>(a) Missing case (Rosen §1.7 #3 variant):</strong> "Prove: For all integers n, n² − n is even."<br>
+        <em>Proof:</em> "Case 1: n is even, n = 2k. Then n² − n = 4k² − 2k = 2(2k² − k), which is even. Therefore n² − n is even for all n."</p>
+
+        <p><strong>(b) Extraneous solutions (Rosen §1.8 #36):</strong> "Solve √(2x − 1) = x − 2."<br>
+        <em>Proof:</em> "Square both sides: 2x − 1 = x² − 4x + 4. Rearr: 0 = x² − 6x + 5. Factor: 0 = (x − 1)(x − 5). So x = 1 or x = 5."</p>
+
+        <p><strong>(c) Converse error (Rosen §1.7 #20 variant):</strong> "Prove: If 3n + 2 is even, then n is even."<br>
+        <em>Proof:</em> "Assume n is even: n = 2k. Then 3n + 2 = 6k + 2 = 2(3k + 1), which is even. ✓ Therefore if 3n + 2 is even, n is even."</p>
+
+        <p><strong>(d) Confusing even with divisible by 4:</strong> "Prove: If n² is divisible by 4, then n is divisible by 4."<br>
+        <em>Proof:</em> "Assume n² = 4k for some integer k. Then n = √(4k) = 2√k. Since n is an integer, √k must be an integer, so k = m². Then n² = 4m², so n = 2m. Therefore n is divisible by 4."</p>
+
+        <p><strong>(e) Sign reversal (M4CS §1 Bogus Proof):</strong> "Prove: 1/8 > 1/4."<br>
+        <em>Proof:</em> "3 > 2. Multiply both sides by log(1/2): 3·log(1/2) > 2·log(1/2). Using log properties: log((1/2)³) > log((1/2)²). Since log is increasing: (1/2)³ > (1/2)². Computing: 1/8 > 1/4. ✓"</p>
+
+        <p><strong>(f) Divisibility non-sequitur (Rosen §1.8 #18 variant):</strong> "Prove: If m and n are integers and mn is even, then m and n are both even."<br>
+        <em>Proof:</em> "Assume mn is even. Then mn = 2k. Since 2 is prime, either m or n must contain the factor 2. But if only one is even, the product would have only one factor of 2. Wait... Actually, since the product is even, both m and n must be even."</p>
+
+        <div class="solution">
+          <div class="label">Solutions — Where Each Proof Goes Wrong</div>
+          <div class="body">
+            <p><strong>(a) Missing case:</strong> The proof only covers the "n even" case. It never considers n odd. (The claim is true, but the proof is incomplete. When n = 2k+1: n² − n = (4k²+4k+1) − (2k+1) = 4k²+2k = 2(2k²+k), also even — but the proof didn't show this.) <strong>Error type:</strong> Incomplete case analysis.</p>
+            <p><strong>(b) Extraneous solutions:</strong> Squaring both sides can introduce false solutions. We must check each candidate: x = 5 → √(2·5−1) = √9 = 3 and 5−2 = 3 ✓. x = 1 → √(2·1−1) = √1 = 1 but 1−2 = −1 ✗. Only x = 5 is valid. <strong>Error type:</strong> Missing verification step (loss of logical equivalence).</p>
+            <p><strong>(c) Converse error:</strong> The proof shows "n even ⇒ 3n + 2 even" — which is the CONVERSE of the required statement. The required statement is "3n + 2 even ⇒ n even." We proved the wrong direction. (Affirming the conclusion.) A correct proof uses the contrapositive: if n is odd, then 3n + 2 = 3(2k+1) + 2 = 6k + 5 = 2(3k+2) + 1 is odd. <strong>Error type:</strong> Proving the converse instead of the original (affirming the conclusion).</p>
+            <p><strong>(d) Confusing even with divisible by 4:</strong> n = 2m means n is EVEN, not divisible by 4! Counterexample: n = 2 gives n² = 4 (divisible by 4) but n = 2 is not divisible by 4. The proof correctly shows n is even (n = 2m) but incorrectly concludes divisible by 4. <strong>Error type:</strong> Non-sequitur — the conclusion doesn't follow from the derived fact.</p>
+            <p><strong>(e) Sign reversal:</strong> log(1/2) = log(2⁻¹) = −log(2) which is NEGATIVE. Multiplying an inequality by a negative number reverses the direction: 3 > 2 should become 3·log(1/2) < 2·log(1/2). The entire chain is invalid. <strong>Error type:</strong> Multiplying inequality by a negative number without flipping the sign.</p>
+            <p><strong>(f) Divisibility non-sequitur:</strong> The conclusion that "both m and n are even" is too strong. Counterexample: m = 3 (odd), n = 2 (even) gives mn = 6 (even). The correct conclusion is: if mn is even, then at least one of m, n is even (possibly both). The proof's "both must be even" doesn't follow. <strong>Error type:</strong> Overgeneralization — the conclusion is stronger than what the premises justify.</p>
+            <p><strong>Key Insight:</strong> When spotting errors in proofs, ask: (1) Are all cases covered? (2) Are there extraneous solutions? (3) Is the direction of implication correct? (4) Does the conclusion actually follow? (5) Are operations valid (especially inequality sign flips)? (6) Is the conclusion too strong?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-difficulty">Medium</span> — Fallacy Identification Practice (Set 1)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Identify the fallacy in each argument:</p>
+        <p><strong>(a)</strong> "If it rains, the ground will be wet. The ground is wet. Therefore, it rained."</p>
+        <p><strong>(b)</strong> "If a number is divisible by 6, then it is divisible by 3. This number is not divisible by 6. Therefore, it is not divisible by 3."</p>
+        <p><strong>(c)</strong> "We know that the sum of angles in a triangle is 180° because a triangle has three angles that add to 180°."</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>(a):</strong> Affirming the conclusion. (p→q) ∧ q → p. The ground could be wet for reasons other than rain (sprinklers, flood, etc.).</p>
+            <p><strong>(b):</strong> Denying the hypothesis. (p→q) ∧ ¬p → ¬q. A number could be divisible by 3 without being divisible by 6 (e.g., 3, 9, 15).</p>
+            <p><strong>(c):</strong> Begging the question / circular reasoning. "A triangle has three angles that add to 180°" is just a restatement of what is being proved.</p>
+            <p><strong>Key Insight:</strong> Once you learn the patterns, fallacies become easy to spot. Always ask: does the conclusion follow necessarily from the premises?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Fallacy Identification Practice (Set 2 — Extra)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Identify the fallacy in each argument:</p>
+        <p><strong>(a)</strong> "If we don't teach students about Gödel's theorems, they'll never learn logic, and then they'll make bad engineers, and civilization will collapse. Therefore, we must include Gödel in the curriculum."</p>
+        <p><strong>(b)</strong> "You claim my induction proof has a flaw in the inductive step. But I've seen your code — it's full of bugs. So the flaw must be in your reading, not my proof."</p>
+        <p><strong>(c)</strong> "Professor Hasan says that induction is the most important proof technique. Professor Ahmed also says so. And Professor Rahman agrees. Therefore, induction is objectively the most important proof technique."</p>
+        <p><strong>(d)</strong> "We can either use strong induction or we'll never solve the recurrence. We can't solve it with ordinary induction. So we must use strong induction."</p>
+        <p><strong>(e)</strong> "Every Fibonacci number I've computed (F₀ through F₂₀) is positive. Therefore, all Fibonacci numbers are positive."</p>
+        <div class="solution">
+          <div class="label">Answers</div>
+          <div class="body">
+            <p><strong>(a):</strong> Slippery slope. The chain from "not teaching Gödel" to "civilization collapses" has no intermediate justifications. Each link needs its own proof.</p>
+            <p><strong>(b):</strong> Ad hominem (tu quoque variant) + Red herring. Attacking the critic's code quality is irrelevant to whether the induction proof has a flaw. The argument should address the mathematical content, not the person.</p>
+            <p><strong>(c):</strong> Appeal to authority. While professors are experts, the truth of "induction is most important" isn't settled by counting opinions. This is a subjective claim, and authority doesn't guarantee objective truth.</p>
+            <p><strong>(d):</strong> False dilemma. The argument presents only two options (strong induction or failure). Perhaps ordinary induction can solve it with a clever reformulation, or perhaps a completely different method (like generating functions) works.</p>
+            <p><strong>(e):</strong> Hasty generalization. Twenty examples do not prove a statement for all natural numbers (infinite domain). A proper induction proof requires a base case AND an inductive step. In this case, the claim is actually true and can be proved by induction — but the finite examples alone don't constitute a proof.</p>
+            <p><strong>Key Insight:</strong> Many fallacies appear in disguise. The best defense is to slow down and check: (1) Does the conclusion follow? (2) Are the premises relevant? (3) Are there hidden assumptions?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="logic-consistency">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Consistency</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Definition & Intuition</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Consistency (Propositional Logic — M4CS 3.16):</strong> A set of propositional formulas {P₁, ..., Pₖ} is <strong>consistent</strong> iff there exists a truth assignment (environment) in which all of them are simultaneously true.</div>
+        <div class="defn"><strong>Consistency (Axiom Systems — LS01):</strong> A set of axioms is <strong>consistent</strong> when you cannot prove that False is True (i.e., no contradiction can be derived).</div>
+        <div class="theorem"><strong>Syntactic vs Semantic Consistency:</strong> Syntactic consistency means no proof of a contradiction exists. Semantic consistency means there is a model (an interpretation) where all axioms hold. For propositional logic, these coincide (soundness and completeness theorems).</div>
+        <div class="theorem"><strong>Principle of Explosion (Ex Falso Quodlibet):</strong> From a contradiction, any statement follows. Formally: (P ∧ ¬P) → Q is a tautology for any Q. This is why consistency is essential — a single contradiction makes the entire system trivial (everything becomes provable).</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">M4CS 3.16</span> — Consistency & Satisfiability</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Problem (M4CS 3.16):</strong> A set of propositional formulas {P₁, ..., Pₖ} is consistent iff there is an environment in which they are all true. Write a formula S such that the set is <strong>not</strong> consistent iff S is valid.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The set is consistent iff there exists an assignment where P₁ ∧ P₂ ∧ ... ∧ Pₖ is true. In other words, the conjunction is satisfiable.</p>
+            <p><strong>Step 2:</strong> The set is inconsistent (not consistent) iff the conjunction P₁ ∧ P₂ ∧ ... ∧ Pₖ is <strong>unsatisfiable</strong>.</p>
+            <p><strong>Step 3:</strong> A formula is unsatisfiable iff its negation is valid. So the set is inconsistent iff ¬(P₁ ∧ P₂ ∧ ... ∧ Pₖ) is valid.</p>
+            <p><strong>Step 4:</strong> By De Morgan's law: ¬(P₁ ∧ ... ∧ Pₖ) ≡ ¬P₁ ∨ ¬P₂ ∨ ... ∨ ¬Pₖ. So S = ¬P₁ ∨ ¬P₂ ∨ ... ∨ ¬Pₖ.</p>
+            <p><strong>Step 5:</strong> Verification: the set {P₁, ..., Pₖ} is inconsistent (no assignment makes all true) iff ¬P₁ ∨ ... ∨ ¬Pₖ is always true (valid) — which makes sense because in every assignment, at least one Pᵢ must be false.</p>
+            <p><strong>Key Insight:</strong> Consistency is equivalent to the satisfiability of the conjunction. This bridges logical consistency with truth assignments.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-difficulty">Medium</span> — Consistency Check Practice (Set 1)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Determine whether each set of formulas is consistent (propositional logic):</p>
+        <p><strong>(a)</strong> {p → q, q → r, p ∧ ¬r}</p>
+        <p><strong>(b)</strong> {p ∨ q, ¬p, ¬q}</p>
+        <p><strong>(c)</strong> {p → q, q → ¬p, p}</p>
+        <div class="solution">
+          <div class="label">Solutions</div>
+          <div class="body">
+            <p><strong>(a):</strong> From p ∧ ¬r we have p true and r false. p → q forces q true. q → r forces r true (since q is true). But we already have r false. Contradiction! The set is <strong>inconsistent</strong>.</p>
+            <p><strong>(b):</strong> From ¬p and ¬q, both p and q are false. Then p ∨ q is false. So no assignment satisfies all three. The set is <strong>inconsistent</strong>.</p>
+            <p><strong>(c):</strong> From p we have p true. p → q forces q true. q → ¬p gives ¬p (since q is true), so p is false. But p is true. Contradiction! The set is <strong>inconsistent</strong>.</p>
+            <p><strong>Key Insight:</strong> To check consistency, try to find a satisfying assignment. If the formulas force a contradiction, the set is inconsistent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Consistency Check Practice (Set 2 — Extra)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p>Determine whether each set is consistent:</p>
+        <p><strong>(a)</strong> {p ∨ q, ¬p, r → q, ¬r}</p>
+        <p><strong>(b)</strong> {p → q, ¬q → r, p, ¬r}</p>
+        <p><strong>(c)</strong> {p ↔ q, q ↔ r, p ↔ ¬r}</p>
+        <p><strong>(d)</strong> {p ∧ q, p → ¬q}</p>
+        <p><strong>(e)</strong> {∀x (P(x) → Q(x)), ∃x P(x), ∀x ¬Q(x)}</p>
+        <div class="solution">
+          <div class="label">Solutions</div>
+          <div class="body">
+            <p><strong>(a):</strong> From ¬p, p is false. Since p ∨ q and ¬p, q must be true. r → q is automatically true when q is true (regardless of r). ¬r means r is false. So assignment: p=F, q=T, r=F satisfies all four. The set is <strong>consistent</strong>.</p>
+            <p><strong>(b):</strong> From p and p → q, we get q true. ¬q → r: since q is true, ¬q is false, so ¬q → r is vacuously true. ¬r means r false. So assignment: p=T, q=T, r=F satisfies all four. <strong>Consistent</strong>.</p>
+            <p><strong>(c):</strong> From p ↔ q and q ↔ r, we have p = q = r. But p ↔ ¬r requires p = ¬r. Since p = r (from the first two), this forces p = ¬p, which is impossible. The set is <strong>inconsistent</strong>.</p>
+            <p><strong>(d):</strong> From p ∧ q, p is true and q is true. Then p → ¬q becomes T → F = F. So the last formula is false. No assignment can satisfy both. The set is <strong>inconsistent</strong>.</p>
+            <p><strong>(e):</strong> From ∀x ¬Q(x), all Q(x) are false. From ∃x P(x), there is some a with P(a) true. But ∀x (P(x) → Q(x)) says P(a) → Q(a), which is T → F = F. Contradiction! The set is <strong>inconsistent</strong>.</p>
+            <p><strong>Key Insight:</strong> Consistency in predicate logic works the same way as propositional logic — find a model (domain + assignment) satisfying all formulas. The challenge is that domains can be infinite, so inconsistency may require a proof rather than a truth table.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Thinking vacuously true implications always make a set consistent.</p>
+            <p><strong>Why it fails:</strong> A vacuous implication (false antecedent) doesn't help satisfy other formulas. Always check whether ALL formulas can be simultaneously true, not just some of them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="logic-completeness">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Completeness</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Definition & Key Facts</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="defn"><strong>Completeness (LS01):</strong> A set of axioms is <strong>complete</strong> when every true proposition can be proved from those axioms.</div>
+        <div class="theorem"><strong>Propositional Logic is Complete:</strong> Every valid propositional formula (tautology) has a proof using natural deduction or truth tables. This is the <strong>Completeness Theorem for Propositional Logic</strong>.</div>
+        <div class="theorem"><strong>First-Order Logic is Complete (Gödel 1929):</strong> In his doctoral dissertation, Gödel proved that first-order logic is complete — every logically valid first-order sentence has a proof. This is Gödel's <strong>Completeness Theorem</strong> (different from his Incompleteness Theorems).</div>
+        <div class="theorem"><strong>But Arithmetic is Not Complete:</strong> While first-order logic itself is complete, any first-order <strong>axiomatization</strong> of arithmetic (like Peano Arithmetic) cannot be complete — this is Gödel's <strong>Incompleteness Theorem</strong>.</div>
+        <p><strong>Key distinction:</strong> Completeness of a <em>logic</em> (every valid formula is provable) vs completeness of an <em>axiom system</em> (every true statement is provable). First-order logic is complete; Peano arithmetic is not.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-book">LS01</span> / <span class="tag tag-mit">MIT L1</span> — "Cannot Have the Cake and Eat It Too"</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Source (LS01 + MIT 6.042J Lecture 1):</strong></p>
+        <div class="defn"><strong>Consistency:</strong> A set of axioms is consistent when you cannot prove that False is True.</div>
+        <div class="defn"><strong>Completeness:</strong> A set of axioms is complete when every True proposition can be proved from those axioms.</div>
+        <div class="theorem"><strong>Gödel's Incompleteness Theorem:</strong> A set of axioms cannot be both consistent and complete. (LS01)</div>
+        <div class="solution">
+          <div class="label">Why This Matters</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Given a set of axioms that has consistency (because we need it — a contradictory system proves everything and is useless), there will be True statements that cannot be proved.</p>
+            <p><strong>Step 2:</strong> You cannot disprove them, but to prove them you need more axioms.</p>
+            <p><strong>Step 3:</strong> But if you add more axioms, that bigger set of axioms will have <em>other</em> statements that cannot be proved. The incompleteness is inescapable — no finite (or recursively enumerable) set of axioms can capture all truths of arithmetic.</p>
+            <p><strong>Key Insight:</strong> The quest for a complete and consistent axiomatization of all mathematics (Russell & Whitehead's Principia Mathematica) was proven impossible by Gödel. It's not that we haven't found such a system — it's that such a system cannot exist.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Completeness Practice (Extra)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Q1:</strong> Is propositional logic consistent? Is it complete? Explain.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Answer:</strong> Yes on both counts. Propositional logic is <strong>consistent</strong> (there is no formula P such that both P and ¬P are provable — truth tables can verify this). It is also <strong>complete</strong>: for every valid formula (tautology), there exists a proof (e.g., using natural deduction or truth tables). This is the Soundness and Completeness Theorem for propositional logic.</p>
+            <p><strong>Key Insight:</strong> Propositional logic is "weak enough" to be fully understood — every question can be decided by truth tables. Adding quantifiers and arithmetic makes the system more expressive but introduces incompleteness.</p>
+          </div>
+        </div>
+        <p><strong>Q2:</strong> What is the difference between Gödel's <strong>Completeness</strong> Theorem (1929) and his <strong>Incompleteness</strong> Theorems (1931)?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — Completeness Theorem (1929):</strong> Gödel proved that first-order predicate logic is complete — every logically valid sentence has a proof. This was his doctoral dissertation and is a positive result: first-order logic captures all logical truth.</p>
+            <p><strong>Step 2 — Incompleteness Theorems (1931):</strong> Two years later, Gödel proved that any consistent axiomatization of arithmetic is incomplete — there are arithmetic truths that cannot be proved from the axioms. This is a negative result about arithmetic, not about pure logic.</p>
+            <p><strong>Step 3 — The relationship:</strong> The Completeness Theorem says "what is logically true is provable." The Incompleteness Theorems say "what is arithmetically true is not the same as what is provable from any fixed set of axioms." Logic itself is complete; arithmetic axiomatizations are not.</p>
+            <p><strong>Key Insight:</strong> Don't confuse the two! Gödel's <em>Completeness</em> Theorem is about logical validity. Gödel's <em>Incompleteness</em> Theorems are about arithmetic truth. They sound contradictory but address different things.</p>
+          </div>
+        </div>
+        <p><strong>Q3:</strong> True or False — "A complete system guarantees that every true statement has a proof." Is this always a desirable property?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Answer:</strong> True by definition — that's exactly what completeness means. However, completeness may require the system to be very weak. For example, Presburger arithmetic (natural numbers with addition only, no multiplication) is both consistent and complete — but it cannot express multiplication, severely limiting what you can say.</p>
+            <p><strong>Key Insight:</strong> Completeness is a trade-off with expressiveness. The more you can say, the harder it is to have a complete axiomatization. Gödel showed that once you can express enough arithmetic (multiplication), completeness becomes impossible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card" id="logic-godel">
+  <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Gödel's Incompleteness Theorems</span><span class="arrow">▾</span></div>
+  <div class="card-body">
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Statement of the Theorems</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="theorem"><strong>First Incompleteness Theorem (Gödel 1931):</strong> Any consistent formal system F within which a certain amount of elementary arithmetic can be carried out is <strong>incomplete</strong> — there are statements of the language of F which can neither be proved nor disproved in F. (M4CS §8.4)</div>
+        <div class="theorem"><strong>Second Incompleteness Theorem (Gödel 1931):</strong> For such a system F, the consistency of F cannot be proved within F itself. In other words, no consistent system is strong enough to verify itself. (M4CS §8.4)</div>
+        <div class="solution">
+          <div class="label">In Plain English</div>
+          <div class="body">
+            <p><strong>First Theorem:</strong> If math is consistent (no contradictions), then there are true mathematical statements that can never be proven.</p>
+            <p><strong>Second Theorem:</strong> Math cannot prove its own consistency. We must accept consistency on faith or from a more powerful system.</p>
+          </div>
+        </div>
+        <div class="theorem"><strong>Implication for ZFC:</strong> The ZFC axioms are not sufficient to settle all questions — for example, the Continuum Hypothesis is independent of ZFC (neither provable nor disprovable). This was shown by Gödel (consistency with ZFC) and Paul Cohen (independence from ZFC). (M4CS §8.4)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> The Self-Reference Mechanism (Diagonalization)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="theorem"><strong>Core Idea — The Liar Paradox Variant:</strong> Gödel constructed a statement G that says "G is not provable in system F." If G is provable, then G says it's unprovable (contradiction). If ¬G is provable, then G is provable (contradiction, assuming consistency). Thus G is true but unprovable.</div>
+        <div class="solution">
+          <div class="label">How the Self-Reference Works</div>
+          <div class="body">
+            <p><strong>Step 1 — Gödel Numbering:</strong> Every symbol, formula, and proof in the formal system is assigned a unique natural number (a Gödel number). This turns statements about proofs into statements about numbers.</p>
+            <p><strong>Step 2 — The Proof Predicate:</strong> Define a formula Prov(x) meaning "the formula with Gödel number x has a proof in the system." This is an arithmetic property of the number x.</p>
+            <p><strong>Step 3 — The Diagonal Lemma:</strong> For any formula φ(x) with one free variable, there exists a sentence D such that D ↔ φ(⌜D⌝) — D says "I have property φ." This is the self-reference construction, analogous to Cantor's diagonalization: list all formulas with one free variable, then construct a formula that differs from each at the "diagonal" position.</p>
+            <p><strong>Step 4 — The Gödel Sentence:</strong> Apply the Diagonal Lemma to ¬Prov(x): obtain G such that G ↔ ¬Prov(⌜G⌝). G says "I am not provable."</p>
+            <p><strong>Step 5 — Undecidability:</strong> If G is provable, then Prov(⌜G⌝) is true, but G says ¬Prov(⌜G⌝) — contradiction (assuming soundness). If ¬G is provable, then ¬Prov(⌜G⌝) is false, so G is true and provable — contradiction (assuming consistency). Hence neither G nor ¬G is provable, yet G is true.</p>
+            <p><strong>Key Insight:</strong> The self-reference is achieved through arithmetic — the system is talking about itself through numbers, not through direct self-reference. This avoids the informal "liar paradox" while achieving the same effect.</p>
+          </div>
+        </div>
+        <div class="mistake">
+          <div class="label">Common Mistake</div>
+          <div class="body">
+            <p><strong>Mistake:</strong> Thinking Gödel's theorem means "some truths are forever unknowable."</p>
+            <p><strong>Clarification:</strong> It means some truths are unprovable <em>within a given formal system</em>. By moving to a more powerful system (e.g., adding axioms), we can prove those statements — but the new system will have its own unprovable truths. The incompleteness is about the limits of formal systems, not the limits of human understanding.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Historical Context: Russell, Whitehead & the Quest</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Source: MIT 6.042J Lecture 1 Transcript</strong></p>
+        <div class="solution">
+          <div class="label">The Story</div>
+          <div class="body">
+            <p><strong>Step 1 — The Dream:</strong> In the early 20th century, mathematicians sought a set of axioms that was both consistent and complete — one that would settle every mathematical question. Bertrand Russell and Alfred North Whitehead spent over a decade writing <em>Principia Mathematica</em> (1910-1913) attempting to do exactly this.</p>
+            <p><strong>Step 2 — The Discovery:</strong> In the 1930s, Kurt Gödel proved that it's <strong>not possible</strong> for any set of axioms to be both consistent and complete. If you have consistency (which is essential), there will always be true statements you cannot prove.</p>
+            <p><strong>Step 3 — The Consequence:</strong> "Imagine poor Russell and Whitehead. They spent their entire careers going after this holy grail. Then Kurt shows up and says, hey guys, there's no grail. It doesn't exist." (MIT Lecture)</p>
+            <p><strong>Key Insight:</strong> This devastated the field of mathematical logic at the time. The quest for a complete axiomatization of all mathematics — the program championed by David Hilbert — was proven impossible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> Connection to Computer Science</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <div class="theorem"><strong>Halting Problem (Turing 1936):</strong> There is no general algorithm that can determine whether an arbitrary computer program halts or runs forever. Turing proved this using a diagonalization argument directly inspired by Gödel's work.</div>
+        <div class="theorem"><strong>Limits of Automated Theorem Proving:</strong> Because of Gödel's theorems, no automated theorem prover can prove all true statements about arithmetic. This is a fundamental limitation, not a technological one.</div>
+        <div class="theorem"><strong>Connection to Smullyan:</strong> Raymond Smullyan extended Gödel's results and showed the connection to undecidability — it is impossible to write a computer program that can solve all mathematical problems. (Rosen biographical note)</div>
+        <div class="solution">
+          <div class="label">Gödel ↔ Turing Connection</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Gödel's diagonalization (1931) constructs a statement that says "this statement is unprovable." Turing's diagonalization (1936) constructs a program that halts iff the halting checker says it doesn't.</p>
+            <p><strong>Step 2:</strong> Both use the same fundamental idea: a system cannot fully reason about itself. For Gödel, it's a formal system vs its own provability. For Turing, it's a program vs its own halting behavior.</p>
+            <p><strong>Step 3:</strong> Both results establish the same lesson: there are fundamental limits to what can be proved or computed. These are not technological barriers but mathematical certainties.</p>
+            <p><strong>Key Insight:</strong> Gödel's theorems are not just abstract logic — they directly imply the existence of uncomputable functions and the impossibility of fully automated mathematics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-difficulty">Medium</span> — Gödel Practice Questions (Set 1)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Q1:</strong> Explain why adding new axioms to a system does not "solve" the incompleteness problem.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> Suppose we have a consistent system F with an unprovable truth G. We add G as a new axiom to get F'.</p>
+            <p><strong>Step 2:</strong> The First Incompleteness Theorem applies to F' as well — because F' still encodes arithmetic. There will be a new statement G' that is true but unprovable in F'.</p>
+            <p><strong>Step 3:</strong> This process never ends: any consistent extension that is recursively axiomatizable is still incomplete. Incompleteness is a permanent feature of any formal system strong enough to express arithmetic.</p>
+            <p><strong>Key Insight:</strong> Gödel's theorem is not about a specific axiom set — it's about any possible axiom set. The incompleteness is inescapable.</p>
+          </div>
+        </div>
+        <p><strong>Q2:</strong> Why does the Second Incompleteness Theorem matter for computer science?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> If we write a program that proves theorems of arithmetic (a theorem prover), the Second Theorem tells us that the program cannot prove its own correctness (consistency) — unless it's inconsistent, which is worse.</p>
+            <p><strong>Step 2:</strong> This means formal verification of complex systems has inherent limits. A sufficiently powerful system cannot fully verify itself.</p>
+            <p><strong>Key Insight:</strong> This is why we need external verification, human reasoning, and multiple levels of checking in critical software systems.</p>
+          </div>
+        </div>
+        <p><strong>Q3:</strong> What is the relationship between the Liar Paradox and Gödel's sentence?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The Liar Paradox ("This statement is false") creates a paradox because it self-referentially claims falsehood — if true then false, if false then true.</p>
+            <p><strong>Step 2:</strong> Gödel's sentence ("This statement is unprovable") avoids direct paradox because it claims unprovability, not falsehood. If it's false, then it is provable (which could be true) — there's no immediate contradiction.</p>
+            <p><strong>Step 3:</strong> The resolution: if the system is consistent, G must be true but unprovable. If the system is inconsistent, G is provable (but then everything is provable).</p>
+            <p><strong>Key Insight:</strong> Gödel replaced "false" (which creates a paradox) with "unprovable" (which creates incompleteness, not paradox). This subtle shift is what makes the theorem work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)"><span><span class="tag tag-set">Set 4</span> <span class="tag tag-web">Web / Extra</span> — Gödel Practice Questions (Set 2 — Extra)</span><span class="arrow">▾</span></div>
+      <div class="card-body">
+        <p><strong>Q1 (True or False):</strong> "Gödel's theorem only applies to systems that are powerful enough to encode arithmetic. A weak system (like propositional logic) can be both consistent and complete."</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Answer:</strong> True. Propositional logic is both consistent and complete — every valid formula has a proof, and no contradiction can be derived. Gödel's theorem only applies to systems that can express at least a certain amount of arithmetic (essentially, Robinson arithmetic Q or Peano arithmetic PA).</p>
+            <p><strong>Key Insight:</strong> The trade-off: weaker systems can be complete but cannot express all of mathematics. Stronger systems can express mathematics but are incomplete. You cannot have both power and completeness.</p>
+          </div>
+        </div>
+        <p><strong>Q2:</strong> Does Gödel's theorem mean that mathematics is fundamentally flawed or unreliable?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Answer:</strong> No. Gödel's theorem shows that there are limits to what any single formal system can prove — not that mathematics itself is unreliable. Most mathematical work happens in systems far weaker than full arithmetic, and these are perfectly well-understood.</p>
+            <p><strong>Key Insight:</strong> The theorem is about formal systems, not about mathematics as a human activity. Mathematicians routinely prove truths that go beyond any fixed axiomatic system by inventing new concepts and techniques. Gödel's limits apply to static formal systems, not to the dynamic practice of mathematics.</p>
+          </div>
+        </div>
+        <p><strong>Q3:</strong> True or False — "If we could prove that ZFC is consistent, then ZFC would be incomplete. Therefore, we cannot prove ZFC is consistent."</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Answer:</strong> The reasoning is essentially correct. The Second Incompleteness Theorem says: if ZFC is consistent, then ZFC cannot prove its own consistency. We can prove the consistency of ZFC from a stronger system (like ZFC + "there exists an inaccessible cardinal"), but that just shifts the question to whether that stronger system is consistent.</p>
+            <p><strong>Key Insight:</strong> This is why the consistency of ZFC is generally accepted as a "faith" assumption by mathematicians — it's a necessary starting point, not something provable from within.</p>
+          </div>
+        </div>
+        <p><strong>Q4:</strong> Explain how Cantor's diagonalization argument is similar to Gödel's construction.</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1 — Cantor:</strong> List all real numbers between 0 and 1 in decimal form. Construct a new number whose n-th digit differs from the n-th digit of the n-th number on the list. This new number differs from every number on the list — so the list is incomplete.</p>
+            <p><strong>Step 2 — Gödel:</strong> List all formulas with one free variable. The Diagonal Lemma constructs a formula that says "I have property ¬Prov(x)" — differing from each formula at the "diagonal" position (its own Gödel number). This statement is true but not on the list of provable formulas.</p>
+            <p><strong>Step 3 — The pattern:</strong> Both arguments assume a complete enumeration, then construct an element that differs from every element at the diagonal position. Cantor shows the reals are uncountable; Gödel shows provable truths don't exhaust all truths.</p>
+            <p><strong>Key Insight:</strong> Diagonalization is the most important proof technique you may never explicitly study — it underlies Cantor (uncountability), Gödel (incompleteness), and Turing (undecidability).</p>
+          </div>
+        </div>
+        <p><strong>Q5:</strong> Why does the First Incompleteness Theorem require the system to be "consistent"? What happens if the system is inconsistent?</p>
+        <div class="solution">
+          <div class="label">Solution</div>
+          <div class="body">
+            <p><strong>Step 1:</strong> The proof assumes consistency to reach the conclusion that G is unprovable but true. If the system is inconsistent, the Principle of Explosion applies — from a contradiction, anything is provable, including G and ¬G.</p>
+            <p><strong>Step 2:</strong> In an inconsistent system, the Gödel sentence G would be provable (everything is provable), but the system would still be "complete" in the trivial sense — every statement is provable, including false ones. This is worse than incompleteness.</p>
+            <p><strong>Step 3:</strong> So consistency is a necessary premise for the interesting conclusion (true but unprovable statements exist). An inconsistent system proves everything — but is useless because it proves falsehoods too.</p>
+            <p><strong>Key Insight:</strong> Consistency is like the "ground truth" of a system. Without it, the system is worthless. With it, incompleteness is inevitable for sufficiently powerful systems.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</section>
+
 <a href="#" class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">↑</a>
 </main>
 <script>
@@ -2514,6 +3230,72 @@ function doSearch(q) {
   }).join('');
   results.style.display='block';
 }
+function doFilter(n) {
+  document.querySelectorAll('.filter-pill').forEach(function(b){b.classList.toggle('active',parseInt(b.dataset.filter)===n)});
+  document.querySelectorAll('section[data-set]').forEach(function(s){
+    var sets = s.getAttribute('data-set');
+    s.classList.toggle('hidden', n !== 0 && sets.indexOf(String(n)) === -1);
+  });
+}
+function toggleProgress(el, id) {
+  var key = 'progress:'+id;
+  if (localStorage.getItem(key)) { localStorage.removeItem(key); el.classList.remove('checked'); }
+  else { localStorage.setItem(key, '1'); el.classList.add('checked'); }
+}
+function toggleStar(el, id) {
+  var key = 'starred:'+id;
+  if (localStorage.getItem(key)) { localStorage.removeItem(key); el.classList.remove('active'); }
+  else { localStorage.setItem(key, '1'); el.classList.add('active'); }
+  renderRevisionList();
+}
+function renderRevisionList() {
+  var container = document.getElementById('revision-items');
+  if (!container) return;
+  var items = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key && key.indexOf('starred:') === 0) {
+      var id = key.substring(8);
+      var el = document.getElementById(id);
+      if (el) {
+        var header = el.querySelector('.card-header');
+        var text = header ? header.textContent.trim().substring(0,60) : id;
+        items.push({id:id, text:text});
+      }
+    }
+  }
+  if (items.length === 0) {
+    container.innerHTML = '<p style="color:var(--text2);font-size:.88rem">No starred cards yet. Click ☆ on any card to mark it for last-minute review.</p>';
+  } else {
+    container.innerHTML = '<ul style="margin:0;padding-left:20px">' +
+      items.map(function(i){return '<li><a href="#'+i.id+'" onclick="event.preventDefault();navigateTo(\'#'+i.id+'\')" style="color:var(--text);text-decoration:none">'+i.text+'</a></li>'}).join('') +
+      '</ul>';
+  }
+}
+function initWidgets() {
+  document.querySelectorAll('.card[id]').forEach(function(card){
+    var header = card.querySelector('.card-header');
+    if (!header) return;
+    var span = header.querySelector('span');
+    if (!span) return;
+    if (card.id === 'revision-list') return;
+    var cb = document.createElement('span');
+    cb.className = 'card-progress';
+    cb.textContent = '\u2610';
+    cb.onclick = function(e){ e.stopPropagation(); cb.textContent = cb.textContent === '\u2610' ? '\u2611' : '\u2610'; cb.classList.toggle('checked'); toggleProgress(cb, card.id); };
+    var star = document.createElement('span');
+    star.className = 'card-star';
+    star.textContent = '\u2606';
+    star.onclick = function(e){ e.stopPropagation(); star.textContent = star.textContent === '\u2606' ? '\u2605' : '\u2606'; star.classList.toggle('active'); toggleStar(star, card.id); };
+    span.insertBefore(star, span.firstChild);
+    span.insertBefore(cb, span.firstChild);
+    var pkey = 'progress:'+card.id;
+    if (localStorage.getItem(pkey)) { cb.classList.add('checked'); cb.textContent = '\u2611'; }
+    var skey = 'starred:'+card.id;
+    if (localStorage.getItem(skey)) { star.classList.add('active'); star.textContent = '\u2605'; }
+  });
+  renderRevisionList();
+}
 function highlightActiveLink() {
   var links = document.querySelectorAll('.sidebar a');
   var topSection = null, topDist = Infinity;
@@ -2539,6 +3321,7 @@ window.addEventListener('hashchange', function() {
 document.addEventListener('DOMContentLoaded', function() {
   var hash = window.location.hash;
   if (hash) navigateTo(hash);
+  initWidgets();
 });
 </script>
 </body>
