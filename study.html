@@ -3301,12 +3301,14 @@ function renderRevisionList() {
   }
 }
 function initWidgets() {
-  document.querySelectorAll('.card[id]').forEach(function(card){
+  var cardIndex = 0;
+  document.querySelectorAll('.card').forEach(function(card){
     var header = card.querySelector('.card-header');
     if (!header) return;
     var span = header.querySelector('span');
     if (!span) return;
-    if (card.id === 'revision-list') return;
+    if (!card.id) card.id = 'gen-' + (cardIndex++);
+    if (card.id === 'revision-list' || card.id === 'cheat-sheet') return;
     var cb = document.createElement('span');
     cb.className = 'card-progress';
     cb.textContent = '\u2610';
