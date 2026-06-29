@@ -106,6 +106,9 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 .card.hidden{display:none}
 section.hidden{display:none}
 .sidebar .si{display:inline-block;width:1.1em;text-align:center;font-size:.72rem;margin-right:2px;cursor:pointer;transition:.2s}
+.collapse-bar{padding:6px 20px;font-size:.75rem;border-bottom:1px solid var(--surface2)}
+#collapse-btn{color:var(--accent2);cursor:pointer;user-select:none;transition:.2s}
+#collapse-btn:hover{color:var(--text)}
 .fold-arrow{display:inline-block;width:1em;text-align:center;font-size:.7rem;color:var(--accent);cursor:pointer;transition:transform .2s}
 .sidebar .sub2{padding-left:50px;font-size:.77rem}
 .fold-arrow.folded{transform:rotate(-90deg)}
@@ -120,6 +123,7 @@ section.hidden{display:none}
 <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
 <nav class="sidebar" id="sidebar">
   <h2>DM Mid <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close">✕</button></h2>
+  <div class="collapse-bar"><span id="collapse-btn" onclick="toggleAll()">▽ Collapse all</span></div>
   <a href="#overview" onclick="navigateTo('#overview')">Exam Overview</a>
   <a href="#topic-freq" onclick="navigateTo('#topic-freq')">Topic Frequency</a>
   <a href="#logic" onclick="navigateTo('#logic')">1. Logic</a>
@@ -3419,6 +3423,22 @@ function initWidgets() {
     a.insertBefore(cb, a.firstChild);
   });
   renderRevisionList();
+}
+function toggleAll() {
+  var chs = document.querySelectorAll('.sidebar-children');
+  var allClosed = true;
+  chs.forEach(function(c){ if(!c.classList.contains('folded')) allClosed=false; });
+  chs.forEach(function(ch){
+    ch.classList.toggle('folded', !allClosed);
+    var prev = ch.previousElementSibling;
+    if (prev && prev.tagName === 'A') {
+      var arrow = prev.querySelector('.fold-arrow');
+      if (arrow) arrow.classList.toggle('folded', !allClosed);
+      var id = prev.getAttribute('href').substring(1);
+      localStorage.setItem((prev.classList.contains('sub')?'fold2:':'fold:')+id, !allClosed?'1':'');
+    }
+  });
+  document.getElementById('collapse-btn').textContent = allClosed ? '▽ Collapse all' : '▷ Expand all';
 }
 function highlightActiveLink() {
   var links = document.querySelectorAll('.sidebar a');
