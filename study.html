@@ -3388,7 +3388,9 @@ function initWidgets() {
         var ca = document.createElement('a'); ca.className = 'sub2';
         ca.href = '#' + c.id;
         var h = c.querySelector('.card-header');
-        ca.textContent = h ? h.textContent.trim().substring(0,55) : c.id;
+        var txt = h ? h.textContent.trim() : c.id;
+        txt = txt.replace(/^[\u2610\u2611\u2605\u2606\s]+/, '');
+        ca.textContent = txt.substring(0,55);
         ca.onclick = function(e){ e.preventDefault(); navigateTo('#'+c.id); };
         ch.appendChild(ca);
       });
