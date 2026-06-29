@@ -105,6 +105,15 @@ h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
 .card-star.active{color:#e8b84b}
 .card.hidden{display:none}
 section.hidden{display:none}
+.sidebar .si{display:inline-block;width:1.1em;text-align:center;font-size:.72rem;margin-right:2px;cursor:pointer;transition:.2s}
+.fold-arrow{display:inline-block;width:1em;text-align:center;font-size:.7rem;color:var(--accent);cursor:pointer;transition:transform .2s}
+.sidebar .sub2{padding-left:50px;font-size:.77rem}
+.fold-arrow.folded{transform:rotate(-90deg)}
+.sidebar-children.folded{display:none}
+.sidebar .si-progress{color:var(--text2)}
+.sidebar .si-progress.si-checked{color:var(--green)}
+.sidebar .si-star{color:var(--text2)}
+.sidebar .si-star.si-active{color:#e8b84b}
 </style>
 </head>
 <body>
@@ -3269,11 +3278,21 @@ function toggleProgress(el, id) {
   var key = 'progress:'+id;
   if (localStorage.getItem(key)) { localStorage.removeItem(key); el.classList.remove('checked'); }
   else { localStorage.setItem(key, '1'); el.classList.add('checked'); }
+  var sa = document.querySelector('.sidebar a[href="#'+id+'"]');
+  if (sa) {
+    var p = sa.querySelector('.si-progress');
+    if (p) { p.textContent = localStorage.getItem(key) ? '\u2611' : '\u2610'; p.classList.toggle('si-checked', !!localStorage.getItem(key)); }
+  }
 }
 function toggleStar(el, id) {
   var key = 'starred:'+id;
   if (localStorage.getItem(key)) { localStorage.removeItem(key); el.classList.remove('active'); }
   else { localStorage.setItem(key, '1'); el.classList.add('active'); }
+  var sa = document.querySelector('.sidebar a[href="#'+id+'"]');
+  if (sa) {
+    var s = sa.querySelector('.si-star');
+    if (s) { s.textContent = localStorage.getItem(key) ? '\u2605' : '\u2606'; s.classList.toggle('si-active', !!localStorage.getItem(key)); }
+  }
   renderRevisionList();
 }
 function renderRevisionList() {
@@ -3323,6 +3342,79 @@ function initWidgets() {
     if (localStorage.getItem(pkey)) { cb.classList.add('checked'); cb.textContent = '\u2611'; }
     var skey = 'starred:'+card.id;
     if (localStorage.getItem(skey)) { star.classList.add('active'); star.textContent = '\u2605'; }
+  });
+  (function(){
+    var nav = document.getElementById('sidebar');
+    var h2 = nav.querySelector('h2');
+    var as = Array.from(nav.children).filter(function(e){return e.tagName==='A'});
+    var groups = [], cur = null;
+    as.forEach(function(a){
+      if (!a.classList.contains('sub')){ cur={p:a,c:[]}; groups.push(cur); }
+      else if(cur) cur.c.push(a);
+    });
+    nav.innerHTML = ''; nav.appendChild(h2);
+    groups.forEach(function(g){
+      if(g.c.length===0){ nav.appendChild(g.p); return; }
+      var wrap = document.createElement('div'); wrap.className='sidebar-group';
+      var arrow = document.createElement('span'); arrow.className='fold-arrow'; arrow.textContent='\u25BE';
+      g.p.insertBefore(arrow, g.p.firstChild); g.p.classList.add('has-children');
+      var ch = document.createElement('div'); ch.className='sidebar-children';
+      g.c.forEach(function(c){ ch.appendChild(c); });
+      wrap.appendChild(g.p); wrap.appendChild(ch); nav.appendChild(wrap);
+      var id = g.p.getAttribute('href').substring(1);
+      if(localStorage.getItem('fold:'+id)){ ch.classList.add('folded'); arrow.classList.add('folded'); }
+      g.p.addEventListener('click',function(e){
+        if(e.target===arrow||e.target.classList.contains('fold-arrow')){
+          e.preventDefault(); e.stopPropagation();
+          ch.classList.toggle('folded'); arrow.classList.toggle('folded');
+          localStorage.setItem('fold:'+id, ch.classList.contains('folded')?'1':'');
+        }
+      });
+    });
+  })();
+  (function(){
+    document.querySelectorAll('.sidebar a[href^="#"]:not(.has-children)').forEach(function(a){
+      var id = a.getAttribute('href').substring(1);
+      var card = document.getElementById(id);
+      if (!card) return;
+      var nested = card.querySelectorAll(':scope > .card-body > .card');
+      if (nested.length === 0) return;
+      var arrow = document.createElement('span');
+      arrow.className = 'fold-arrow'; arrow.textContent = '\u25BE';
+      a.insertBefore(arrow, a.firstChild); a.classList.add('has-children');
+      var ch = document.createElement('div'); ch.className = 'sidebar-children';
+      nested.forEach(function(c){
+        if (!c.id) return;
+        var ca = document.createElement('a'); ca.className = 'sub2';
+        ca.href = '#' + c.id;
+        var h = c.querySelector('.card-header');
+        ca.textContent = h ? h.textContent.trim().substring(0,55) : c.id;
+        ca.onclick = function(e){ e.preventDefault(); navigateTo('#'+c.id); };
+        ch.appendChild(ca);
+      });
+      a.parentNode.insertBefore(ch, a.nextSibling);
+      arrow.onclick = function(e){ e.stopPropagation(); ch.classList.toggle('folded'); arrow.classList.toggle('folded'); localStorage.setItem('fold2:'+id, ch.classList.contains('folded')?'1':''); };
+      if (localStorage.getItem('fold2:'+id)) { ch.classList.add('folded'); arrow.classList.add('folded'); }
+    });
+  })();
+  document.querySelectorAll('.sidebar a[href^="#"]').forEach(function(a){
+    var id = a.getAttribute('href').substring(1);
+    var card = document.getElementById(id);
+    if (!card || !card.classList || !card.classList.contains('card')) return;
+    var cb = document.createElement('span');
+    cb.className = 'si si-progress';
+    var pkey = 'progress:'+id;
+    cb.textContent = localStorage.getItem(pkey) ? '\u2611' : '\u2610';
+    if (localStorage.getItem(pkey)) cb.classList.add('si-checked');
+    cb.onclick = function(e){ e.preventDefault(); e.stopPropagation(); var c = document.getElementById(id); if(c){var w=c.querySelector('.card-progress');if(w)w.click();} };
+    var st = document.createElement('span');
+    st.className = 'si si-star';
+    var skey = 'starred:'+id;
+    st.textContent = localStorage.getItem(skey) ? '\u2605' : '\u2606';
+    if (localStorage.getItem(skey)) st.classList.add('si-active');
+    st.onclick = function(e){ e.preventDefault(); e.stopPropagation(); var c = document.getElementById(id); if(c){var w=c.querySelector('.card-star');if(w)w.click();} };
+    a.insertBefore(st, a.firstChild);
+    a.insertBefore(cb, a.firstChild);
   });
   renderRevisionList();
 }
