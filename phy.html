@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circuit Analysis — Ch 1-9 | Boylestad · Faisal+Mahira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edc9;--surface:#faedcd;--surface2:#f3e5b8;--accent:#d4a373;--accent2:#bc6c25;--text:#283618;--text2:#5c6e3a;--green:#607d3b;--orange:#bc6c25;--red:#9c3a3a;--set1:rgba(91,141,191,0.45);--set2:rgba(106,158,106,0.45);--set3:rgba(212,137,90,0.45);--set4:rgba(155,114,176,0.45);--set1s:#5b8dbf;--set2s:#6a9e6a;--set3s:#d4895a;--set4s:#9b72b0;--radius:10px}
+html.dark{--bg:#240a19;--surface:#2e0e20;--surface2:#462639;--accent:#a8805c;--accent2:#d4a373;--text:#e0e2e6;--text2:#9a9fab;--set1:rgba(91,141,191,0.3);--set2:rgba(106,158,106,0.3);--set3:rgba(212,137,90,0.3);--set4:rgba(155,114,176,0.3)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Merriweather',Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);line-height:1.8}
+.sidebar{position:fixed;top:0;left:0;width:270px;height:100vh;background:var(--surface);overflow-y:auto;z-index:100;border-right:1px solid var(--surface2);transform:translateX(-100%);transition:transform .35s ease;box-shadow:2px 0 20px rgba(0,0,0,.05)}
+.sidebar.open{transform:translateX(0)}
+.sidebar h2{padding:22px 20px 18px;font-size:1.1rem;color:var(--accent2);border-bottom:1px solid var(--surface2);font-weight:600;letter-spacing:.02em}
+.sidebar a{display:block;padding:9px 20px;color:var(--text2);text-decoration:none;font-size:.88rem;border-left:3px solid transparent;transition:.2s}
+.sidebar a:hover,.sidebar a.active{color:var(--accent2);background:var(--surface2);border-left-color:var(--accent)}
+.sidebar .sub{padding-left:34px;font-size:.8rem;border-left-color:transparent}
+.sidebar .sub2{padding-left:50px;font-size:.77rem}
+.sidebar .fold-link{cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding-right:10px}
+.fold-arrow{font-size:.65rem;color:var(--accent);transition:transform .2s}
+.fold-arrow.folded{transform:rotate(-90deg)}
+.sidebar-children.folded{display:none}
+.collapse-bar{padding:6px 20px;font-size:.75rem;border-bottom:1px solid var(--surface2)}
+#collapse-btn{color:var(--accent2);cursor:pointer;user-select:none;transition:.2s}
+#collapse-btn:hover{color:var(--text)}
+main{margin-left:0;padding:24px}
+@media(min-width:900px){.sidebar{transform:translateX(0)}.sidebar-toggle{display:none!important}.sidebar-close{display:none!important}main{margin-left:270px;padding:36px 44px;max-width:1200px}}
+@media(max-width:899px){.search{padding-left:56px}}
+.sidebar-toggle{position:fixed;top:16px;left:16px;z-index:200;background:var(--accent);border:none;color:#fff;width:40px;height:40px;border-radius:var(--radius);cursor:pointer;font-size:1.2rem;box-shadow:0 2px 10px rgba(212,163,115,.3);transition:opacity .3s}
+.sidebar-toggle.hidden{opacity:0;pointer-events:none}
+.sidebar-close{float:right;background:none;border:none;color:var(--accent2);font-size:1.3rem;cursor:pointer;padding:0;line-height:1}
+.search{position:sticky;top:0;z-index:50;background:var(--bg);padding:14px 0;position:relative}
+.search input{width:100%;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--surface2);background:var(--surface);color:var(--text);font-size:.95rem;outline:0;font-family:inherit}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,163,115,.15)}
+.dark-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1.2rem;cursor:pointer;padding:6px 10px;border-radius:6px;transition:.2s;z-index:60}
+.dark-toggle:hover{background:var(--surface2)}
+section{margin-bottom:48px;scroll-margin-top:80px}
+.hero{background:var(--surface);border-radius:var(--radius);padding:36px;margin-bottom:36px;box-shadow:0 2px 16px rgba(0,0,0,.04);border:1px solid var(--surface2)}
+.hero h1{font-size:1.9rem;margin-bottom:6px;color:var(--accent2);font-weight:700;text-align:center}
+.hero .subtitle{color:var(--text2);font-size:.95rem;text-align:center}
+.hero .byline{color:var(--text2);font-size:.85rem;text-align:center;margin-top:4px}
+h2{font-size:1.35rem;margin-bottom:16px;color:var(--accent2);padding-bottom:8px;border-bottom:1px solid var(--surface2);font-weight:600}
+h3{font-size:1.05rem;margin:16px 0 8px;color:var(--text);font-weight:600}
+.card{background:var(--surface);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;border:1px solid var(--surface2);box-shadow:0 1px 8px rgba(0,0,0,.03);transition:box-shadow .25s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+section[data-set="1"] .card{border-left:3px solid var(--set1)}
+section[data-set="2"] .card{border-left:3px solid var(--set2)}
+section[data-set="3"] .card{border-left:3px solid var(--set3)}
+section[data-set="4"] .card{border-left:3px solid var(--set4)}
+.card-header{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;font-size:.93rem;flex-wrap:wrap;gap:6px}
+.card-header:hover{background:var(--surface2)}
+.card-header .arrow{transition:transform .3s;font-size:.75rem;color:var(--accent);margin-left:auto}
+.card-header .tags{display:flex;gap:4px;flex-wrap:wrap;margin-right:8px}
+.card-body{padding:0 18px 18px;display:none;font-size:.9rem}
+.card.open > .card-body{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;max-height:0}to{opacity:1;max-height:2000px}}
+.card.open > .card-header .arrow{transform:rotate(180deg)}
+.card .card{background:var(--bg);border-color:var(--surface2)}
+.card .card .card-header{font-size:.88rem;padding:12px 16px}
+.card .card .card-body{padding:0 16px 14px;display:none}
+.card .card.open > .card-body{display:block;animation:fadeIn .25s ease}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-family:-apple-system,sans-serif;font-weight:500}
+.tag-theory{background:#607d3b22;color:var(--green);border:1px solid var(--green)}
+.tag-maths{background:#bc6c2522;color:var(--orange);border:1px solid var(--orange)}
+.tag-topic{background:#d4a37333;color:var(--accent2);border:1px solid var(--accent2)}
+.tag-set{background:#28361833;color:var(--text2);border:1px solid var(--text2)}
+.tag-set[data-set="1"]{background:var(--set1);color:var(--set1s);border-color:var(--set1s)}
+.tag-set[data-set="2"]{background:var(--set2);color:var(--set2s);border-color:var(--set2s)}
+.tag-set[data-set="3"]{background:var(--set3);color:var(--set3s);border-color:var(--set3s)}
+.tag-set[data-set="4"]{background:var(--set4);color:var(--set4s);border-color:var(--set4s)}
+.theorem{background:var(--surface2);border-left:4px solid var(--accent);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
+.defn{background:var(--surface2);border-left:4px solid var(--green);padding:12px 16px;margin:10px 0;border-radius:0 var(--radius) var(--radius) 0}
+.solution{background:var(--bg);border:1px solid #607d3b44;border-radius:var(--radius);padding:14px;margin:10px 0}
+.solution .label{color:var(--green);font-weight:600;font-size:.85rem;margin-bottom:6px}
+.solution .body{margin-top:4px;font-size:.9rem}
+.solution .body p{margin-bottom:6px}
+.mistake{background:var(--surface);border:1px solid #9c3a3a33;border-radius:var(--radius);padding:14px;margin:10px 0}
+.mistake .label{color:var(--red);font-weight:600;font-size:.85rem;margin-bottom:6px}
+.mistake .body{margin-top:4px;font-size:.9rem}
+.mistake .body p{margin-bottom:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+th,td{padding:8px 12px;border:1px solid var(--surface2);text-align:left}
+th{background:var(--surface2);color:var(--accent2);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:var(--surface);border:1px solid var(--surface2);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.03)}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--accent);font-family:Georgia,serif}
+.stat-card .desc{font-size:.82rem;color:var(--text2);margin-top:4px}
+.back-top{position:fixed;bottom:26px;right:26px;background:var(--accent);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;opacity:.85;transition:.2s;box-shadow:0 2px 10px rgba(212,163,115,.3)}
+.back-top:hover{opacity:1}
+.filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.filter-pill{padding:6px 16px;border-radius:20px;border:1px solid var(--surface2);background:var(--surface);color:var(--text2);cursor:pointer;font-size:.82rem;font-family:inherit;transition:.2s}
+.filter-pill:hover,.filter-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.card-progress,.card-star{cursor:pointer;user-select:none;margin-right:6px;transition:.2s;font-size:.95rem}
+.card-progress{color:var(--text2)}
+.card-progress.checked{color:var(--green)}
+.card-star{color:var(--text2)}
+.card-star.active{color:#e8b84b}
+.card.hidden{display:none}
+section.hidden{display:none}
+.math{font-family:'Times New Roman',serif;font-style:italic}
+pre{background:var(--surface2);padding:12px;border-radius:8px;overflow-x:auto;font-size:.85rem;font-family:'SF Mono','Fira Code','Courier New',monospace}
+svg.circuit{display:block;margin:10px auto;max-width:100%}
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}
+.cheat-item{background:var(--surface);border:1px solid var(--surface2);border-radius:var(--radius);padding:12px;text-align:center}
+.cheat-item .formula{font-size:1.1rem;font-weight:700;color:var(--accent2);font-family:Georgia,serif}
+.cheat-item .desc{font-size:.75rem;color:var(--text2);margin-top:2px}
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">=</button>
+<nav class="sidebar" id="sidebar">
+  <h2>Circuit Analysis <button class="sidebar-close" onclick="toggleSidebar()">&times;</button></h2>
+  <div class="collapse-bar"><span id="collapse-btn" onclick="toggleAll()">+ Expand all</span></div>
+  <a href="#overview" onclick="navigateTo('#overview')">Overview</a>
+  <a href="#cheat" onclick="navigateTo('#cheat')">Cheat Sheet</a>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 1 &middot; Introduction <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch1-sci" class="sub" onclick="navigateTo('#ch1-sci')">Scientific Notation</a>
+    <a href="#ch1-sig" class="sub" onclick="navigateTo('#ch1-sig')">Significant Figures</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 2 &middot; Voltage &amp; Current <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch2-volt" class="sub" onclick="navigateTo('#ch2-volt')">Voltage: V = W/Q</a>
+    <a href="#ch2-curr" class="sub" onclick="navigateTo('#ch2-curr')">Current: I = Q/t</a>
+    <a href="#ch2-batt" class="sub" onclick="navigateTo('#ch2-batt')">Battery &amp; Amp-Hour</a>
+    <a href="#ch2-conv" class="sub" onclick="navigateTo('#ch2-conv')">Conductors/Insulators</a>
+    <a href="#ch2-act" class="sub" onclick="navigateTo('#ch2-act')">Active &amp; Passive Elements</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 3 &middot; Resistance <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch3-res" class="sub" onclick="navigateTo('#ch3-res')">R = &rho;L/A</a>
+    <a href="#ch3-color" class="sub" onclick="navigateTo('#ch3-color')">Resistor Color Code</a>
+    <a href="#ch3-therm" class="sub" onclick="navigateTo('#ch3-therm')">Thermistors &amp; LDRs</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 4 &middot; Ohm's Law, Power <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch4-ohm" class="sub" onclick="navigateTo('#ch4-ohm')">Ohm's Law</a>
+    <a href="#ch4-power" class="sub" onclick="navigateTo('#ch4-power')">Power &amp; Energy</a>
+    <a href="#ch4-fuse" class="sub" onclick="navigateTo('#ch4-fuse')">Fuses / Breakers / GFCIs</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 5 &middot; Series DC <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch5-series" class="sub" onclick="navigateTo('#ch5-series')">Series &amp; KVL</a>
+    <a href="#ch5-vdr" class="sub" onclick="navigateTo('#ch5-vdr')">Voltage Divider Rule</a>
+    <a href="#ch5-power" class="sub" onclick="navigateTo('#ch5-power')">Power in Series</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 6 &middot; Parallel DC <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch6-par" class="sub" onclick="navigateTo('#ch6-par')">Parallel &amp; KCL</a>
+    <a href="#ch6-cdr" class="sub" onclick="navigateTo('#ch6-cdr')">Current Divider Rule</a>
+    <a href="#ch6-open" class="sub" onclick="navigateTo('#ch6-open')">Open &amp; Short</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 7 &middot; Series-Parallel <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch7-red" class="sub" onclick="navigateTo('#ch7-red')">Reduce &amp; Return</a>
+    <a href="#ch7-load" class="sub" onclick="navigateTo('#ch7-load')">Loaded Divider</a>
+    <a href="#ch7-lad" class="sub" onclick="navigateTo('#ch7-lad')">Ladder Networks</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 8 &middot; Methods of Analysis <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch8-src" class="sub" onclick="navigateTo('#ch8-src')">Source Conversion</a>
+    <a href="#ch8-mesh" class="sub" onclick="navigateTo('#ch8-mesh')">Mesh Analysis</a>
+    <a href="#ch8-nodal" class="sub" onclick="navigateTo('#ch8-nodal')">Nodal Analysis</a>
+    <a href="#ch8-yd" class="sub" onclick="navigateTo('#ch8-yd')">Wye-Delta</a>
+    <a href="#ch8-smoke" class="sub" onclick="navigateTo('#ch8-smoke')">Smoke Detector</a>
+  </div>
+
+  <a class="fold-link" onclick="toggleFold(this)">Ch 9 &middot; Network Theorems <span class="fold-arrow folded">&#9660;</span></a>
+  <div class="sidebar-children folded">
+    <a href="#ch9-super" class="sub" onclick="navigateTo('#ch9-super')">Superposition</a>
+  </div>
+
+  <a href="#exam" onclick="navigateTo('#exam')">Previous Exam</a>
+</nav>
+<main>
+<div class="search">
+  <input type="text" id="searchInput" placeholder="Search topics, problems..." oninput="doSearch(this.value)">
+  <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode">&#9790;</button>
+</div>
+<div class="filter-bar">
+  <button class="filter-pill active" data-filter="0" onclick="doFilter(0)">All</button>
+  <button class="filter-pill" data-filter="1" onclick="doFilter(1)">Ch 1-3</button>
+  <button class="filter-pill" data-filter="2" onclick="doFilter(2)">Ch 4-6</button>
+  <button class="filter-pill" data-filter="3" onclick="doFilter(3)">Ch 7-9</button>
+  <button class="filter-pill" data-filter="4" onclick="doFilter(4)">Exam</button>
+  <button class="filter-pill" data-filter="star" onclick="doFilter('star')">Starred</button>
+</div>
+
+<!-- ========== OVERVIEW ========== -->
+<section id="overview">
+  <div class="hero">
+    <h1>Circuit Analysis</h1>
+    <p class="subtitle">Chapters 1-9 &middot; Boylestad 11th Ed.</p>
+    <p class="byline">Faisal + Mahira</p>
+    <div class="grid" style="margin-top:20px">
+      <div class="stat-card"><div class="num">9</div><div class="desc">Chapters</div></div>
+      <div class="stat-card"><div class="num" id="totalCards">0</div><div class="desc">Topics</div></div>
+      <div class="stat-card"><div class="num">30+</div><div class="desc">Practice Problems</div></div>
+      <div class="stat-card"><div class="num" id="doneCards">0</div><div class="desc">Done</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)"><span>Starred Cards</span><span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p style="color:var(--text2);margin-bottom:8px">Click the star on any card to add it here.</p>
+      <div id="revision-items"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)"><span>Progress</span><span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p style="color:var(--text2)"><span id="progressCount">0/0</span> topics completed</p>
+      <div style="background:var(--surface2);border-radius:6px;height:10px;overflow:hidden;margin-top:6px">
+        <div id="progressBar" style="height:100%;background:var(--green);border-radius:6px;width:0%;transition:width .4s"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CHEAT SHEET ========== -->
+<section id="cheat">
+<h2>Formula Cheat Sheet</h2>
+<div class="cheat-grid">
+  <div class="cheat-item"><div class="formula">I = Q / t</div><div class="desc">Current (A = C/s)</div></div>
+  <div class="cheat-item"><div class="formula">V = W / Q</div><div class="desc">Voltage (V = J/C)</div></div>
+  <div class="cheat-item"><div class="formula">Q = n &times; e</div><div class="desc">e = 1.602&times;10<sup>-19</sup> C</div></div>
+  <div class="cheat-item"><div class="formula">R = &rho;L / A</div><div class="desc">Resistance</div></div>
+  <div class="cheat-item"><div class="formula">V = IR</div><div class="desc">Ohm's Law</div></div>
+  <div class="cheat-item"><div class="formula">J = &sigma;E</div><div class="desc">Ohm's Law (vector)</div></div>
+  <div class="cheat-item"><div class="formula">P = VI = I&sup2;R = V&sup2;/R</div><div class="desc">Power</div></div>
+  <div class="cheat-item"><div class="formula">W = P &times; t</div><div class="desc">Energy (kWh = kW&times;h)</div></div>
+  <div class="cheat-item"><div class="formula">&eta; = P<sub>out</sub> / P<sub>in</sub></div><div class="desc">Efficiency</div></div>
+  <div class="cheat-item"><div class="formula">R<sub>T</sub> = &Sigma;R</div><div class="desc">Series resistors</div></div>
+  <div class="cheat-item"><div class="formula">1/R<sub>T</sub> = &Sigma;1/R</div><div class="desc">Parallel resistors</div></div>
+  <div class="cheat-item"><div class="formula">R<sub>T</sub> = R<sub>1</sub>R<sub>2</sub>/(R<sub>1</sub>+R<sub>2</sub>)</div><div class="desc">2 parallel resistors</div></div>
+  <div class="cheat-item"><div class="formula">V<sub>x</sub> = (R<sub>x</sub>/R<sub>T</sub>)V<sub>s</sub></div><div class="desc">VDR</div></div>
+  <div class="cheat-item"><div class="formula">I<sub>x</sub> = (R<sub>T</sub>/R<sub>x</sub>)I<sub>T</sub></div><div class="desc">CDR</div></div>
+  <div class="cheat-item"><div class="formula">I = V/R</div><div class="desc">Source conversion</div></div>
+  <div class="cheat-item"><div class="formula">R<sub>Y</sub> = product / sum</div><div class="desc">&Delta; &rarr; Y</div></div>
+  <div class="cheat-item"><div class="formula">R<sub>&Delta;</sub> = sum / opposite</div><div class="desc">Y &rarr; &Delta;</div></div>
+  <div class="cheat-item"><div class="formula">R<sub>2</sub> = R<sub>1</sub>[1+&alpha;(T<sub>2</sub>-T<sub>1</sub>)]</div><div class="desc">Temp coefficient</div></div>
+</div>
+</section>
+
+<!-- ==================== CH 1 ==================== -->
+<section id="ch1" data-set="1">
+<h2>1. Introduction &amp; Units <span class="tag tag-set" data-set="1">Ch 1</span></h2>
+
+<div class="card" id="ch1-sci">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Scientific Notation &amp; Metric Prefixes</span>
+    <span class="tags"><span class="tag tag-topic">Units</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>Powers of Ten:</strong> 10<sup>6</sup> = 1,000,000 (Mega, M)<br>
+      10<sup>3</sup> = 1,000 (kilo, k) &middot; 10<sup>-3</sup> = 0.001 (milli, m)<br>
+      10<sup>-6</sup> = 0.000001 (micro, &mu;) &middot; 10<sup>-9</sup> = 0.000000001 (nano, n)<br>
+      10<sup>-12</sup> = 0.000000000001 (pico, p)
+    </div>
+    <p><strong>Practice Problems:</strong></p>
+    <p>1. Convert 0.0047 to scientific notation.</p>
+    <p>2. Express 47,000 &Omega; in k&Omega; and M&Omega;.</p>
+    <p>3. Convert 3.5 &times; 10<sup>6</sup> to standard form.</p>
+    <p>4. A current is 2.5 mA. Express in amperes.</p>
+    <div class="solution">
+      <div class="label">Answers</div>
+      <div class="body">
+        <p><strong>1.</strong> 0.0047 = 4.7 &times; 10<sup>-3</sup></p>
+        <p><strong>2.</strong> 47,000 &Omega; = 47 k&Omega; = 0.047 M&Omega;</p>
+        <p><strong>3.</strong> 3.5 &times; 10<sup>6</sup> = 3,500,000</p>
+        <p><strong>4.</strong> 2.5 mA = 2.5 &times; 10<sup>-3</sup> A = 0.0025 A</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch1-sig">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Significant Figures &amp; Rounding</span>
+    <span class="tags"><span class="tag tag-topic">Accuracy</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      Non-zero digits are always significant. Zeros between non-zero digits are significant.<br>
+      Trailing zeros after decimal are significant. Leading zeros are not.
+    </div>
+    <p><strong>Practice:</strong> How many significant figures in: (a) 3.14 (b) 0.0025 (c) 100.0 (d) 500</p>
+    <div class="solution">
+      <div class="label">Answers</div>
+      <div class="body">
+        <p><strong>(a)</strong> 3.14 &rarr; 3 sig figs</p>
+        <p><strong>(b)</strong> 0.0025 &rarr; 2 sig figs</p>
+        <p><strong>(c)</strong> 100.0 &rarr; 4 sig figs</p>
+        <p><strong>(d)</strong> 500 &rarr; 1 sig fig (ambiguous without decimal)</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 2 ==================== -->
+<section id="ch2" data-set="1">
+<h2>2. Voltage &amp; Current <span class="tag tag-set" data-set="1">Ch 2</span></h2>
+
+<div class="card" id="ch2-volt">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Voltage: V = W / Q</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>V = W / Q</strong> where V = voltage (V), W = energy (J), Q = charge (C).<br>
+      1 volt = 1 joule per coulomb.
+    </div>
+    <p><strong>Practice Problems:</strong></p>
+    <p>1. 60 J of energy moves 15 C of charge. Find voltage.</p>
+    <p>2. How much energy is needed to move 20 C through 12 V?</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> V = W / Q = 60 / 15 = <strong>4 V</strong></p>
+        <p><strong>2.</strong> W = V &times; Q = 12 &times; 20 = <strong>240 J</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch2-curr">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Current: I = Q / t</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>I = Q / t</strong> where I = current (A), Q = charge (C), t = time (s).<br>
+      <strong>Q = n &times; e</strong> where e = 1.602 &times; 10<sup>-19</sup> C.
+    </div>
+    <p><strong>Practice Problems:</strong></p>
+    <p>1. 30 C passes through a wire in 15 s. Find current.</p>
+    <p>2. How many electrons pass through a point in 2 s if I = 3 A?</p>
+    <p>3. A current of 5 A flows for 10 minutes. What charge has passed?</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> I = 30 / 15 = <strong>2 A</strong></p>
+        <p><strong>2.</strong> Q = 3 &times; 2 = 6 C. n = Q/e = 6 / (1.602&times;10<sup>-19</sup>) = <strong>3.745 &times; 10<sup>19</sup> electrons</strong></p>
+        <p><strong>3.</strong> t = 10 min = 600 s. Q = 5 &times; 600 = <strong>3000 C</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch2-batt">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Battery &amp; Ampere-Hour Rating</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Ampere-hour (Ah)</strong> rating indicates the total charge a battery can deliver.<br>
+      100 Ah can supply 1 A for 100 hours or 10 A for 10 hours. <strong>Ah = I &times; t</strong>.
+    </div>
+    <p><strong>Practice Problems:</strong></p>
+    <p>1. A 50 Ah battery powers a device drawing 2.5 A. How long?</p>
+    <p>2. A device draws 0.5 A. How many hours from an 80 Ah battery?</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> t = Ah / I = 50 / 2.5 = <strong>20 hours</strong></p>
+        <p><strong>2.</strong> t = 80 / 0.5 = <strong>160 hours</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch2-conv">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Conductors, Insulators, Semiconductors</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Free electron:</strong> An electron that has broken free from its parent atom and moves freely through the metal lattice. These form the "electron gas" that conducts current when an electric field is applied.
+    </div>
+    <div class="defn">
+      <strong>Conductor</strong> (Cu, Al, Ag): Free electrons in outer shell &rarr; current flows easily. Low resistivity.<br>
+      <strong>Insulator</strong> (rubber, glass, plastic): Tightly bound electrons &rarr; very high resistance.<br>
+      <strong>Semiconductor</strong> (Si, Ge): Conductivity between conductor and insulator; controllable via doping (adding impurities).
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch2-act">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Active &amp; Passive Elements</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Active elements</strong> supply energy to a circuit: battery, generator, transistor, op-amp.<br>
+      <strong>Passive elements</strong> consume, store, or dissipate energy: resistor, capacitor, inductor.
+    </div>
+    <div class="defn">
+      <strong>Oscillatory (RLC) circuit:</strong> A resistor, inductor, and capacitor in series/parallel form a damped oscillator. The resistor dissipates energy as heat, causing oscillations to decay. Mechanical analog: <strong>mass-spring-damper</strong> system. Mass &harr; inductor (stores kinetic/current energy), spring &harr; capacitor (stores potential/voltage energy), damper &harr; resistor (dissipates as heat/friction).
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 3 ==================== -->
+<section id="ch3" data-set="1">
+<h2>3. Resistance <span class="tag tag-set" data-set="1">Ch 3</span></h2>
+
+<div class="card" id="ch3-res">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Resistance: R = &rho;L / A</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-theory">Resistivity</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>R = &rho; L / A</strong> where R = resistance (&Omega;), &rho; = resistivity (&Omega;&middot;m), L = length (m), A = area (m<sup>2</sup>).
+    </div>
+    <div class="defn">
+      <strong>Resistance (R)</strong> is a property of a specific object (depends on size/shape). <strong>Resistivity (&rho;)</strong> is an intrinsic material property. A long thin wire has more R than a short thick wire of the same material.
+    </div>
+    <div class="defn">
+      <strong>Temperature effect:</strong> R<sub>2</sub> = R<sub>1</sub>[1 + &alpha;(T<sub>2</sub> - T<sub>1</sub>)].<br>
+      For metals: &alpha; &gt; 0 (R increases with temperature). For semiconductors: &alpha; &lt; 0 (R decreases with temperature).
+    </div>
+    <p><strong>Practice:</strong> Copper wire (&rho; = 1.72&times;10<sup>-8</sup> &Omega;&middot;m), L = 50 m, A = 2&times;10<sup>-6</sup> m<sup>2</sup>. Find R. If the length is doubled, what is the new R?</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> R = (1.72&times;10<sup>-8</sup> &times; 50) / (2&times;10<sup>-6</sup>)</p>
+        <p><strong>Step 2:</strong> R = 8.6&times;10<sup>-7</sup> / 2&times;10<sup>-6</sup> = <strong>0.43 &Omega;</strong></p>
+        <p><strong>Step 3:</strong> If L doubles to 100 m: R = 0.43 &times; 2 = <strong>0.86 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch3-color">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Resistor Color Code</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Color Code Chart:</strong><br>
+      Black 0 &middot; Brown 1 &middot; Red 2 &middot; Orange 3 &middot; Yellow 4 &middot; Green 5 &middot; Blue 6 &middot; Violet 7 &middot; Gray 8 &middot; White 9<br>
+      Band 1 &amp; 2: digits. Band 3: multiplier (power of 10). Band 4: tolerance (gold = &plusmn;5%, silver = &plusmn;10%).
+    </div>
+    <p><strong>Practice Problems:</strong></p>
+    <p>1. Red, Violet, Orange, Gold &rarr; nominal R and tolerance?</p>
+    <p>2. Brown, Black, Red, Silver &rarr; nominal R?</p>
+    <p>3. A 4.7 k&Omega; resistor with &plusmn;5% tolerance: what are the band colors?</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> Red=2, Violet=7, Orange=&times;10<sup>3</sup>, Gold=&plusmn;5% &rarr; <strong>27 k&Omega; &plusmn;5%</strong></p>
+        <p><strong>2.</strong> Brown=1, Black=0, Red=&times;10<sup>2</sup>, Silver=&plusmn;10% &rarr; <strong>1 k&Omega; &plusmn;10%</strong></p>
+        <p><strong>3.</strong> 4.7 k&Omega; = 47 &times; 10<sup>2</sup> &rarr; Yellow (4), Violet (7), Red (&times;10<sup>2</sup>), Gold (&plusmn;5%)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch3-therm">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Thermistors, LDRs &amp; Temperature Effects</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span><span class="tag tag-topic">Devices</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Thermistor:</strong> Temperature-sensitive resistor. <strong>NTC</strong> (Negative Temperature Coefficient): R decreases as temperature increases. <strong>PTC</strong> (Positive Temperature Coefficient): R increases as temperature increases. The negative slope on an I-V curve means current increases faster than voltage (R is decreasing).
+    </div>
+    <div class="defn">
+      <strong>LDR (Photoconductive cell):</strong> Light Dependent Resistor. R decreases when exposed to light. More light &rarr; more charge carriers &rarr; lower R. Used in automatic light sensors, camera exposure meters.
+    </div>
+    <div class="defn">
+      <strong>Varistor (VDR):</strong> Voltage-dependent resistor. R decreases as voltage increases. Used for surge protection.
+    </div>
+    <div class="theorem">
+      <strong>Temperature coefficient:</strong> R<sub>2</sub> = R<sub>1</sub>[1 + &alpha;(T<sub>2</sub> - T<sub>1</sub>)]. &alpha; in &deg;C<sup>-1</sup>.
+    </div>
+    <p><strong>Practice:</strong> A copper wire has R = 10 &Omega; at 20&deg;C. &alpha; = 0.00393 /&deg;C. Find R at 80&deg;C.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> R<sub>2</sub> = 10 [1 + 0.00393(80 - 20)]</p>
+        <p><strong>Step 2:</strong> R<sub>2</sub> = 10 [1 + 0.00393 &times; 60]</p>
+        <p><strong>Step 3:</strong> R<sub>2</sub> = 10 [1 + 0.2358] = 10 &times; 1.2358 = <strong>12.36 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 4 ==================== -->
+<section id="ch4" data-set="2">
+<h2>4. Ohm's Law, Power &amp; Energy <span class="tag tag-set" data-set="2">Ch 4</span></h2>
+
+<div class="card" id="ch4-ohm">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Ohm's Law: V = IR</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>V = IR</strong> &middot; <strong>I = V/R</strong> &middot; <strong>R = V/I</strong><br>
+      <strong>Scalar form:</strong> V = IR. &nbsp; <strong>Vector form:</strong> <strong>J = &sigma;E</strong> (J = current density A/m<sup>2</sup>, &sigma; = conductivity S/m, E = electric field V/m).
+    </div>
+    <svg class="circuit" width="240" height="100" viewBox="0 0 240 100">
+      <rect x="10" y="38" width="30" height="24" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="16" y="55" font-size="9" fill="var(--text)">V</text>
+      <line x1="40" y1="50" x2="80" y2="50" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="80" y="42" width="20" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="85" y="54" font-size="8" fill="var(--text)">R</text>
+      <line x1="100" y1="50" x2="140" y2="50" stroke="var(--text)" stroke-width="1.5"/>
+      <polyline points="140,50 150,40 160,60 170,40 180,60 190,50 200,50" fill="none" stroke="var(--text)" stroke-width="1"/>
+      <line x1="200" y1="50" x2="230" y2="50" stroke="var(--text)" stroke-width="1.5"/>
+      <circle cx="230" cy="50" r="3" fill="var(--text)"/>
+    </svg>
+    <p><strong>Practice:</strong></p>
+    <p>1. A 12 V battery across a 4 &Omega; resistor. Find current.</p>
+    <p>2. A current of 2 A flows through an 8 &Omega; resistor. Find voltage drop.</p>
+    <p>3. A 9 V source produces 3 A. Find resistance.</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> I = V/R = 12/4 = <strong>3 A</strong></p>
+        <p><strong>2.</strong> V = IR = 2 &times; 8 = <strong>16 V</strong></p>
+        <p><strong>3.</strong> R = V/I = 9/3 = <strong>3 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch4-power">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Power &amp; Energy</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>P = V &times; I = I<sup>2</sup>R = V<sup>2</sup>/R</strong> (Watts)<br>
+      <strong>Energy:</strong> W = P &times; t (Joules). kWh = kW &times; h.<br>
+      <strong>Efficiency:</strong> &eta; = (P<sub>out</sub> / P<sub>in</sub>) &times; 100%
+    </div>
+    <p><strong>Practice:</strong></p>
+    <p>1. A 60 W bulb on 120 V. Find current and resistance.</p>
+    <p>2. A heater draws 10 A from 240 V. Find power and energy used in 3 hours (kWh).</p>
+    <p>3. A motor draws 500 W, delivers 400 W. Find efficiency.</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> I = 60/120 = <strong>0.5 A</strong>. R = 120<sup>2</sup>/60 = <strong>240 &Omega;</strong></p>
+        <p><strong>2.</strong> P = 240 &times; 10 = <strong>2400 W</strong>. Energy = 2.4 kW &times; 3 h = <strong>7.2 kWh</strong></p>
+        <p><strong>3.</strong> &eta; = (400/500) &times; 100% = <strong>80%</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch4-fuse">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Fuses, Circuit Breakers &amp; GFCIs</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Fuse:</strong> A thin wire that melts when current exceeds its rating. One-time use (must be replaced). Fast-acting.
+    </div>
+    <div class="defn">
+      <strong>Circuit Breaker:</strong> A bimetallic strip (heat) or electromagnet (instant) that trips a switch. Reusable (just reset). Common in household panels.
+    </div>
+    <div class="defn">
+      <strong>GFCI (Ground Fault Circuit Interrupter):</strong> Detects an imbalance (&gt;5 mA) between hot and neutral wires. If current leaks through a person to ground, the GFCI cuts power in milliseconds. Required in bathrooms, kitchens, outdoors. Prevents electrocution.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 5 ==================== -->
+<section id="ch5" data-set="2">
+<h2>5. Series DC Circuits <span class="tag tag-set" data-set="2">Ch 5</span></h2>
+
+<div class="card" id="ch5-series">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Series Circuits &amp; KVL</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-theory">KVL</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>R<sub>T</sub> = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + ...</strong> &middot; Same current flows through all series resistors.<br>
+      <strong>KVL (Kirchhoff's Voltage Law):</strong> The sum of voltage drops around any closed loop equals the applied voltage. &Sigma;V<sub>drops</sub> = V<sub>source</sub>.
+    </div>
+    <svg class="circuit" width="320" height="160" viewBox="0 0 320 160">
+      <rect x="10" y="62" width="30" height="24" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="16" y="79" font-size="9" fill="var(--text)">V</text>
+      <line x1="40" y1="74" x2="100" y2="74" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="100" y="66" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="105" y="78" font-size="8" fill="var(--text)">R1</text>
+      <line x1="130" y1="74" x2="170" y2="74" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="170" y="66" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="175" y="78" font-size="8" fill="var(--text)">R2</text>
+      <line x1="200" y1="74" x2="240" y2="74" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="240" y="66" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="245" y="78" font-size="8" fill="var(--text)">R3</text>
+      <line x1="270" y1="74" x2="280" y2="74" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="280" y1="74" x2="280" y2="140" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="280" y1="140" x2="25" y2="140" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="25" y1="140" x2="25" y2="86" stroke="var(--text)" stroke-width="1.5"/>
+      <polygon points="25,86 20,96 30,96" fill="var(--text)"/>
+    </svg>
+    <p><strong>Practice:</strong> R<sub>1</sub>=1k&Omega;, R<sub>2</sub>=2k&Omega;, R<sub>3</sub>=3k&Omega; in series with 12V.</p>
+    <p>(i) R<sub>T</sub> (ii) I<sub>s</sub> (iii) V<sub>1</sub>, V<sub>2</sub>, V<sub>3</sub> (iv) Verify KVL.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> R<sub>T</sub> = 1k + 2k + 3k = <strong>6 k&Omega;</strong></p>
+        <p><strong>Step 2:</strong> I<sub>s</sub> = 12/6000 = <strong>2 mA</strong></p>
+        <p><strong>Step 3:</strong> V<sub>1</sub> = 2mA&times;1k = <strong>2 V</strong>, V<sub>2</sub> = 2mA&times;2k = <strong>4 V</strong>, V<sub>3</sub> = 2mA&times;3k = <strong>6 V</strong></p>
+        <p><strong>Step 4 (KVL check):</strong> 2 + 4 + 6 = 12 V &#10003;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch5-vdr">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Voltage Divider Rule (VDR)</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>V<sub>x</sub> = (R<sub>x</sub> / R<sub>T</sub>) &times; V<sub>s</sub></strong><br>
+      The voltage across any resistor in a series circuit equals its resistance fraction of the total.
+    </div>
+    <div class="defn">
+      <strong>Derivation:</strong> I = V<sub>s</sub>/R<sub>T</sub>. Then V<sub>x</sub> = I &times; R<sub>x</sub> = (V<sub>s</sub>/R<sub>T</sub>) &times; R<sub>x</sub> = V<sub>s</sub> &times; (R<sub>x</sub>/R<sub>T</sub>).
+    </div>
+    <p><strong>Practice:</strong></p>
+    <p>1. R<sub>1</sub>=10&Omega;, R<sub>2</sub>=30&Omega; in series with 40V. Find V<sub>1</sub>, V<sub>2</sub> using VDR.</p>
+    <p>2. R<sub>1</sub>=1k&Omega;, R<sub>2</sub>=2k&Omega;, R<sub>3</sub>=1k&Omega;, 24V. Find V<sub>2</sub>.</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> R<sub>T</sub> = 40&Omega;. V<sub>1</sub> = (10/40)&times;40 = <strong>10 V</strong>. V<sub>2</sub> = (30/40)&times;40 = <strong>30 V</strong></p>
+        <p><strong>2.</strong> R<sub>T</sub> = 1+2+1 = 4k&Omega;. V<sub>2</sub> = (2k/4k)&times;24 = <strong>12 V</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch5-power">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Power in Series Circuits</span>
+    <span class="tags"><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>P<sub>s</sub> = V<sub>s</sub> &times; I<sub>s</sub></strong> (power supplied by source).<br>
+      <strong>P<sub>R</sub> = I<sup>2</sup>R</strong> (power dissipated by resistor).<br>
+      Conservation: &Sigma;P<sub>R</sub> = P<sub>s</sub>
+    </div>
+    <p><strong>Practice:</strong> R<sub>1</sub>=1&Omega;, R<sub>2</sub>=2&Omega;, R<sub>3</sub>=3&Omega; in series with 12V.</p>
+    <p>(i) P<sub>s</sub> (ii) P<sub>1</sub>, P<sub>2</sub>, P<sub>3</sub> (iii) Verify &Sigma;P = P<sub>s</sub></p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> R<sub>T</sub> = 6&Omega;, I = 12/6 = 2A</p>
+        <p><strong>Step 2:</strong> P<sub>s</sub> = 12 &times; 2 = <strong>24 W</strong></p>
+        <p><strong>Step 3:</strong> P<sub>1</sub> = 2<sup>2</sup>&times;1 = 4W, P<sub>2</sub> = 2<sup>2</sup>&times;2 = 8W, P<sub>3</sub> = 2<sup>2</sup>&times;3 = 12W</p>
+        <p><strong>Step 4:</strong> 4 + 8 + 12 = 24W = P<sub>s</sub> &#10003;</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 6 ==================== -->
+<section id="ch6" data-set="2">
+<h2>6. Parallel DC Circuits <span class="tag tag-set" data-set="2">Ch 6</span></h2>
+
+<div class="card" id="ch6-par">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Parallel Circuits &amp; KCL</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-theory">KCL</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>1/R<sub>T</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> + ...</strong><br>
+      For 2 resistors: <strong>R<sub>T</sub> = (R<sub>1</sub>R<sub>2</sub>)/(R<sub>1</sub>+R<sub>2</sub>)</strong><br>
+      For n equal R: R<sub>T</sub> = R / n<br>
+      <strong>KCL (Kirchhoff's Current Law):</strong> I<sub>T</sub> = I<sub>1</sub> + I<sub>2</sub> + ... (current entering = sum leaving)
+    </div>
+    <svg class="circuit" width="280" height="180" viewBox="0 0 280 180">
+      <rect x="10" y="72" width="30" height="24" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="16" y="89" font-size="9" fill="var(--text)">V</text>
+      <line x1="40" y1="84" x2="80" y2="84" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="80" y1="84" x2="80" y2="50" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="75" y="34" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="76" y="46" font-size="7" fill="var(--text)">R1</text>
+      <line x1="105" y1="42" x2="120" y2="42" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="80" y1="84" x2="80" y2="120" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="75" y="120" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="76" y="132" font-size="7" fill="var(--text)">R2</text>
+      <line x1="105" y1="128" x2="120" y2="128" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="80" y1="84" x2="80" y2="160" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="75" y="160" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="76" y="172" font-size="7" fill="var(--text)">R3</text>
+      <line x1="105" y1="168" x2="120" y2="168" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="120" y1="42" x2="120" y2="168" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="120" y1="84" x2="270" y2="84" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="270" y1="84" x2="270" y2="96" stroke="var(--text)" stroke-width="1.5"/>
+    </svg>
+    <p><strong>Practice:</strong> R<sub>1</sub>=6&Omega;, R<sub>2</sub>=3&Omega;, R<sub>3</sub>=2&Omega; in parallel with 12V.</p>
+    <p>(i) R<sub>T</sub> (ii) I<sub>T</sub> (iii) I<sub>1</sub>, I<sub>2</sub>, I<sub>3</sub> (iv) Verify KCL.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> 1/R<sub>T</sub> = 1/6 + 1/3 + 1/2 = 1/6 + 2/6 + 3/6 = 1 &rarr; R<sub>T</sub> = <strong>1 &Omega;</strong></p>
+        <p><strong>Step 2:</strong> I<sub>T</sub> = 12/1 = <strong>12 A</strong></p>
+        <p><strong>Step 3:</strong> I<sub>1</sub> = 12/6 = 2 A, I<sub>2</sub> = 12/3 = 4 A, I<sub>3</sub> = 12/2 = 6 A</p>
+        <p><strong>Step 4 (KCL check):</strong> 2 + 4 + 6 = 12 A &#10003;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch6-cdr">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Current Divider Rule (CDR)</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>I<sub>x</sub> = (R<sub>T</sub> / R<sub>x</sub>) &times; I<sub>T</sub></strong><br>
+      For 2 resistors: <strong>I<sub>1</sub> = (R<sub>2</sub> / (R<sub>1</sub>+R<sub>2</sub>)) &times; I<sub>T</sub></strong><br>
+      <strong>I<sub>2</sub> = (R<sub>1</sub> / (R<sub>1</sub>+R<sub>2</sub>)) &times; I<sub>T</sub></strong><br>
+      More current flows through the smaller resistor.
+    </div>
+    <p><strong>Practice:</strong></p>
+    <p>1. R<sub>1</sub>=6&Omega;, R<sub>2</sub>=3&Omega; parallel, I<sub>T</sub>=3A. Find I<sub>1</sub>, I<sub>2</sub>.</p>
+    <p>2. R<sub>1</sub>=12&Omega;, R<sub>2</sub>=4&Omega; parallel, I<sub>T</sub>=8A. Find I<sub>1</sub>, I<sub>2</sub>.</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> I<sub>1</sub> = (3/(6+3))&times;3 = <strong>1 A</strong>. I<sub>2</sub> = (6/(6+3))&times;3 = <strong>2 A</strong></p>
+        <p><strong>2.</strong> I<sub>1</sub> = (4/(12+4))&times;8 = (4/16)&times;8 = <strong>2 A</strong>. I<sub>2</sub> = (12/16)&times;8 = <strong>6 A</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch6-open">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Open &amp; Short Circuits in Parallel</span>
+    <span class="tags"><span class="tag tag-theory">Theory</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Open circuit:</strong> R = &infin;, I = 0, V = full voltage across the open. Other branches unaffected.
+    </div>
+    <div class="defn">
+      <strong>Short circuit:</strong> R = 0, I = maximum (limited only by source), V = 0 across the short. Current bypasses all other parallel branches. Very large total current &rarr; blown fuse/tripped breaker.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 7 ==================== -->
+<section id="ch7" data-set="3">
+<h2>7. Series-Parallel Networks <span class="tag tag-set" data-set="3">Ch 7</span></h2>
+
+<div class="card" id="ch7-red">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Reduce &amp; Return Approach</span>
+    <span class="tags"><span class="tag tag-theory">Method</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Reduce:</strong> Combine series and parallel resistors step-by-step from the farthest point from the source, reducing the network to a single equivalent R<sub>T</sub>. Find total current I<sub>s</sub> = V<sub>s</sub>/R<sub>T</sub>.<br>
+      <strong>Return:</strong> Work backwards, using VDR and CDR to find voltages and currents in each original resistor.
+    </div>
+    <p><strong>Practice:</strong> R<sub>1</sub>=10&Omega; (series with source), R<sub>2</sub>=20&Omega; and R<sub>3</sub>=30&Omega; in parallel. Source = 12V. Find all currents.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1 (Reduce):</strong> R<sub>2</sub>||R<sub>3</sub> = (20&times;30)/(20+30) = 12 &Omega;</p>
+        <p><strong>Step 2:</strong> R<sub>T</sub> = 10 + 12 = 22 &Omega;</p>
+        <p><strong>Step 3:</strong> I<sub>s</sub> = 12/22 = <strong>0.545 A</strong></p>
+        <p><strong>Step 4 (Return):</strong> V<sub>1</sub> = 0.545 &times; 10 = 5.45 V</p>
+        <p><strong>Step 5:</strong> V<sub>parallel</sub> = 12 - 5.45 = 6.55 V</p>
+        <p><strong>Step 6:</strong> I<sub>2</sub> = 6.55/20 = <strong>0.328 A</strong>, I<sub>3</sub> = 6.55/30 = <strong>0.218 A</strong></p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="label">Common Mistake</div>
+      <div class="body">
+        <p><strong>Mistake:</strong> Stopping after finding R<sub>T</sub> and I<sub>s</sub>. You must "return" to find each resistor's specific values.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch7-load">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Loaded Voltage Divider</span>
+    <span class="tags"><span class="tag tag-theory">Concept</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      When a load resistor R<sub>L</sub> is connected across the output of a voltage divider, the effective resistance changes, altering the output voltage. This is called <strong>loading</strong>. The output voltage drops compared to the unloaded case.
+    </div>
+    <p><strong>Practice:</strong> R<sub>1</sub>=R<sub>2</sub>=10k&Omega;, V<sub>s</sub>=20V. A 10k&Omega; load is connected across R<sub>2</sub>. Find loaded and unloaded V<sub>out</sub>.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1 (Unloaded):</strong> V<sub>out</sub> = (10k/(10k+10k))&times;20 = <strong>10 V</strong></p>
+        <p><strong>Step 2 (Loaded):</strong> R<sub>2</sub>||R<sub>L</sub> = (10&times;10)/(10+10) = 5 k&Omega;</p>
+        <p><strong>Step 3:</strong> V<sub>out</sub> = (5k/(10k+5k))&times;20 = <strong>6.67 V</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch7-lad">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Ladder Networks</span>
+    <span class="tags"><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Method:</strong> Start from the farthest end, combine series and parallel step-by-step toward the source. Then return from source to find branch currents/voltages.
+    </div>
+    <p><strong>Practice:</strong> R<sub>1</sub>=2&Omega; (series from source), then node with R<sub>3</sub>=2&Omega; to ground, then R<sub>2</sub>=4&Omega; (series), then R<sub>4</sub>=4&Omega; to ground. V<sub>s</sub>=20V. Find R<sub>T</sub>.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> Start from end: R<sub>4</sub> = 4 &Omega; to ground</p>
+        <p><strong>Step 2:</strong> R<sub>2</sub> + R<sub>4</sub> = 4 + 4 = 8 &Omega;</p>
+        <p><strong>Step 3:</strong> R<sub>3</sub> || (R<sub>2</sub>+R<sub>4</sub>) = 2 || 8 = (2&times;8)/(10) = 1.6 &Omega;</p>
+        <p><strong>Step 4:</strong> R<sub>T</sub> = R<sub>1</sub> + 1.6 = 2 + 1.6 = <strong>3.6 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 8 ==================== -->
+<section id="ch8" data-set="3">
+<h2>8. Methods of Analysis <span class="tag tag-set" data-set="3">Ch 8</span></h2>
+
+<div class="card" id="ch8-src">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Source Conversion</span>
+    <span class="tags"><span class="tag tag-maths">Method</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>Voltage &rarr; Current:</strong> I = V/R, resistor R in parallel.<br>
+      <strong>Current &rarr; Voltage:</strong> V = I &times; R, resistor R in series.
+    </div>
+    <p><strong>Practice:</strong></p>
+    <p>1. Convert 12V in series with 6&Omega; to a current source.</p>
+    <p>2. Convert 3A in parallel with 4&Omega; to a voltage source.</p>
+    <div class="solution">
+      <div class="label">Solutions</div>
+      <div class="body">
+        <p><strong>1.</strong> I = 12/6 = <strong>2 A</strong> in parallel with <strong>6 &Omega;</strong></p>
+        <p><strong>2.</strong> V = 3 &times; 4 = <strong>12 V</strong> in series with <strong>4 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch8-mesh">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Mesh Analysis</span>
+    <span class="tags"><span class="tag tag-maths">Method</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Steps:</strong> (1) Assign clockwise mesh currents for each loop. (2) Apply KVL to each mesh. (3) For resistors shared between meshes, voltage = (I<sub>1</sub> - I<sub>2</sub>)R. (4) Solve the system of equations.
+    </div>
+    <svg class="circuit" width="280" height="160" viewBox="0 0 280 160">
+      <rect x="10" y="60" width="30" height="24" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="12" y="77" font-size="9" fill="var(--text)">V</text>
+      <line x1="40" y1="72" x2="80" y2="72" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="80" y="64" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="85" y="76" font-size="7" fill="var(--text)">R1</text>
+      <line x1="110" y1="72" x2="150" y2="72" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="150" y="64" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="153" y="76" font-size="7" fill="var(--text)">R2</text>
+      <line x1="180" y1="72" x2="220" y2="72" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="220" y="64" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="225" y="76" font-size="7" fill="var(--text)">R3</text>
+      <line x1="250" y1="72" x2="270" y2="72" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="270" y1="72" x2="270" y2="150" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="270" y1="150" x2="25" y2="150" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="25" y1="150" x2="25" y2="84" stroke="var(--text)" stroke-width="1.5"/>
+      <polygon points="25,84 20,94 30,94" fill="var(--text)"/>
+    </svg>
+    <p><strong>Practice:</strong> V<sub>1</sub>=10V in mesh 1, R<sub>1</sub>=2&Omega;, shared R<sub>2</sub>=4&Omega;, mesh 2 has R<sub>3</sub>=2&Omega;, V<sub>2</sub>=5V (opposite polarity). Find mesh currents.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1 (Mesh 1):</strong> 10 = 2I<sub>1</sub> + 4(I<sub>1</sub>-I<sub>2</sub>) &rarr; 10 = 6I<sub>1</sub> - 4I<sub>2</sub></p>
+        <p><strong>Step 2 (Mesh 2):</strong> -5 = 2I<sub>2</sub> + 4(I<sub>2</sub>-I<sub>1</sub>) &rarr; -5 = -4I<sub>1</sub> + 6I<sub>2</sub></p>
+        <p><strong>Step 3:</strong> Multiply eq1 by 3: 30 = 18I<sub>1</sub> - 12I<sub>2</sub>. Multiply eq2 by 2: -10 = -8I<sub>1</sub> + 12I<sub>2</sub></p>
+        <p><strong>Step 4 (Add):</strong> 20 = 10I<sub>1</sub> &rarr; I<sub>1</sub> = <strong>2 A</strong></p>
+        <p><strong>Step 5:</strong> 10 = 6(2) - 4I<sub>2</sub> &rarr; 10 = 12 - 4I<sub>2</sub> &rarr; I<sub>2</sub> = <strong>0.5 A</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch8-nodal">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Nodal Analysis</span>
+    <span class="tags"><span class="tag tag-maths">Method</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Steps:</strong> (1) Select reference node (ground). (2) Assign voltages V<sub>1</sub>, V<sub>2</sub> at remaining nodes. (3) Apply KCL at each node: sum of currents leaving = 0. (4) Use I = V/R. (5) Solve.
+    </div>
+    <p><strong>Practice:</strong> Node 1: R<sub>1</sub>=2&Omega; to ground, R<sub>2</sub>=4&Omega; to Node 2. Node 2: R<sub>3</sub>=2&Omega; to ground. Current source 3A into Node 1. Find V<sub>1</sub>, V<sub>2</sub>.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1 (Node 1):</strong> 3 = V<sub>1</sub>/2 + (V<sub>1</sub>-V<sub>2</sub>)/4 &rarr; 12 = 3V<sub>1</sub> - V<sub>2</sub></p>
+        <p><strong>Step 2 (Node 2):</strong> 0 = V<sub>2</sub>/2 + (V<sub>2</sub>-V<sub>1</sub>)/4 &rarr; 0 = 3V<sub>2</sub> - V<sub>1</sub> &rarr; V<sub>1</sub> = 3V<sub>2</sub></p>
+        <p><strong>Step 3:</strong> 12 = 3(3V<sub>2</sub>) - V<sub>2</sub> = 8V<sub>2</sub> &rarr; V<sub>2</sub> = <strong>1.5 V</strong></p>
+        <p><strong>Step 4:</strong> V<sub>1</sub> = 3 &times; 1.5 = <strong>4.5 V</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch8-yd">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Wye (Y) &harr; Delta (&Delta;) Conversion</span>
+    <span class="tags"><span class="tag tag-maths">Formula</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>&Delta; &rarr; Y:</strong> R<sub>1</sub> = (R<sub>a</sub>R<sub>b</sub>) / (R<sub>a</sub>+R<sub>b</sub>+R<sub>c</sub>)<br>
+      R<sub>2</sub> = (R<sub>b</sub>R<sub>c</sub>) / (sum) &middot; R<sub>3</sub> = (R<sub>a</sub>R<sub>c</sub>) / (sum)
+    </div>
+    <div class="theorem">
+      <strong>Y &rarr; &Delta;:</strong> R<sub>a</sub> = (R<sub>1</sub>R<sub>2</sub>+R<sub>2</sub>R<sub>3</sub>+R<sub>3</sub>R<sub>1</sub>) / R<sub>1</sub><br>
+      R<sub>b</sub> = (sum) / R<sub>2</sub> &middot; R<sub>c</sub> = (sum) / R<sub>3</sub>
+    </div>
+    <svg class="circuit" width="320" height="100" viewBox="0 0 320 100">
+      <text x="10" y="20" font-size="10" fill="var(--text)">&Delta;:</text>
+      <polygon points="80,70 50,15 110,15" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="48" y="12" font-size="8" fill="var(--text)">Ra</text>
+      <text x="108" y="12" font-size="8" fill="var(--text)">Rb</text>
+      <text x="70" y="82" font-size="8" fill="var(--text)">Rc</text>
+      <text x="170" y="20" font-size="10" fill="var(--text)">Y:</text>
+      <line x1="210" y1="50" x2="210" y2="15" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="210" y1="50" x2="245" y2="75" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="210" y1="50" x2="175" y2="75" stroke="var(--text)" stroke-width="1.5"/>
+      <circle cx="210" cy="50" r="2" fill="var(--text)"/>
+      <text x="204" y="10" font-size="8" fill="var(--text)">R1</text>
+      <text x="238" y="82" font-size="8" fill="var(--text)">R2</text>
+      <text x="162" y="82" font-size="8" fill="var(--text)">R3</text>
+      <circle cx="210" cy="15" r="3" fill="var(--accent)"/>
+      <circle cx="245" cy="75" r="3" fill="var(--accent)"/>
+      <circle cx="175" cy="75" r="3" fill="var(--accent)"/>
+    </svg>
+    <p><strong>Practice:</strong> Convert &Delta;: R<sub>a</sub>=10&Omega;, R<sub>b</sub>=20&Omega;, R<sub>c</sub>=30&Omega; to Y.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1:</strong> Sum = 10 + 20 + 30 = 60</p>
+        <p><strong>Step 2:</strong> R<sub>1</sub> = (10&times;20)/60 = 200/60 = <strong>3.33 &Omega;</strong></p>
+        <p><strong>Step 3:</strong> R<sub>2</sub> = (20&times;30)/60 = 600/60 = <strong>10 &Omega;</strong></p>
+        <p><strong>Step 4:</strong> R<sub>3</sub> = (10&times;30)/60 = 300/60 = <strong>5 &Omega;</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="ch8-smoke">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Smoke Detector &amp; Bridge Circuit</span>
+    <span class="tags"><span class="tag tag-theory">Application</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="defn">
+      <strong>Ionization smoke detectors</strong> use a <strong>Wheatstone bridge</strong> circuit. A small radioactive source (americium-241) ionizes air between two plates, creating a small current (one arm of the bridge). Smoke particles entering the chamber disrupt this current, changing the resistance of that arm. The bridge becomes unbalanced, producing a voltage difference that triggers the alarm circuit.
+    </div>
+    <svg class="circuit" width="200" height="160" viewBox="0 0 200 160">
+      <polygon points="100,5 5,100 100,155 195,100" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="60" y="75" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="62" y="87" font-size="7" fill="var(--text)">R1</text>
+      <rect x="120" y="75" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="122" y="87" font-size="7" fill="var(--text)">R2</text>
+      <rect x="60" y="115" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="62" y="127" font-size="7" fill="var(--text)">R3</text>
+      <rect x="120" y="115" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="122" y="127" font-size="7" fill="var(--text)">R4</text>
+      <circle cx="100" cy="55" r="2" fill="var(--text)"/>
+      <text x="104" y="58" font-size="7" fill="var(--accent2)">Vout</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- ==================== CH 9 ==================== -->
+<section id="ch9" data-set="3">
+<h2>9. Network Theorems <span class="tag tag-set" data-set="3">Ch 9</span></h2>
+<p style="color:var(--text2);margin-bottom:12px">Exam scope: only Superposition.</p>
+
+<div class="card" id="ch9-super">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Superposition Theorem</span>
+    <span class="tags"><span class="tag tag-maths">Theorem</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <div class="theorem">
+      <strong>Statement:</strong> In any linear circuit with multiple independent sources, the current through or voltage across any element is the algebraic sum of the contributions from each source acting alone. When one source is active, all other independent sources are deactivated: voltage sources &rarr; short circuit, current sources &rarr; open circuit.
+    </div>
+    <svg class="circuit" width="340" height="180" viewBox="0 0 340 180">
+      <rect x="5" y="65" width="30" height="24" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="7" y="82" font-size="8" fill="var(--text)">V</text>
+      <line x1="35" y1="77" x2="65" y2="77" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="65" y="69" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="67" y="81" font-size="7" fill="var(--text)">R1</text>
+      <line x1="95" y1="77" x2="125" y2="77" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="125" y="69" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="126" y="81" font-size="7" fill="var(--text)">R2</text>
+      <line x1="155" y1="77" x2="185" y2="15" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="155" y1="77" x2="185" y2="140" stroke="var(--text)" stroke-width="1.5"/>
+      <rect x="70" y="130" width="30" height="16" rx="2" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="72" y="142" font-size="7" fill="var(--text)">R3</text>
+      <line x1="100" y1="138" x2="185" y2="138" stroke="var(--text)" stroke-width="1.5"/>
+      <circle cx="185" cy="15" r="4" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <text x="178" y="6" font-size="7" fill="var(--text)">I</text>
+      <line x1="185" y1="19" x2="185" y2="60" stroke="var(--text)" stroke-width="1.5"/>
+      <polygon points="185,60 190,50 180,50" fill="var(--text)"/>
+      <line x1="185" y1="146" x2="185" y2="175" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="185" y1="175" x2="20" y2="175" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="20" y1="175" x2="20" y2="89" stroke="var(--text)" stroke-width="1.5"/>
+      <polygon points="20,89 15,99 25,99" fill="var(--text)"/>
+    </svg>
+    <p><strong>Practice:</strong> V<sub>1</sub>=20V (left loop), I<sub>2</sub>=2A (current source in right branch). R<sub>1</sub>=10&Omega; (left), R<sub>2</sub>=20&Omega; (shared), R<sub>3</sub>=10&Omega; (right). Find current through R<sub>2</sub> using superposition.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>Step 1 (V<sub>1</sub> alone, I<sub>2</sub> open):</strong> R<sub>T</sub> = 10 + 20 = 30 &Omega;</p>
+        <p><strong>Step 2:</strong> I<sub>R2</sub> = 20/30 = <strong>0.667 A</strong> (downward)</p>
+        <p><strong>Step 3 (I<sub>2</sub> alone, V<sub>1</sub> short):</strong> Using CDR: I<sub>R2</sub> = (10/(10+20)) &times; 2 = <strong>0.667 A</strong> (upward)</p>
+        <p><strong>Step 4 (Superpose):</strong> I<sub>R2</sub> = 0.667 - 0.667 = <strong>0 A</strong></p>
+      </div>
+    </div>
+    <div class="mistake">
+      <div class="label">Common Mistake</div>
+      <div class="body">
+        <p><strong>Mistake:</strong> Forgetting to account for direction (sign) when summing contributions. Always mark reference directions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ==================== EXAM ==================== -->
+<section id="exam" data-set="4">
+<h2>Previous Exam (23-24 Mid) <span class="tag tag-set" data-set="4">Exam</span></h2>
+<p style="color:var(--text2);margin-bottom:12px">2nd semester midterm questions. Some figures are missing -- assumed values are used for practice.</p>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Q1 - Free Electrons &amp; Current</span>
+    <span class="tags"><span class="tag tag-set" data-set="4">Exam</span><span class="tag tag-theory">Theory+Maths</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <p><strong>(a)</strong> Define "free" electron in a metal. 0.16 C flows through a copper wire in 64&times;10<sup>3</sup> sec. Determine the current. How long for 4&times;10<sup>20</sup> electrons to pass if I = 5&times;10<sup>-3</sup> A?</p>
+    <p><strong>(b)</strong> Name active &amp; passive elements. Draw oscillatory circuit with dissipation. How is energy dissipated? Mechanical analog?</p>
+    <p><strong>(c)</strong> Discuss active vs passive. Distinguish resistance &amp; resistivity. Ohm's law scalar &amp; vector form. Temperature effects on R.</p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>(a)</strong> Free electron: not bound to any atom, moves freely in the metal lattice.</p>
+        <p>I = 0.16 / (64&times;10<sup>3</sup>) = <strong>2.5 &times; 10<sup>-6</sup> A</strong> (2.5 &mu;A)</p>
+        <p>Q = 4&times;10<sup>20</sup> &times; 1.602&times;10<sup>-19</sup> = 64.08 C. t = 64.08/(5&times;10<sup>-3</sup>) = <strong>12,816 s</strong> (3.56 h)</p>
+        <p><strong>(b)</strong> Active: battery, generator, transistor. Passive: resistor, capacitor, inductor. RLC circuit: resistor dissipates as heat (damping). Mechanical analog: mass-spring-damper.</p>
+        <p><strong>(c)</strong> Active supplies energy. R = object property, &rho; = material property. Scalar: V=IR. Vector: J = &sigma;E. Metals: R&uarr; with temp. Semiconductors: R&darr; with temp.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Q2 - Voltage Divider Rule &amp; Thermistor</span>
+    <span class="tags"><span class="tag tag-set" data-set="4">Exam</span><span class="tag tag-theory">Theory+Maths</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <p><strong>(a)</strong> State VDR. Draw I-V diagrams for Ohmic &amp; non-Ohmic devices (thermistor). What does negative slope mean?</p>
+    <p><strong>(b)</strong> Derive VDR using a simple series circuit.</p>
+    <p><strong>(c)</strong> For series circuit (Fig.1): find R<sub>T</sub>, I<sub>s</sub>, V across each resistor, power supplied, power dissipated, verify total. <em>(Assume R<sub>1</sub>=1&Omega;, R<sub>2</sub>=2&Omega;, R<sub>3</sub>=3&Omega;, V<sub>s</sub>=15V)</em></p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>(a)</strong> V<sub>x</sub> = (R<sub>x</sub>/R<sub>T</sub>) &times; V<sub>s</sub>. Ohmic: straight line through origin. Non-Ohmic (NTC thermistor): curved. Negative slope &rarr; R decreases as I increases.</p>
+        <p><strong>(b)</strong> I = V<sub>s</sub>/R<sub>T</sub>. V<sub>x</sub> = I&middot;R<sub>x</sub> = V<sub>s</sub>&middot;(R<sub>x</sub>/R<sub>T</sub>).</p>
+        <p><strong>(c)</strong> R<sub>T</sub>=6&Omega;, I<sub>s</sub>=15/6=<strong>2.5A</strong>. V<sub>1</sub>=2.5V, V<sub>2</sub>=5V, V<sub>3</sub>=7.5V. P<sub>s</sub>=37.5W, P<sub>1</sub>=6.25W, P<sub>2</sub>=12.5W, P<sub>3</sub>=18.75W. Sum=37.5W &#10003;</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Q3 - Series-Parallel &amp; Reduce-Return</span>
+    <span class="tags"><span class="tag tag-set" data-set="4">Exam</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <p><strong>(a)</strong> What is Reduce and Return approach?</p>
+    <p><strong>(b)</strong> Give an example showing the steps.</p>
+    <p><strong>(c)</strong> For parallel network (Fig.2): find R<sub>T</sub>, source current, branch currents. <em>(Assume R<sub>1</sub>=12&Omega;, R<sub>2</sub>=6&Omega;, R<sub>3</sub>=4&Omega;, V<sub>s</sub>=24V)</em></p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>(a)</strong> Reduce: combine resistors from farthest end toward source to get R<sub>T</sub> and I<sub>s</sub>. Return: work backwards using VDR/CDR.</p>
+        <p><strong>(b)</strong> See Ch 7 Reduce &amp; Return card.</p>
+        <p><strong>(c)</strong> 1/R<sub>T</sub> = 1/12+1/6+1/4 = 6/12 &rarr; R<sub>T</sub> = <strong>2 &Omega;</strong></p>
+        <p>I<sub>s</sub> = 24/2 = <strong>12 A</strong>. I<sub>1</sub>=2A, I<sub>2</sub>=4A, I<sub>3</sub>=6A.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span>Q4 - Superposition Theorem</span>
+    <span class="tags"><span class="tag tag-set" data-set="4">Exam</span><span class="tag tag-maths">Practice</span></span>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <span class="card-star" onclick="toggleStar(this)">&#9734;</span>
+      <span class="card-progress" onclick="toggleProgress(this)">&#9675;</span>
+    </div>
+    <p><strong>(a)</strong> State and explain Superposition theorem.</p>
+    <p><strong>(b)</strong> Apply to circuit with voltage source + current source.</p>
+    <p><strong>(c)</strong> Using superposition, find current through the 12&Omega; resistor (Fig.3). <em>(Assume V=24V, I=2A, R<sub>1</sub>=6&Omega;, R<sub>2</sub>=12&Omega;, R<sub>3</sub>=6&Omega;)</em></p>
+    <div class="solution">
+      <div class="label">Solution</div>
+      <div class="body">
+        <p><strong>(a)</strong> Each source contributes independently; sum contributions algebraically. Deactivate: V&rarr;short, I&rarr;open.</p>
+        <p><strong>(b)</strong> (1) V alone: open I. (2) I alone: short V. (3) Add with signs.</p>
+        <p><strong>(c) V alone:</strong> I<sub>R2</sub> = 24/(6+12) = <strong>1.333 A</strong> (right)</p>
+        <p><strong>I alone:</strong> I<sub>R2</sub> = (6/(6+12))&times;2 = <strong>0.667 A</strong> (left)</p>
+        <p><strong>Net:</strong> 1.333 - 0.667 = <strong>0.667 A</strong> (right)</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<a href="#" class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">&uarr;</a>
+</main>
+
+<script>
+let currentFilter = 0;
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navigateTo(hash){
+  if(window.innerWidth<900) document.getElementById('sidebar').classList.remove('open');
+  window.location.hash=hash;
+}
+
+function toggleDark(){
+  document.documentElement.classList.toggle('dark');
+  document.querySelector('.dark-toggle').textContent =
+    document.documentElement.classList.contains('dark') ? '\u263E' : '\u2600';
+}
+
+function toggleCard(header){
+  const card = header.closest('.card');
+  card.classList.toggle('open');
+}
+
+function toggleFold(el){
+  const arrow = el.querySelector('.fold-arrow');
+  const children = el.nextElementSibling;
+  arrow.classList.toggle('folded');
+  children.classList.toggle('folded');
+}
+
+function toggleAll(){
+  const all = document.querySelectorAll('.card');
+  const anyOpen = Array.from(all).some(c => c.classList.contains('open'));
+  all.forEach(c => c.classList.toggle('open', !anyOpen));
+  document.getElementById('collapse-btn').textContent = anyOpen ? '+ Expand all' : '- Collapse all';
+}
+
+function toggleStar(el){
+  el.classList.toggle('active');
+  el.textContent = el.classList.contains('active') ? '\u2605' : '\u2606';
+  updateRevisionList(); updateProgress();
+}
+
+function toggleProgress(el){
+  el.classList.toggle('checked');
+  el.textContent = el.classList.contains('checked') ? '\u25CF' : '\u25CB';
+  updateProgress();
+}
+
+function updateProgress(){
+  const total = document.querySelectorAll('.card').length;
+  const done = document.querySelectorAll('.card-progress.checked').length;
+  document.getElementById('progressCount').textContent = done+'/'+total;
+  document.getElementById('doneCards').textContent = done;
+  document.getElementById('totalCards').textContent = total;
+  const pct = total ? (done/total*100) : 0;
+  document.getElementById('progressBar').style.width = pct+'%';
+}
+
+function updateRevisionList(){
+  const list = document.getElementById('revision-items');
+  const starred = document.querySelectorAll('.card-star.active');
+  if(!starred.length){list.innerHTML='<p style="color:var(--text2);font-size:.85rem">Star some cards to see them here.</p>';return}
+  let html='';
+  starred.forEach(s=>{
+    const card = s.closest('.card');
+    const title = card.querySelector('.card-header span').textContent;
+    html += '<p style="font-size:.88rem;margin-bottom:4px;color:var(--accent2)">'+title+'</p>';
+  });
+  list.innerHTML=html;
+}
+
+function doSearch(q){
+  const cards = document.querySelectorAll('.card');
+  q = q.toLowerCase().trim();
+  cards.forEach(c=>{c.classList.toggle('hidden', q && !c.textContent.toLowerCase().includes(q))});
+  updateFilterVisibility();
+}
+
+function doFilter(f){
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.toggle('active', p.dataset.filter==f));
+  updateFilterVisibility();
+}
+
+function updateFilterVisibility(){
+  const cards = document.querySelectorAll('.card');
+  const f = currentFilter;
+  cards.forEach(c=>{
+    if(f===0){c.classList.remove('hidden');return}
+    if(f==='star'){c.classList.toggle('hidden', !c.querySelector('.card-star.active'));return}
+    const sec = c.closest('section');
+    const set = sec ? parseInt(sec.dataset.set) : 0;
+    c.classList.toggle('hidden', set !== f && (f!==4 || !sec || sec.id!=='exam'));
+  });
+  document.querySelectorAll('section').forEach(s=>{
+    const vis = Array.from(s.querySelectorAll('.card')).some(c=>!c.classList.contains('hidden'));
+    s.classList.toggle('hidden', !vis);
+  });
+}
+
+window.addEventListener('scroll', function(){
+  const btn = document.querySelector('.sidebar-toggle');
+  const hero = document.querySelector('.hero');
+  if(hero){btn.classList.toggle('hidden', window.scrollY < hero.offsetTop + hero.offsetHeight - 60)}
+});
+
+document.addEventListener('DOMContentLoaded', function(){
+  updateProgress(); updateRevisionList();
+});
+</script>
+</body>
+</html>
